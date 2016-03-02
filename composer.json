@@ -1,0 +1,18 @@
+{
+  "name": "spiral/migrations",
+  "description": "Migrations mechanism for spiral framework built at top of schema declarations",
+  "authors": [
+    {
+      "name": "Anton Titov / Wolfy-J",
+      "email": "wolfy.jd@gmail.com"
+    }
+  ],
+  "require": {
+    "spiral/framework": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Spiral\\": "source/"
+    }
+  }
+}
