@@ -45,12 +45,20 @@ class AddReference extends ReferenceOperation
      * @param string $column
      * @param string $foreignTable
      * @param string $foreignKey
+     * @param array  $options
      */
-    public function __construct($database, $table, $column, $foreignTable, $foreignKey)
-    {
+    public function __construct(
+        $database,
+        $table,
+        $column,
+        $foreignTable,
+        $foreignKey,
+        array $options
+    ) {
         parent::__construct($database, $table, $column);
         $this->foreignTable = $foreignTable;
         $this->foreignKey = $foreignKey;
+        $this->options = $options;
     }
 
     /**
@@ -74,8 +82,8 @@ class AddReference extends ReferenceOperation
             );
         }
 
-        if (!$context->getSchema($this->database,
-            $this->foreignTable)->hasColumn($this->foreignKey)
+        if (
+        !$context->getSchema($this->database, $this->foreignTable)->hasColumn($this->foreignKey)
         ) {
             throw new ReferenceException(
                 "Unable to add foreign key '{$schema->getName()}'.'{$this->column}',"

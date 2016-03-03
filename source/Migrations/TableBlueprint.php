@@ -162,7 +162,7 @@ class TableBlueprint
     public function alterIndex(array $columns, array $options)
     {
         return $this->addOperation(
-            new AlterIndex($this->database, $this->table, $columns)
+            new AlterIndex($this->database, $this->table, $columns, $options)
         );
     }
 
