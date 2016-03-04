@@ -16,6 +16,7 @@ use Spiral\Migrations\Operations\Indexes\AddIndex;
 use Spiral\Migrations\Operations\Indexes\AlterIndex;
 use Spiral\Migrations\Operations\Indexes\DropIndex;
 use Spiral\Migrations\Operations\References\AddReference;
+use Spiral\Migrations\Operations\References\AlterReference;
 use Spiral\Migrations\Operations\References\DropReference;
 use Spiral\Migrations\Operations\Table\CreateTable;
 use Spiral\Migrations\Operations\Table\DropTable;
@@ -194,6 +195,31 @@ class TableBlueprint
     {
         return $this->addOperation(
             new AddReference(
+                $this->database,
+                $this->table,
+                $column,
+                $foreignTable,
+                $foreignKey,
+                $options
+            )
+        );
+    }
+
+
+    /**
+     * Example:
+     * $table->alterForeignKey('user_id', 'users', 'id', ['delete' => 'NO ACTION']);
+     *
+     * @param string $column
+     * @param string $foreignTable
+     * @param string $foreignKey
+     * @param array  $options
+     * @return TableBlueprint
+     */
+    public function alterForeignKey($column, $foreignTable, $foreignKey, array $options = [])
+    {
+        return $this->addOperation(
+            new AlterReference(
                 $this->database,
                 $this->table,
                 $column,

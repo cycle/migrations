@@ -10,9 +10,21 @@
   "require": {
     "spiral/framework": "*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "mockery/mockery": "^0.9.4"
+  },
   "autoload": {
     "psr-4": {
       "Spiral\\": "source/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": [
+        "tests/",
+        "tests/cases/"
+      ]
     }
   }
 }

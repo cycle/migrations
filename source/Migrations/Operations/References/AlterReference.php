@@ -13,7 +13,7 @@ use Spiral\Migrations\Exceptions\Operations\ReferenceException;
 use Spiral\Migrations\Operations\ReferenceOperation;
 use Spiral\Migrations\Operations\Traits\OptionsTrait;
 
-class AddReference extends ReferenceOperation
+class AlterReference extends ReferenceOperation
 {
     use OptionsTrait;
 
@@ -68,10 +68,10 @@ class AddReference extends ReferenceOperation
     {
         $schema = $context->getSchema($this->getDatabase(), $this->getTable());
 
-        if ($schema->hasForeign($this->column)) {
+        if (!$schema->hasForeign($this->column)) {
             throw new ReferenceException(
-                "Unable to add foreign key '{$schema->getName()}'.({$this->column}), "
-                . "foreign key already exists"
+                "Unable to alter foreign key '{$schema->getName()}'.({$this->column}), "
+                . "foreign does not exists"
             );
         }
 
@@ -79,14 +79,14 @@ class AddReference extends ReferenceOperation
 
         if ($this->foreignTable != $this->table && !$outerSchema->exists()) {
             throw new ReferenceException(
-                "Unable to add foreign key '{$schema->getName()}'.'{$this->column}', "
+                "Unable to alter foreign key '{$schema->getName()}'.'{$this->column}', "
                 . "foreign table '{$this->foreignTable}' does not exists"
             );
         }
 
-        if ($this->foreignTable != $this->table && !$outerSchema->hasColumn($this->foreignKey)) {
+        if ($this->foreignTable != $this->table && !$outerSchema->hasColumn($this->foreignKey))  {
             throw new ReferenceException(
-                "Unable to add foreign key '{$schema->getName()}'.'{$this->column}',"
+                "Unable to alter foreign key '{$schema->getName()}'.'{$this->column}',"
                 . " foreign column '{$this->foreignTable}'.'{$this->foreignKey}' does not exists"
             );
         }

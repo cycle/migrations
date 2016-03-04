@@ -211,6 +211,9 @@ class Migrator implements SingletonInterface
         $this->beginTransactions();
         try {
             call_user_func($closure);
+        } catch (\Exception $e) {
+            $this->rollbackTransactions();
+            throw $e;
         } catch (\Throwable $e) {
             $this->rollbackTransactions();
             throw $e;
@@ -241,7 +244,7 @@ class Migrator implements SingletonInterface
     }
 
     /**
-     * Commit transaction for every avialable driver.
+     * Commit transaction for every available driver.
      */
     protected function commitTransactions()
     {
