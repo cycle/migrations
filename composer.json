@@ -1,7 +1,7 @@
 {
-  "name": "spiral/database",
+  "name": "spiral/migrations",
   "type": "library",
-  "description": "DBAL, schema introspection, migration and pagination",
+  "description": "Database migrations, migration scaffolding",
   "license": "MIT",
   "authors": [
     {
