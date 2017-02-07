@@ -3,7 +3,7 @@
          backupGlobals="false"
          backupStaticAttributes="false"
          colors="true"
-         verbose="true"
+         verbose="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -12,9 +12,16 @@
          stopOnError="false"
          syntaxCheck="true"
         >
+
     <testsuites>
-        <testsuite name="Spiral Migration Tests">
+        <testsuite name="Spiral Framework Core Tests">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>source/Spiral</directory>
+        </whitelist>
+    </filter>
 </phpunit>

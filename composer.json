@@ -1,6 +1,8 @@
 {
-  "name": "spiral/migrations",
-  "description": "Migrations mechanism for spiral framework built at top of schema declarations",
+  "name": "spiral/database",
+  "type": "library",
+  "description": "DBAL, schema introspection, migration and pagination",
+  "license": "MIT",
   "authors": [
     {
       "name": "Anton Titov / Wolfy-J",
@@ -8,23 +10,24 @@
     }
   ],
   "require": {
-    "spiral/framework": "*"
+    "php": ">=7.0",
+    "spiral/common": "^0.9",
+    "spiral/tokenizer": "^0.9",
+    "spiral/database": "^0.9",
+    "spiral/reactor": "^0.9"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.0",
+    "phpunit/phpunit": "~5.0",
     "mockery/mockery": "^0.9.4"
   },
   "autoload": {
     "psr-4": {
-      "Spiral\\": "source/"
+      "Spiral\\": "source/Spiral/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\": [
-        "tests/",
-        "tests/cases/"
-      ]
+      "Spiral\\Tests\\": "tests/"
     }
   }
 }

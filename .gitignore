@@ -1,4 +1,11 @@
 .idea/
-composer/
-composer.phat
+.env
+.coveralls.yml
 composer.lock
+vendor/
+tests/runtime/*
+build/logs/*
+build/
+*.db
+clover.xml
+clover.json
