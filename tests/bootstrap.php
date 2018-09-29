@@ -14,7 +14,7 @@ mb_internal_encoding('UTF-8');
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 \Spiral\Migrations\Tests\BaseTest::$config = [
-    'debug'     => true,
+    'debug'     => false,
     'sqlite'    => [
         'driver' => \Spiral\Database\Driver\SQLite\SQLiteDriver::class,
         'check'  => function () {
