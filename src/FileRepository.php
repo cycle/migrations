@@ -76,10 +76,6 @@ class FileRepository implements RepositoryInterface
                 require_once($f['filename']);
             }
 
-            if (!$f['created'] instanceof \DateTime) {
-                throw new RepositoryException("Invalid migration filename '{$f['filename']}'");
-            }
-
             /** @var MigrationInterface $migration */
             $migration = $this->factory->make($f['class']);
 
@@ -139,6 +135,10 @@ class FileRepository implements RepositoryInterface
         foreach ($this->files->getFiles($this->config->getDirectory(), '*.php') as $filename) {
             $reflection = $this->tokenizer->fileReflection($filename);
             $definition = explode('_', basename($filename));
+
+            if (count($definition) < 3) {
+                throw new RepositoryException("Invalid migration filename '{$filename}'");
+            }
 
             yield [
                 'filename' => $filename,
