@@ -8,81 +8,35 @@
 
 namespace Spiral\Migrations;
 
-use Spiral\Core\Component;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\DatabaseManager;
-use Spiral\Database\Entities\Driver;
-use Spiral\Database\Entities\Table;
-use Spiral\Migrations\Config\MigrationsConfig;
+use Spiral\Database\Table;
+use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\Exceptions\MigrationException;
-use Spiral\Migrations\Migration\State;
 
-/**
- * MigrationManager component.
- */
-class Migrator extends Component implements SingletonInterface
+class Migrator
 {
-    /**
-     * @var MigrationsConfig
-     */
-    private $config = null;
+    /** @var MigrationConfig */
+    private $config;
+
+    /** @var DatabaseManager */
+    private $dbal;
+
+    /** @var RepositoryInterface */
+    private $repository;
 
     /**
-     * @invisible
-     * @var DatabaseManager
-     */
-    protected $dbal = null;
-
-    /**
-     * @invisible
-     * @var RepositoryInterface
-     */
-    protected $repository = null;
-
-    /**
-     * @param MigrationsConfig    $config
-     * @param DatabaseManager     $dbal
+     * @param MigrationConfig     $config
      * @param RepositoryInterface $repository
+     * @param DatabaseManager     $dbal
      */
     public function __construct(
-        MigrationsConfig $config,
-        DatabaseManager $dbal,
-        RepositoryInterface $repository
+        MigrationConfig $config,
+        RepositoryInterface $repository,
+        DatabaseManager $dbal
     ) {
         $this->config = $config;
-        $this->dbal = $dbal;
         $this->repository = $repository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isConfigured(): bool
-    {
-        return $this->stateTable()->exists();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configure()
-    {
-        if ($this->isConfigured()) {
-            return;
-        }
-
-        //Migrations table is pretty simple.
-        $schema = $this->stateTable()->getSchema();
-
-        /*
-         * Schema update will automatically sync all needed data
-         */
-        $schema->primary('id');
-        $schema->string('migration', 255)->nullable(false);
-        $schema->datetime('time_executed')->datetime();
-        $schema->index(['migration']);
-
-        $schema->save();
+        $this->dbal = $dbal;
     }
 
     /**
@@ -94,6 +48,42 @@ class Migrator extends Component implements SingletonInterface
     }
 
     /**
+     * Check if all related databases are configures with migrations.
+     *
+     * @return bool
+     */
+    public function isConfigured(): bool
+    {
+        foreach ($this->dbal->getDatabases() as $db) {
+            return !$db->hasTable($this->config->getTable());
+        }
+
+        return false;
+    }
+
+    /**
+     * Configure all related databases with migration table.
+     */
+    public function configure()
+    {
+        if ($this->isConfigured()) {
+            return;
+        }
+
+        foreach ($this->dbal->getDatabases() as $db) {
+            $schema = $db->table($this->config->getTable())->getSchema();
+
+            // Schema update will automatically sync all needed data
+            $schema->primary('id');
+            $schema->string('migration', 255)->nullable(false);
+            $schema->datetime('time_executed')->datetime();
+            $schema->index(['migration']);
+
+            $schema->save();
+        }
+    }
+
+    /**
      * Get every available migration with valid meta information.
      *
      * @return MigrationInterface[]
@@ -102,8 +92,8 @@ class Migrator extends Component implements SingletonInterface
     {
         $result = [];
         foreach ($this->repository->getMigrations() as $migration) {
-            //Populating migration status and execution time (if any)
-            $result[] = $migration->withState($this->resolveStatus($migration->getState()));
+            //Populating migration state and execution time (if any)
+            $result[] = $migration->withState($this->resolveState($migration));
         }
 
         return $result;
@@ -112,44 +102,37 @@ class Migrator extends Component implements SingletonInterface
     /**
      * Execute one migration and return it's instance.
      *
-     * @param CapsuleInterface $capsule Default capsule to be used if none given.
+     * @param MigrationInterface $migration
+     * @param CapsuleInterface   $capsule
+     * @return null|MigrationInterface
      *
-     * @return MigrationInterface|null
+     * @throws \Throwable
      */
-    public function run(CapsuleInterface $capsule = null)
-    {
-        $capsule = $capsule ?? new MigrationCapsule($this->dbal);
-
+    public function run(
+        MigrationInterface $migration,
+        CapsuleInterface $capsule
+    ): ?MigrationInterface {
         if (!$this->isConfigured()) {
             throw new MigrationException("Unable to run migration, Migrator not configured");
         }
 
-        /**
-         * @var MigrationInterface $migration
-         */
+        $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
+
         foreach ($this->getMigrations() as $migration) {
             if ($migration->getState()->getStatus() != State::STATUS_PENDING) {
                 continue;
             }
 
-            //Isolate migration commands in a capsule
-            $migration = $migration->withCapsule($capsule);
-
-            //Executing migration inside global transaction
-            $this->execute(function () use ($migration) {
-                $migration->up();
+            $capsule->getDatabase()->transaction(function () use ($migration, $capsule) {
+                $migration->withCapsule($capsule)->up();
             });
 
-            //Registering record in database
-            $this->stateTable()->insertOne([
+            $this->migrationTable($migration->getDatabase())->insertOne([
                 'migration'     => $migration->getState()->getName(),
                 'time_executed' => new \DateTime('now')
             ]);
 
-            //Update migration state
-            return $migration->withState(
-                $this->resolveStatus($migration->getState())
-            );
+            return $migration->withState($this->resolveState($migration));
         }
 
         return null;
@@ -158,43 +141,37 @@ class Migrator extends Component implements SingletonInterface
     /**
      * Rollback last migration and return it's instance.
      *
-     * @param CapsuleInterface $capsule Default capsule to be used if none given.
+     * @param MigrationInterface $migration
+     * @param CapsuleInterface   $capsule
+     * @return null|MigrationInterface
      *
-     * @return MigrationInterface|null
+     * @throws \Throwable
      */
-    public function rollback(CapsuleInterface $capsule = null)
-    {
-        $capsule = $capsule ?? new MigrationCapsule($this->dbal);
-
+    public function rollback(
+        MigrationInterface $migration,
+        CapsuleInterface $capsule
+    ): ?MigrationInterface {
         if (!$this->isConfigured()) {
             throw new MigrationException("Unable to run migration, Migrator not configured");
         }
 
-        /**
-         * @var MigrationInterface $migration
-         */
+        $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
+
+        /** @var MigrationInterface $migration */
         foreach (array_reverse($this->getMigrations()) as $migration) {
             if ($migration->getState()->getStatus() != State::STATUS_EXECUTED) {
                 continue;
             }
 
-            //Isolate migration commands in a capsule
-            $migration = $migration->withCapsule($capsule);
-
-            //Executing migration inside global transaction
-            $this->execute(function () use ($migration) {
-                $migration->down();
+            $capsule->getDatabase()->transaction(function () use ($migration, $capsule) {
+                $migration->withCapsule($capsule)->down();
             });
 
-            //Flushing DB record
-            $this->stateTable()->delete([
+            $this->migrationTable($migration->getDatabase())->delete([
                 'migration' => $migration->getState()->getName()
             ])->run();
 
-            //Update migration state
-            return $migration->withState(
-                $this->resolveStatus($migration->getState())
-            );
+            return $migration->withState($this->resolveState($migration));
         }
 
         return null;
@@ -203,112 +180,36 @@ class Migrator extends Component implements SingletonInterface
     /**
      * Migration table, all migration information will be stored in it.
      *
+     * @param string $database
      * @return Table
      */
-    protected function stateTable(): Table
+    protected function migrationTable(string $database): Table
     {
-        return $this->dbal->database(
-            $this->config->getDatabase()
-        )->table(
-            $this->config->getTable()
-        );
+        return $this->dbal->database($database)->table($this->config->getTable());
     }
 
     /**
      * Clarify migration state with valid status and execution time
      *
-     * @param State $initialState
-     *
+     * @param MigrationInterface $migration
      * @return State
      */
-    protected function resolveStatus(State $initialState)
+    protected function resolveState(MigrationInterface $migration): State
     {
+        $db = $this->dbal->database($migration->getDatabase());
+
         //Fetch migration information from database
-        $state = $this->stateTable()
-            ->select('id', 'time_executed')
-            ->where(['migration' => $initialState->getName()])
-            ->run()
-            ->fetch();
+        $data = $this->migrationTable($db)->select('id', 'time_executed')
+            ->where(['migration' => $migration->getState()->getName()])
+            ->run()->fetch();
 
-        if (empty($state['time_executed'])) {
-            return $initialState->withStatus(State::STATUS_PENDING);
+        if (empty($data['time_executed'])) {
+            return $migration->getState()->withStatus(State::STATUS_PENDING);
         }
 
-        return $initialState->withStatus(
+        return $migration->getState()->withStatus(
             State::STATUS_EXECUTED,
-            new \DateTime(
-                $state['time_executed'],
-                $this->stateTable()->getDatabase()->getDriver()->getTimezone()
-            )
+            new \DateTime($data['time_executed'], $db->getDriver()->getTimezone())
         );
-    }
-
-    /**
-     * Run given code under transaction open for every driver.
-     *
-     * @param \Closure $closure
-     *
-     * @throws \Throwable
-     */
-    protected function execute(\Closure $closure)
-    {
-        $this->beginTransactions();
-        try {
-            call_user_func($closure);
-        } catch (\Throwable $e) {
-            $this->rollbackTransactions();
-            throw $e;
-        }
-
-        $this->commitTransactions();
-    }
-
-    /**
-     * Begin transaction for every available driver (we don't know what database migration related
-     * to).
-     */
-    protected function beginTransactions()
-    {
-        foreach ($this->getDrivers() as $driver) {
-            $driver->beginTransaction();
-        }
-    }
-
-    /**
-     * Rollback transaction for every available driver.
-     */
-    protected function rollbackTransactions()
-    {
-        foreach ($this->getDrivers() as $driver) {
-            $driver->rollbackTransaction();
-        }
-    }
-
-    /**
-     * Commit transaction for every available driver.
-     */
-    protected function commitTransactions()
-    {
-        foreach ($this->getDrivers() as $driver) {
-            $driver->commitTransaction();
-        }
-    }
-
-    /**
-     * Get all available drivers.
-     *
-     * @return Driver[]
-     */
-    protected function getDrivers(): array
-    {
-        $drivers = [];
-        foreach ($this->dbal->getDatabases() as $database) {
-            $driver = $database->getDriver();
-            if (!isset($drivers["{$driver->getName()}.{$driver->getSource()}"])) {
-                $drivers["{$driver->getName()}.{$driver->getSource()}"] = $database->getDriver();
-            }
-        }
-
-        return $drivers;
     }
 }

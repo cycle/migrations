@@ -1,127 +1,127 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations;
 
-use Interop\Container\ContainerInterface;
+namespace Spiral\Migrations\Tests;
+
+use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
+use Psr\Log\LogLevel;
 use Spiral\Core\Container;
 use Spiral\Core\NullMemory;
-use Spiral\Database\Configs\DatabasesConfig;
+use Spiral\Database\Config\DatabaseConfig;
+use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
-use Spiral\Database\Entities\Database;
-use Spiral\Database\Entities\Driver;
-use Spiral\Database\Helpers\SynchronizationPool;
-use Spiral\Database\Schemas\Prototypes\AbstractTable;
-use Spiral\Database\Schemas\StateComparator;
-use Spiral\Files\FileManager;
-use Spiral\Migrations\Atomizer;
-use Spiral\Migrations\Config\MigrationsConfig;
+use Spiral\Database\Driver\AbstractDriver;
+use Spiral\Database\Driver\AbstractHandler;
+use Spiral\Database\Schema\AbstractTable;
+use Spiral\Database\Schema\Comparator;
+use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\FileRepository;
-use Spiral\Migrations\Migration;
 use Spiral\Migrations\Migrator;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\FileDeclaration;
-use Spiral\Tokenizer\Configs\TokenizerConfig;
+use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
+use Spiral\Tokenizer\TokenizerInterface;
 
-abstract class BaseTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends TestCase
 {
-    const PROFILING = ENABLE_PROFILING;
+    public static $config;
+    public const DRIVER = null;
+    protected static $driverCache = [];
 
-    /**
-     * @var DatabaseManager
-     */
-    protected $dbal;
+    public const CONFIG = [
+        'directories' => [__DIR__ . '/fixtures/'],
+        'table'       => 'migrations',
+        'safe'        => true
+    ];
 
-    /**
-     * @var Migrator
-     */
-    protected $migrator;
+    /** @var AbstractDriver */
+    protected $driver;
 
-    /**
-     * @var Database
-     */
-    protected $db;
-
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     protected $container;
 
-    /**
-     * @var FileRepository
-     */
+    /**  @var Migrator */
+    protected $migrator;
+
+    /** @var DatabaseManager */
+    protected $dbal;
+
+    /** @var Database */
+    protected $db;
+
+    /** @var FileRepository */
     protected $repository;
 
     public function setUp()
     {
         $this->container = $container = new Container();
-        $this->dbal = $this->databaseManager($this->container);
+        $this->dbal = $this->getDBAL($this->container);
+
+        $config = new MigrationConfig(static::CONFIG);
 
         $this->migrator = new Migrator(
-            $this->migrationsConfig(),
+            $config,
             $this->dbal,
             $this->repository = new FileRepository(
-                $this->migrationsConfig(),
-                $this->tokenizer(),
-                new FileManager(),
+                $config,
+                $this->getTokenizer(),
+                new Files(),
                 $this->container
             )
         );
     }
 
-    public function tearDown()
-    {
-        $files = new FileManager();
-        foreach ($files->getFiles(__DIR__ . '/fixtures/', '*.php') as $file) {
-            $files->delete($file);
-        }
 
-        $this->db->getDriver()->setProfiling(false);
-
-        $schemas = [];
-        //Clean up
-        foreach ($this->dbal->database()->getTables() as $table) {
-            $schema = $table->getSchema();
-            $schema->declareDropped();
-            $schemas[] = $schema;
-        }
-
-        //Clear all tables
-        $syncBus = new SynchronizationPool($schemas);
-        $syncBus->run();
-
-        $this->db->getDriver()->setProfiling(true);
-    }
+//    protected function atomize(string $name, array $tables)
+//    {
+//        //Make sure name is unique
+//        $name = $name . '_' . crc32(microtime(true));
+//
+//        $atomizer = new Atomizer(
+//            new Atomizer\MigrationRenderer(new Atomizer\AliasLookup($this->dbal))
+//        );
+//
+//        foreach ($tables as $table) {
+//            $atomizer->addTable($table);
+//        }
+//
+//        //Rendering
+//        $declaration = new ClassDeclaration($name, Migration::class);
+//
+//        $declaration->method('up')->setPublic();
+//        $declaration->method('down')->setPublic();
+//
+//        $atomizer->declareChanges($declaration->method('up')->getSource());
+//        $atomizer->revertChanges($declaration->method('down')->getSource());
+//
+//        $file = new FileDeclaration();
+//        $file->addElement($declaration);
+//
+//        $this->repository->registerMigration($name, $name, $file);
+//    }
 
     /**
-     * @return MigrationsConfig
+     * @param string $name
+     * @param string $prefix
+     *
+     * @return Database|null When non empty null will be given, for safety, for science.
      */
-    protected function migrationsConfig(): MigrationsConfig
+    protected function db(string $name = 'default', string $prefix = '')
     {
-        return new MigrationsConfig([
-            'directory' => __DIR__ . '/fixtures/',
-            'database'  => 'default',
-            'table'     => 'migrations',
-            'safe'      => true
-        ]);
-    }
+        if (isset(static::$driverCache[static::DRIVER])) {
+            $driver = static::$driverCache[static::DRIVER];
+        } else {
+            static::$driverCache[static::DRIVER] = $driver = $this->getDriver();
+        }
 
-    protected function tokenizer(): Tokenizer
-    {
-        return new Tokenizer(
-            new TokenizerConfig([
-                'directories' => [
-                    __DIR__ . '/fixtures/'
-                ],
-                'exclude'     => []
-            ]),
-            new FileManager(),
-            new NullMemory()
-        );
+        return new Database($name, $prefix, $driver);
     }
 
     /**
@@ -129,10 +129,10 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
      *
      * @return DatabaseManager
      */
-    protected function databaseManager(ContainerInterface $container): DatabaseManager
+    protected function getDBAL(ContainerInterface $container): DatabaseManager
     {
         $dbal = new DatabaseManager(
-            $this->dbConfig = new DatabasesConfig([
+            new DatabaseConfig([
                 'default'     => 'default',
                 'aliases'     => [],
                 'databases'   => [],
@@ -142,24 +142,89 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
         );
 
         $dbal->addDatabase(
-            $this->db = new Database($this->getDriver($container), 'default', 'tests_')
+            $this->db = new Database(
+                "default",
+                "tests_",
+                $this->getDriver()
+            )
         );
 
-        $dbal->addDatabase(new Database($this->getDriver($container), 'slave', 'slave_'));
+        $dbal->addDatabase(new Database(
+            "slave",
+            "slave_",
+            $this->getDriver()
+        ));
 
         return $dbal;
     }
 
+    protected function getTokenizer(): TokenizerInterface
+    {
+        return new Tokenizer(
+            new TokenizerConfig([
+                'directories' => [
+                    __DIR__ . '/fixtures/'
+                ],
+                'exclude'     => []
+            ]),
+            new NullMemory()
+        );
+    }
+
     /**
-     * Database driver.
-     *
-     * @return Driver
+     * @return AbstractDriver
      */
-    abstract function getDriver(ContainerInterface $container = null): Driver;
+    public function getDriver(): AbstractDriver
+    {
+        $config = self::$config[static::DRIVER];
+        if (!isset($this->driver)) {
+            $class = $config['driver'];
+
+            $this->driver = new $class([
+                'connection' => $config['conn'],
+                'username'   => $config['user'],
+                'password'   => $config['pass'],
+                'options'    => []
+            ]);
+        }
+
+        if (self::$config['debug']) {
+            $this->driver->setProfiling(true);
+            $this->driver->setLogger(new TestLogger());
+        }
+
+        return $this->driver;
+    }
+
+    /**
+     * @param Database|null $database
+     */
+    protected function dropDatabase(Database $database = null)
+    {
+        if (empty($database)) {
+            return;
+        }
+
+        foreach ($database->getTables() as $table) {
+            $schema = $table->getSchema();
+
+            foreach ($schema->getForeignKeys() as $foreign) {
+                $schema->dropForeignKey($foreign->getColumn());
+            }
+
+            $schema->save(AbstractHandler::DROP_FOREIGN_KEYS);
+        }
+
+        foreach ($database->getTables() as $table) {
+            $schema = $table->getSchema();
+            $schema->declareDropped();
+            $schema->save();
+        }
+    }
 
     protected function assertSameAsInDB(AbstractTable $current)
     {
-        $comparator = new StateComparator(
+        $comparator = new Comparator(
             $current->getState(),
             $this->schema($current->getName())->getState()
         );
@@ -169,7 +234,21 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function makeMessage(string $table, StateComparator $comparator)
+    /**
+     * @param AbstractTable $table
+     * @return AbstractTable
+     */
+    protected function fetchSchema(AbstractTable $table): AbstractTable
+    {
+        return $this->schema($table->getName());
+    }
+
+    /**
+     * @param string     $table
+     * @param Comparator $comparator
+     * @return string
+     */
+    protected function makeMessage(string $table, Comparator $comparator)
     {
         if ($comparator->isPrimaryChanged()) {
             return "Table '{$table}' not synced, primary indexes are different.";
@@ -195,48 +274,37 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
                     $names) . "' have been changed.";
         }
 
-        if ($comparator->droppedForeigns()) {
+        if ($comparator->droppedForeignKeys()) {
             return "Table '{$table}' not synced, FKs are missing.";
         }
 
-        if ($comparator->addedForeigns()) {
+        if ($comparator->addedForeignKeys()) {
             return "Table '{$table}' not synced, new FKs found.";
         }
 
 
         return "Table '{$table}' not synced, no idea why, add more messages :P";
     }
+}
 
-    public function schema(string $table): AbstractTable
+class TestLogger implements LoggerInterface
+{
+    use LoggerTrait;
+
+    public function log($level, $message, array $context = [])
     {
-        return $this->db->table($table)->getSchema();
-    }
-
-    protected function atomize(string $name, array $tables)
-    {
-        //Make sure name is unique
-        $name = $name . '_' . crc32(microtime(true));
-
-        $atomizer = new Atomizer(
-            new Atomizer\MigrationRenderer(new Atomizer\AliasLookup($this->dbal))
-        );
-
-        foreach ($tables as $table) {
-            $atomizer->addTable($table);
+        if ($level == LogLevel::ERROR) {
+            echo " \n! \033[31m" . $message . "\033[0m";
+        } elseif ($level == LogLevel::ALERT) {
+            echo " \n! \033[35m" . $message . "\033[0m";
+        } elseif (strpos($message, 'SHOW') === 0) {
+            echo " \n> \033[34m" . $message . "\033[0m";
+        } else {
+            if (strpos($message, 'SELECT') === 0) {
+                echo " \n> \033[32m" . $message . "\033[0m";
+            } else {
+                echo " \n> \033[33m" . $message . "\033[0m";
+            }
         }
-
-        //Rendering
-        $declaration = new ClassDeclaration($name, Migration::class);
-
-        $declaration->method('up')->setPublic();
-        $declaration->method('down')->setPublic();
-
-        $atomizer->declareChanges($declaration->method('up')->getSource());
-        $atomizer->revertChanges($declaration->method('down')->getSource());
-
-        $file = new FileDeclaration();
-        $file->addElement($declaration);
-
-        $this->repository->registerMigration($name, $name, $file);
     }
 }

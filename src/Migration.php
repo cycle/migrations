@@ -8,24 +8,31 @@
 
 namespace Spiral\Migrations;
 
-use Spiral\Database\Entities\Database;
+use Spiral\Database\Database;
+use Spiral\Database\DatabaseInterface;
 use Spiral\Migrations\Exceptions\MigrationException;
-use Spiral\Migrations\Migration\State;
 
 /**
  * Simple migration class with shortcut for database and blueprint instances.
  */
 abstract class Migration implements MigrationInterface
 {
-    /**
-     * @var State|null
-     */
+    // Target migration database
+    protected const DATABASE = null;
+
+    /** @var State|null */
     private $state = null;
 
-    /**
-     * @var CapsuleInterface
-     */
+    /** @var CapsuleInterface */
     private $capsule = null;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDatabase(): ?string
+    {
+        return static::DATABASE;
+    }
 
     /**
      * {@inheritdoc}
@@ -62,33 +69,29 @@ abstract class Migration implements MigrationInterface
     }
 
     /**
-     * @param string $database
-     *
      * @return Database
      */
-    protected function database(string $database = null): Database
+    protected function database(): DatabaseInterface
     {
         if (empty($this->capsule)) {
             throw new MigrationException("Unable to get database, no capsule are set");
         }
 
-        return $this->capsule->getDatabase($database);
+        return $this->capsule->getDatabase();
     }
 
     /**
      * Get table schema builder (blueprint).
      *
-     * @param string      $table
-     * @param string|null $database
-     *
+     * @param string $table
      * @return TableBlueprint
      */
-    protected function table(string $table, string $database = null): TableBlueprint
+    protected function table(string $table): TableBlueprint
     {
         if (empty($this->capsule)) {
             throw new MigrationException("Unable to get table blueprint, no capsule are set");
         }
 
-        return new TableBlueprint($this->capsule, $table, $database);
+        return new TableBlueprint($this->capsule, $table);
     }
 }

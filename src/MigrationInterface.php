@@ -9,15 +9,20 @@
 namespace Spiral\Migrations;
 
 use Spiral\Migrations\Exceptions\MigrationException;
-use Spiral\Migrations\Migration\State;
 
 interface MigrationInterface
 {
     /**
-     * Version of migration with specific db capsule.
+     * Target migration database. Each migration must be specific to one database only.
+     *
+     * @return null|string
+     */
+    public function getDatabase(): ?string;
+
+    /**
+     * Lock migration into specific migration capsule.
      *
      * @param CapsuleInterface $capsule
-     *
      * @return self
      */
     public function withCapsule(CapsuleInterface $capsule): MigrationInterface;
@@ -26,7 +31,6 @@ interface MigrationInterface
      * Alter associated migration state (new migration instance to be created).
      *
      * @param State $state
-     *
      * @return self
      */
     public function withState(State $state): MigrationInterface;

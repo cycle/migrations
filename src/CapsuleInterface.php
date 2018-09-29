@@ -8,9 +8,9 @@
 
 namespace Spiral\Migrations;
 
-use Spiral\Database\Entities\Database;
-use Spiral\Database\Entities\Table;
-use Spiral\Database\Schemas\Prototypes\AbstractTable;
+use Spiral\Database\DatabaseInterface;
+use Spiral\Database\Schema\AbstractTable;
+use Spiral\Database\TableInterface;
 use Spiral\Migrations\Exceptions\ContextException;
 
 /**
@@ -19,31 +19,25 @@ use Spiral\Migrations\Exceptions\ContextException;
 interface CapsuleInterface
 {
     /**
-     * @param string $database
-     *
-     * @return Database
+     * @return DatabaseInterface
      */
-    public function getDatabase(string $database = null): Database;
+    public function getDatabase(): DatabaseInterface;
 
     /**
-     * @param string      $table
-     * @param string|null $database
-     *
-     * @return Table
+     * @param string $table
+     * @return TableInterface
      */
-    public function getTable(string $table, string $database = null): Table;
+    public function getTable(string $table): TableInterface;
 
     /**
      * Get schema associated with given database and table.
      *
-     * @param string      $table
-     * @param string|null $database
-     *
+     * @param string $table
      * @return AbstractTable
      *
      * @throws ContextException
      */
-    public function getSchema(string $table, string $database = null): AbstractTable;
+    public function getSchema(string $table): AbstractTable;
 
     /**
      * Execute given set of operations.

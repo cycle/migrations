@@ -32,8 +32,7 @@ interface RepositoryInterface
      * @param string $class
      * @param string $body When body is null repository will try to copy content from a specific
      *                     class filename. Must include all PHP headers.
-     *
-     * @return string Migration filename.
+     * @return string      Migration filename.
      *
      * @throws RepositoryException
      */

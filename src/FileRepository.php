@@ -11,9 +11,8 @@ namespace Spiral\Migrations;
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Migrations\Config\MigrationsConfig;
+use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\Exceptions\RepositoryException;
-use Spiral\Migrations\Migration\State;
 use Spiral\Tokenizer\TokenizerInterface;
 
 /**
@@ -21,19 +20,13 @@ use Spiral\Tokenizer\TokenizerInterface;
  */
 class FileRepository implements RepositoryInterface
 {
-    /**
-     * Migrations file name format. This format will be used when requesting new migration filename.
-     */
-    const FILENAME_FORMAT = '{timestamp}_{chunk}_{name}.php';
+    // Migrations file name format. This format will be used when requesting new migration filename.
+    private const FILENAME_FORMAT = '%s_%s_%s.php';
 
-    /**
-     * Timestamp format for files.
-     */
-    const TIMESTAMP_FORMAT = 'Ymd.His';
+    // Timestamp format for files.
+    private const TIMESTAMP_FORMAT = 'Ymd.His';
 
-    /**
-     * @var MigrationsConfig
-     */
+    /** @var MigrationConfig */
     private $config = null;
 
     /**
@@ -43,35 +36,26 @@ class FileRepository implements RepositoryInterface
      */
     private $chunkID = 0;
 
-    /**
-     * @invisible
-     * @var TokenizerInterface
-     */
-    protected $tokenizer = null;
+    /** @var FactoryInterface */
+    private $factory;
+
+    /** @var TokenizerInterface */
+    private $tokenizer;
+
+    /** @var FilesInterface */
+    private $files;
 
     /**
-     * @invisible
-     * @var FactoryInterface
-     */
-    protected $factory = null;
-
-    /**
-     * @invisible
-     * @var FilesInterface
-     */
-    protected $files = null;
-
-    /**
-     * @param MigrationsConfig   $config
+     * @param MigrationConfig    $config
+     * @param FactoryInterface   $factory
      * @param TokenizerInterface $tokenizer
      * @param FilesInterface     $files
-     * @param FactoryInterface   $factory
      */
     public function __construct(
-        MigrationsConfig $config,
+        MigrationConfig $config,
+        FactoryInterface $factory,
         TokenizerInterface $tokenizer,
-        FilesInterface $files,
-        FactoryInterface $factory
+        FilesInterface $files
     ) {
         $this->config = $config;
 
@@ -87,25 +71,21 @@ class FileRepository implements RepositoryInterface
     {
         $migrations = [];
 
-        foreach ($this->getFiles() as $definition) {
-            if (!class_exists($definition['class'], false)) {
+        foreach ($this->getFiles() as $f) {
+            if (!class_exists($f['class'], false)) {
                 //Attempting to load migration class (we can not relay on autoloading here)
-                require_once($definition['filename']);
+                require_once($f['filename']);
             }
 
-            if (!$definition['created'] instanceof \DateTime) {
-                throw new RepositoryException(
-                    "Invalid migration filename '{$definition['filename']}'"
-                );
+            if (!$f['created'] instanceof \DateTime) {
+                throw new RepositoryException("Invalid migration filename '{$f['filename']}'");
             }
 
-            /**
-             * @var MigrationInterface $migration
-             */
-            $migration = $this->factory->make($definition['class']);
+            /** @var MigrationInterface $migration */
+            $migration = $this->factory->make($f['class']);
 
-            $migrations[$definition['filename']] = $migration->withState(
-                new State($definition['name'], $definition['created'])
+            $migrations[$f['filename']] = $migration->withState(
+                new State($f['name'], $f['created'])
             );
         }
 
@@ -132,7 +112,7 @@ class FileRepository implements RepositoryInterface
 
             if ($migration->getState()->getName() == $name) {
                 throw new RepositoryException(
-                    "Unable to register migration '{$name}', migration under same name already exists"
+                    "Unable to register migration '{$name}', migration under the same name already exists"
                 );
             }
         }
@@ -142,15 +122,12 @@ class FileRepository implements RepositoryInterface
             $body = $this->files->read((new \ReflectionClass($class))->getFileName());
         }
 
-        //Copying
-        $this->files->write(
-            $filename = $this->createFilename($name),
-            $body,
-            FilesInterface::READONLY,
-            true
-        );
+        $filename = $this->createFilename($name);
 
-        return basename($filename);
+        //Copying
+        $this->files->write($filename, $body, FilesInterface::READONLY, true);
+
+        return $filename;
     }
 
     /**
@@ -158,17 +135,26 @@ class FileRepository implements RepositoryInterface
      */
     private function getFiles(): \Generator
     {
-        foreach ($this->files->getFiles($this->config['directory'], '*.php') as $filename) {
-            $reflection = $this->tokenizer->fileReflection($filename);
+        foreach ($this->config->getDirectories() as $directory) {
+            foreach ($this->files->getFiles($directory, '*.php') as $filename) {
 
-            $definition = explode('_', basename($filename));
+                $reflection = $this->tokenizer->fileReflection($filename);
+                $definition = explode('_', basename($filename));
 
-            yield [
-                'filename' => $filename,
-                'class'    => $reflection->getClasses()[0],
-                'created'  => \DateTime::createFromFormat(self::TIMESTAMP_FORMAT, $definition[0]),
-                'name'     => str_replace('.php', '', join('_', array_slice($definition, 2)))
-            ];
+                yield [
+                    'filename' => $filename,
+                    'class'    => $reflection->getClasses()[0],
+                    'created'  => \DateTime::createFromFormat(
+                        self::TIMESTAMP_FORMAT,
+                        $definition[0]
+                    ),
+                    'name'     => str_replace(
+                        '.php',
+                        '',
+                        join('_', array_slice($definition, 2))
+                    )
+                ];
+            }
         }
     }
 
@@ -176,21 +162,20 @@ class FileRepository implements RepositoryInterface
      * Request new migration filename based on user input and current timestamp.
      *
      * @param string $name
-     *
      * @return string
      */
     private function createFilename(string $name): string
     {
         $name = Inflector::tableize($name);
 
-        $filename = \Spiral\interpolate(self::FILENAME_FORMAT, [
-            'timestamp' => date(self::TIMESTAMP_FORMAT),
-            'chunk'     => $this->chunkID++,
-            'name'      => $name
-        ]);
+        $filename = sprintf(self::FILENAME_FORMAT,
+            date(self::TIMESTAMP_FORMAT),
+            $this->chunkID++,
+            $name
+        );
 
         return $this->files->normalizePath(
-            $this->config->getDirectory() . FilesInterface::SEPARATOR . $filename
+            $this->config->getDirectories() . FilesInterface::SEPARATOR . $filename
         );
     }
 }

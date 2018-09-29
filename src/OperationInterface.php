@@ -17,13 +17,6 @@ use Spiral\Migrations\Exceptions\OperationException;
 interface OperationInterface
 {
     /**
-     * Database operation related to. Null forces to use default database.
-     *
-     * @return string|null
-     */
-    public function getDatabase();
-
-    /**
      * Table operation related to.
      *
      * @return string

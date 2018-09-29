@@ -8,8 +8,8 @@
 
 namespace Spiral\Migrations\Atomizer;
 
-use Spiral\Database\Schemas\Prototypes\AbstractTable;
-use Spiral\Reactor\Body\Source;
+use Spiral\Database\Schema\AbstractTable;
+use Spiral\Reactor\Partial\Source;
 
 /**
  * Renders table differences and create syntaxes into given source.
