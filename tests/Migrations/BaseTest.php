@@ -68,6 +68,10 @@ abstract class BaseTest extends TestCase
 
     public function setUp()
     {
+        if (static::$config['debug']) {
+            echo "\n\n-------- BEGIN: " . $this->getName() . " --------------\n\n";
+        }
+
         $this->container = $container = new Container();
         $this->dbal = $this->getDBAL($this->container);
 
@@ -105,7 +109,9 @@ abstract class BaseTest extends TestCase
 
         $reflector->run();
 
-        echo "\n\n----------------------\n\n";
+        if (static::$config['debug']) {
+            echo "\n\n-------- END: " . $this->getName() . " --------------\n\n";
+        }
     }
 
     protected function atomize(string $name, array $tables)
