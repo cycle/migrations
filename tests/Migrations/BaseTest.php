@@ -92,6 +92,7 @@ abstract class BaseTest extends TestCase
         $files = new Files();
         foreach ($files->getFiles(__DIR__ . '/../fixtures/', '*.php') as $file) {
             $files->delete($file);
+            clearstatcache(true, $file);
         }
 
         //Clean up
