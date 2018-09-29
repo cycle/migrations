@@ -166,4 +166,40 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
         $this->assertFalse($this->db->hasTable('sample1'));
     }
+
+    public function testDropFK()
+    {
+        //Create thought migration
+        $this->migrator->configure();
+
+        $schema = $this->schema('sample');
+        $schema->primary('id');
+        $schema->integer('value');
+        $schema->index(['value']);
+
+        $schema1 = $this->schema('sample1');
+        $schema1->primary('id');
+        $schema1->float('value');
+        $schema1->integer('sk');
+        $schema1->foreignKey('sk')->references('sample', 'id');
+
+        $this->atomize('migration1', [$schema, $schema1]);
+        $this->migrator->run();
+
+        $this->assertTrue($this->db->hasTable('sample'));
+        $this->assertTrue($this->db->hasTable('sample1'));
+
+        $this->assertTrue($this->db->table('sample1')->hasForeignKey('sk'));
+
+        $schema1 = $this->schema('sample1');
+        $schema1->dropForeignKey('sk');
+
+        $this->atomize('migration2', [$this->schema('sample'), $schema1]);
+
+        $this->migrator->run();
+        $this->assertFalse($this->db->table('sample1')->hasForeignKey('sk'));
+
+        $this->migrator->rollback();
+        $this->assertTrue($this->db->table('sample1')->hasForeignKey('sk'));
+    }
 }

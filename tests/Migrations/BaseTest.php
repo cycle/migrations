@@ -125,6 +125,8 @@ abstract class BaseTest extends TestCase
             $atomizer->addTable($table);
         }
 
+        $this->assertCount(count($tables), $atomizer->getTables());
+
         //Rendering
         $declaration = new ClassDeclaration($name, Migration::class);
 
@@ -267,6 +269,7 @@ abstract class BaseTest extends TestCase
     protected function assertSameAsInDB(AbstractTable $current)
     {
         $comparator = new Comparator(
+
             $current->getState(),
             $this->schema($current->getName())->getState()
         );
