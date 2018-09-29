@@ -83,10 +83,12 @@ class FileRepository implements RepositoryInterface
             /** @var MigrationInterface $migration */
             $migration = $this->factory->make($f['class']);
 
-            $migrations[$f['filename']] = $migration->withState(
+            $migrations[$f['created']->getTimestamp() . $f['chunk']] = $migration->withState(
                 new State($f['name'], $f['created'])
             );
         }
+
+        ksort($migrations);
 
         return $migrations;
     }
@@ -145,6 +147,7 @@ class FileRepository implements RepositoryInterface
                     self::TIMESTAMP_FORMAT,
                     $definition[0]
                 ),
+                'chunk'    => $definition[1],
                 'name'     => str_replace(
                     '.php',
                     '',
