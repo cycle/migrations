@@ -28,7 +28,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Spiral\\Migrations\\Tests\\": "tests/Migrations/"
+      "Spiral\\Migrations\\Tests\\": "tests/Migrations/",
+      "Spiral\\Migrations\\Fixtures\\": "tests/Fixtures/"
     }
   }
 }

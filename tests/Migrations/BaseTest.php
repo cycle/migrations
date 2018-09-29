@@ -43,7 +43,7 @@ abstract class BaseTest extends TestCase
     protected static $driverCache = [];
 
     public const CONFIG = [
-        'directory' => __DIR__ . '/../fixtures/',
+        'directory' => __DIR__ . '/../files/',
         'table'     => 'migrations',
         'safe'      => true
     ];
@@ -94,7 +94,7 @@ abstract class BaseTest extends TestCase
     public function tearDown()
     {
         $files = new Files();
-        foreach ($files->getFiles(__DIR__ . '/../fixtures/', '*.php') as $file) {
+        foreach ($files->getFiles(__DIR__ . '/../files/', '*.php') as $file) {
             $files->delete($file);
             clearstatcache(true, $file);
         }
