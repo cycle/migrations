@@ -7,7 +7,7 @@
 
 namespace Spiral\Migrations\Atomizer;
 
-use Spiral\Atomizer\Exceptions\AtomizerException;
+use Spiral\Atomizer\Exception\AtomizerException;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Schemas\Prototypes\AbstractTable;
 

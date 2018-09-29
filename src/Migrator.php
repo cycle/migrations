@@ -13,7 +13,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Entities\Driver;
 use Spiral\Database\Entities\Table;
-use Spiral\Migrations\Configs\MigrationsConfig;
+use Spiral\Migrations\Config\MigrationsConfig;
 use Spiral\Migrations\Exceptions\MigrationException;
 use Spiral\Migrations\Migration\State;
 

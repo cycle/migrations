@@ -18,7 +18,7 @@ use Spiral\Database\Schemas\Prototypes\AbstractTable;
 use Spiral\Database\Schemas\StateComparator;
 use Spiral\Files\FileManager;
 use Spiral\Migrations\Atomizer;
-use Spiral\Migrations\Configs\MigrationsConfig;
+use Spiral\Migrations\Config\MigrationsConfig;
 use Spiral\Migrations\FileRepository;
 use Spiral\Migrations\Migration;
 use Spiral\Migrations\Migrator;

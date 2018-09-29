@@ -6,7 +6,7 @@
  * @author  Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Migrations\Configs;
+namespace Spiral\Migrations\Config;
 
 use Spiral\Core\InjectableConfig;
 

@@ -11,7 +11,7 @@ namespace Spiral\Migrations;
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Migrations\Configs\MigrationsConfig;
+use Spiral\Migrations\Config\MigrationsConfig;
 use Spiral\Migrations\Exceptions\RepositoryException;
 use Spiral\Migrations\Migration\State;
 use Spiral\Tokenizer\TokenizerInterface;

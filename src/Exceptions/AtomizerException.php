@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Atomizer\Exceptions;
+namespace Spiral\Atomizer\Exception;
 
 class AtomizerException extends \RuntimeException
 {
