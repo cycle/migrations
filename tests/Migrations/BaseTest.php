@@ -104,6 +104,8 @@ abstract class BaseTest extends TestCase
         }
 
         $reflector->run();
+
+        echo "\n\n----------------------\n\n";
     }
 
     protected function atomize(string $name, array $tables)
