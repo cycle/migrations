@@ -18,19 +18,19 @@ class MigrationConfig extends InjectableConfig
      * @var array
      */
     protected $config = [
-        'directories' => [''],
-        'table'       => 'migrations',
-        'safe'        => false
+        'directory' => '',
+        'table'     => 'migrations',
+        'safe'      => false
     ];
 
     /**
-     * Migrations directories.
+     * Migrations directory.
      *
-     * @return array
+     * @return string
      */
-    public function getDirectories(): array
+    public function getDirectory(): string
     {
-        return [$this->config['directory']];
+        return $this->config['directory'];
     }
 
     /**

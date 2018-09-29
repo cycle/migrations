@@ -9,7 +9,7 @@
 namespace Spiral\Migrations\Operation\ForeignKey;
 
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exceptions\Operation\ReferenceException;
+use Spiral\Migrations\Exception\Operation\ReferenceException;
 
 class Drop extends ForeignKey
 {

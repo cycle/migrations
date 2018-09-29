@@ -1,12 +1,15 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations;
+
+namespace Spiral\Migrations\Tests;
 
 use Spiral\Migrations\Migration;
+use Spiral\Migrations\State;
 
 abstract class AtomizerTest extends BaseTest
 {
@@ -24,7 +27,7 @@ abstract class AtomizerTest extends BaseTest
         $migration = $this->migrator->run();
 
         $this->assertInstanceOf(Migration::class, $migration);
-        $this->assertSame(Migration\State::STATUS_EXECUTED, $migration->getState()->getStatus());
+        $this->assertSame(State::STATUS_EXECUTED, $migration->getState()->getStatus());
         $this->assertInstanceOf(\DateTime::class, $migration->getState()->getTimeCreated());
         $this->assertInstanceOf(\DateTime::class, $migration->getState()->getTimeExecuted());
 
@@ -46,18 +49,18 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->abstractType());
+        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
 
         $schema = $this->schema('sample');
         $schema->float('value');
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('float', $this->schema('sample')->column('value')->abstractType());
+        $this->assertSame('float', $this->schema('sample')->column('value')->getAbstractType());
         $this->assertTrue($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->abstractType());
+        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
         $this->assertTrue($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
@@ -140,7 +143,7 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->abstractType());
+        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
 
         $schema = $this->schema('sample');
         $schema->float('value')->defaultValue(2);
@@ -148,13 +151,13 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('float', $this->schema('sample')->column('value')->abstractType());
+        $this->assertSame('float', $this->schema('sample')->column('value')->getAbstractType());
         $this->assertEquals(2, $this->schema('sample')->column('value')->getDefaultValue());
 
         $this->assertTrue($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->abstractType());
+        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
         $this->assertSame(null, $this->schema('sample')->column('value')->getDefaultValue());
 
         $this->assertTrue($this->db->hasTable('sample'));
@@ -298,7 +301,7 @@ abstract class AtomizerTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Migrations\Exceptions\Operation\TableException
+     * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
     public function testChangePrimaryKeys()
     {

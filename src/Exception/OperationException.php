@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Migrations\Exceptions;
+namespace Spiral\Migrations\Exception;
 
 class OperationException extends MigrationException
 {

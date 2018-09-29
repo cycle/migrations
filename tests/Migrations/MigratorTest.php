@@ -1,10 +1,13 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations;
+
+
+namespace Spiral\Migrations\Tests;
 
 abstract class MigratorTest extends BaseTest
 {
@@ -39,7 +42,7 @@ abstract class MigratorTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Migrations\Exceptions\MigrationException
+     * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
     public function testRunUnconfigured()
     {
@@ -47,7 +50,7 @@ abstract class MigratorTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Migrations\Exceptions\MigrationException
+     * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
     public function testRollbackUnconfigured()
     {

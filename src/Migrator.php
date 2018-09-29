@@ -11,7 +11,7 @@ namespace Spiral\Migrations;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Table;
 use Spiral\Migrations\Config\MigrationConfig;
-use Spiral\Migrations\Exceptions\MigrationException;
+use Spiral\Migrations\Exception\MigrationException;
 
 class Migrator
 {
@@ -26,13 +26,13 @@ class Migrator
 
     /**
      * @param MigrationConfig     $config
-     * @param RepositoryInterface $repository
      * @param DatabaseManager     $dbal
+     * @param RepositoryInterface $repository
      */
     public function __construct(
         MigrationConfig $config,
-        RepositoryInterface $repository,
-        DatabaseManager $dbal
+        DatabaseManager $dbal,
+        RepositoryInterface $repository
     ) {
         $this->config = $config;
         $this->repository = $repository;
@@ -55,10 +55,12 @@ class Migrator
     public function isConfigured(): bool
     {
         foreach ($this->dbal->getDatabases() as $db) {
-            return !$db->hasTable($this->config->getTable());
+            if (!$db->hasTable($this->config->getTable())) {
+                return false;
+            }
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -102,27 +104,23 @@ class Migrator
     /**
      * Execute one migration and return it's instance.
      *
-     * @param MigrationInterface $migration
-     * @param CapsuleInterface   $capsule
+     * @param CapsuleInterface $capsule
      * @return null|MigrationInterface
      *
      * @throws \Throwable
      */
-    public function run(
-        MigrationInterface $migration,
-        CapsuleInterface $capsule
-    ): ?MigrationInterface {
+    public function run(CapsuleInterface $capsule = null): ?MigrationInterface
+    {
         if (!$this->isConfigured()) {
             throw new MigrationException("Unable to run migration, Migrator not configured");
         }
-
-        $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
 
         foreach ($this->getMigrations() as $migration) {
             if ($migration->getState()->getStatus() != State::STATUS_PENDING) {
                 continue;
             }
 
+            $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
             $capsule->getDatabase()->transaction(function () use ($migration, $capsule) {
                 $migration->withCapsule($capsule)->up();
             });
@@ -141,21 +139,16 @@ class Migrator
     /**
      * Rollback last migration and return it's instance.
      *
-     * @param MigrationInterface $migration
-     * @param CapsuleInterface   $capsule
+     * @param CapsuleInterface $capsule
      * @return null|MigrationInterface
      *
      * @throws \Throwable
      */
-    public function rollback(
-        MigrationInterface $migration,
-        CapsuleInterface $capsule
-    ): ?MigrationInterface {
+    public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
+    {
         if (!$this->isConfigured()) {
             throw new MigrationException("Unable to run migration, Migrator not configured");
         }
-
-        $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
 
         /** @var MigrationInterface $migration */
         foreach (array_reverse($this->getMigrations()) as $migration) {
@@ -163,6 +156,7 @@ class Migrator
                 continue;
             }
 
+            $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
             $capsule->getDatabase()->transaction(function () use ($migration, $capsule) {
                 $migration->withCapsule($capsule)->down();
             });
@@ -178,17 +172,6 @@ class Migrator
     }
 
     /**
-     * Migration table, all migration information will be stored in it.
-     *
-     * @param string $database
-     * @return Table
-     */
-    protected function migrationTable(string $database): Table
-    {
-        return $this->dbal->database($database)->table($this->config->getTable());
-    }
-
-    /**
      * Clarify migration state with valid status and execution time
      *
      * @param MigrationInterface $migration
@@ -199,7 +182,8 @@ class Migrator
         $db = $this->dbal->database($migration->getDatabase());
 
         //Fetch migration information from database
-        $data = $this->migrationTable($db)->select('id', 'time_executed')
+        $data = $this->migrationTable($migration->getDatabase())
+            ->select('id', 'time_executed')
             ->where(['migration' => $migration->getState()->getName()])
             ->run()->fetch();
 
@@ -211,5 +195,16 @@ class Migrator
             State::STATUS_EXECUTED,
             new \DateTime($data['time_executed'], $db->getDriver()->getTimezone())
         );
+    }
+
+    /**
+     * Migration table, all migration information will be stored in it.
+     *
+     * @param string|null $database
+     * @return Table
+     */
+    protected function migrationTable(string $database = null): Table
+    {
+        return $this->dbal->database($database)->table($this->config->getTable());
     }
 }

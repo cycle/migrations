@@ -9,7 +9,7 @@
 namespace Spiral\Migrations\Operation\Index;
 
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exceptions\Operation\IndexException;
+use Spiral\Migrations\Exception\Operation\IndexException;
 use Spiral\Migrations\Operation\Traits\OptionsTrait;
 
 class Alter extends Index

@@ -9,7 +9,7 @@
 namespace Spiral\Migrations;
 
 use Spiral\Database\Schema\AbstractTable;
-use Spiral\Migrations\Exceptions\BlueprintException;
+use Spiral\Migrations\Exception\BlueprintException;
 use Spiral\Migrations\Operation;
 
 /**

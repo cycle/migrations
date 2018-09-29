@@ -11,7 +11,7 @@ namespace Spiral\Migrations;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Database\Schema\AbstractTable;
 use Spiral\Database\TableInterface;
-use Spiral\Migrations\Exceptions\ContextException;
+use Spiral\Migrations\Exception\ContextException;
 
 /**
  * Migration capsule (isolation).

@@ -13,7 +13,7 @@ use Spiral\Database\DatabaseInterface;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Schema\AbstractTable;
 use Spiral\Database\TableInterface;
-use Spiral\Migrations\Exceptions\CapsuleException;
+use Spiral\Migrations\Exception\CapsuleException;
 
 /**
  * Isolates set of table specific operations and schemas into one place. Kinda repository.
@@ -71,14 +71,14 @@ class Capsule implements CapsuleInterface
     public function execute(array $operations)
     {
         foreach ($operations as $operation) {
-            if ($operation instanceof OperationInterface) {
-                $operation->execute($this);
+            if (!$operation instanceof OperationInterface) {
+                throw new CapsuleException(sprintf(
+                    "Migration operation expected to be an instance of `OperationInterface`, `%s` given",
+                    get_class($operation)
+                ));
             }
 
-            throw new CapsuleException(sprintf(
-                "Migration operation expected to be an instance of OperationInterface, '%s' given",
-                get_class($operation)
-            ));
+            $operation->execute($this);
         }
     }
 }

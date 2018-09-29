@@ -19,11 +19,7 @@ use Spiral\Reactor\Partial\Source;
  */
 class Atomizer
 {
-    /**
-     * Render changes into source.
-     *
-     * @var RendererInterface
-     */
+    /** @var RendererInterface */
     private $renderer;
 
     /** @var AbstractTable[] */

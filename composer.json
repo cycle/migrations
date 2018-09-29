@@ -24,12 +24,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Spiral\\Migations\\": "src/"
+      "Spiral\\Migrations\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Spiral\\Migrations\\Tests\\": "tests/"
+      "Spiral\\Migrations\\Tests\\": "tests/Migrations/"
     }
   }
 }

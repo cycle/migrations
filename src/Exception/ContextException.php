@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Migrations\Exceptions;
+namespace Spiral\Migrations\Exception;
 
 class ContextException extends MigrationException
 {

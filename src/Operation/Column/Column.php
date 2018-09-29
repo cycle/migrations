@@ -10,7 +10,7 @@ namespace Spiral\Migrations\Operation\Column;
 
 use Spiral\Database\Schema\AbstractColumn;
 use Spiral\Database\Schema\AbstractTable;
-use Spiral\Migrations\Exceptions\Operation\ColumnException;
+use Spiral\Migrations\Exception\Operation\ColumnException;
 use Spiral\Migrations\Operation\AbstractOperation;
 use Spiral\Migrations\Operation\Traits\OptionsTrait;
 

@@ -9,7 +9,7 @@
 namespace Spiral\Migrations\Operation\Table;
 
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exceptions\Operation\TableException;
+use Spiral\Migrations\Exception\Operation\TableException;
 use Spiral\Migrations\Operation\AbstractOperation;
 
 class PrimaryKeys extends AbstractOperation

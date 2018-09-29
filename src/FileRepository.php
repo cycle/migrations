@@ -10,9 +10,10 @@ namespace Spiral\Migrations;
 
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\FactoryInterface;
+use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Migrations\Config\MigrationConfig;
-use Spiral\Migrations\Exceptions\RepositoryException;
+use Spiral\Migrations\Exception\RepositoryException;
 use Spiral\Tokenizer\TokenizerInterface;
 
 /**
@@ -49,18 +50,16 @@ class FileRepository implements RepositoryInterface
      * @param MigrationConfig    $config
      * @param FactoryInterface   $factory
      * @param TokenizerInterface $tokenizer
-     * @param FilesInterface     $files
      */
     public function __construct(
         MigrationConfig $config,
         FactoryInterface $factory,
-        TokenizerInterface $tokenizer,
-        FilesInterface $files
+        TokenizerInterface $tokenizer
     ) {
         $this->config = $config;
 
         $this->tokenizer = $tokenizer;
-        $this->files = $files;
+        $this->files = new Files();
         $this->factory = $factory;
     }
 
@@ -135,26 +134,23 @@ class FileRepository implements RepositoryInterface
      */
     private function getFiles(): \Generator
     {
-        foreach ($this->config->getDirectories() as $directory) {
-            foreach ($this->files->getFiles($directory, '*.php') as $filename) {
+        foreach ($this->files->getFiles($this->config->getDirectory(), '*.php') as $filename) {
+            $reflection = $this->tokenizer->fileReflection($filename);
+            $definition = explode('_', basename($filename));
 
-                $reflection = $this->tokenizer->fileReflection($filename);
-                $definition = explode('_', basename($filename));
-
-                yield [
-                    'filename' => $filename,
-                    'class'    => $reflection->getClasses()[0],
-                    'created'  => \DateTime::createFromFormat(
-                        self::TIMESTAMP_FORMAT,
-                        $definition[0]
-                    ),
-                    'name'     => str_replace(
-                        '.php',
-                        '',
-                        join('_', array_slice($definition, 2))
-                    )
-                ];
-            }
+            yield [
+                'filename' => $filename,
+                'class'    => $reflection->getClasses()[0],
+                'created'  => \DateTime::createFromFormat(
+                    self::TIMESTAMP_FORMAT,
+                    $definition[0]
+                ),
+                'name'     => str_replace(
+                    '.php',
+                    '',
+                    join('_', array_slice($definition, 2))
+                )
+            ];
         }
     }
 
@@ -175,7 +171,7 @@ class FileRepository implements RepositoryInterface
         );
 
         return $this->files->normalizePath(
-            $this->config->getDirectories() . FilesInterface::SEPARATOR . $filename
+            $this->config->getDirectory() . FilesInterface::SEPARATOR . $filename
         );
     }
 }

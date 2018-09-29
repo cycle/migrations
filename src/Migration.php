@@ -10,7 +10,7 @@ namespace Spiral\Migrations;
 
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
-use Spiral\Migrations\Exceptions\MigrationException;
+use Spiral\Migrations\Exception\MigrationException;
 
 /**
  * Simple migration class with shortcut for database and blueprint instances.

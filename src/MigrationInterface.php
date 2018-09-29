@@ -8,7 +8,7 @@
 
 namespace Spiral\Migrations;
 
-use Spiral\Migrations\Exceptions\MigrationException;
+use Spiral\Migrations\Exception\MigrationException;
 
 interface MigrationInterface
 {

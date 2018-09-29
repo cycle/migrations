@@ -10,7 +10,7 @@ namespace Spiral\Migrations\Operation\ForeignKey;
 
 use Spiral\Database\ForeignKeyInterface;
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exceptions\Operation\ReferenceException;
+use Spiral\Migrations\Exception\Operation\ReferenceException;
 use Spiral\Migrations\Operation\Traits\OptionsTrait;
 
 class Alter extends ForeignKey

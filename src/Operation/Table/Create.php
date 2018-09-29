@@ -10,7 +10,7 @@ namespace Spiral\Migrations\Operation\Table;
 
 use Spiral\Database\Driver\HandlerInterface;
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exceptions\Operation\TableException;
+use Spiral\Migrations\Exception\Operation\TableException;
 use Spiral\Migrations\Operation\AbstractOperation;
 
 class Create extends AbstractOperation

@@ -8,7 +8,7 @@
 
 namespace Spiral\Migrations;
 
-use Spiral\Migrations\Exceptions\OperationException;
+use Spiral\Migrations\Exception\OperationException;
 
 /**
  * Represents simple table operation. Operation is a bridge between command and declarative

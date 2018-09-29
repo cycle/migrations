@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Migrations\Exceptions\Operation;
+namespace Spiral\Migrations\Exception\Operation;
 
-use Spiral\Migrations\Exceptions\OperationException;
+use Spiral\Migrations\Exception\OperationException;
 
 class ColumnException extends OperationException
 {

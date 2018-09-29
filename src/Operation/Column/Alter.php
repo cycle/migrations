@@ -9,7 +9,7 @@
 namespace Spiral\Migrations\Operation\Column;
 
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exceptions\Operation\ColumnException;
+use Spiral\Migrations\Exception\Operation\ColumnException;
 
 class Alter extends Column
 {

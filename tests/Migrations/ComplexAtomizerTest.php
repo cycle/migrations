@@ -1,12 +1,15 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations;
 
-use Spiral\Database\Schemas\Prototypes\AbstractReference;
+namespace Spiral\Migrations\Tests;
+
+
+use Spiral\Database\ForeignKeyInterface;
 
 abstract class ComplexAtomizerTest extends BaseTest
 {
@@ -24,7 +27,7 @@ abstract class ComplexAtomizerTest extends BaseTest
         $schema1->primary('id');
         $schema1->float('value');
         $schema1->integer('sample_id');
-        $schema1->foreign('sample_id')->references('sample', 'id');
+        $schema1->foreignKey('sample_id')->references('sample', 'id');
 
         $this->atomize('migration1', [$schema, $schema1]);
         $this->migrator->run();
@@ -51,9 +54,9 @@ abstract class ComplexAtomizerTest extends BaseTest
         $schema1->primary('id');
         $schema1->float('value');
         $schema1->integer('sample_id');
-        $schema1->foreign('sample_id')->references('sample', 'id')
-            ->onDelete(AbstractReference::CASCADE)
-            ->onUpdate(AbstractReference::CASCADE);
+        $schema1->foreignKey('sample_id')->references('sample', 'id')
+            ->onDelete(ForeignKeyInterface::CASCADE)
+            ->onUpdate(ForeignKeyInterface::CASCADE);
 
         $this->atomize('migration1', [$schema, $schema1]);
         $this->migrator->run();
@@ -61,29 +64,29 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->assertTrue($this->db->hasTable('sample'));
         $this->assertTrue($this->db->hasTable('sample1'));
 
-        $fk = $this->schema('sample1')->foreign('sample_id');
-        $this->assertSame(AbstractReference::CASCADE, $fk->getDeleteRule());
-        $this->assertSame(AbstractReference::CASCADE, $fk->getUpdateRule());
+        $fk = $this->schema('sample1')->foreignKey('sample_id');
+        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getDeleteRule());
+        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getUpdateRule());
 
         $schema1 = $this->schema('sample1');
-        $schema1->foreign('sample_id')->references('sample', 'id')
-            ->onDelete(AbstractReference::NO_ACTION)
-            ->onUpdate(AbstractReference::NO_ACTION);
+        $schema1->foreignKey('sample_id')->references('sample', 'id')
+            ->onDelete(ForeignKeyInterface::NO_ACTION)
+            ->onUpdate(ForeignKeyInterface::NO_ACTION);
 
         $this->atomize('migration1', [$this->schema('sample'), $schema1]);
         $this->migrator->run();
 
-        $fk = $this->schema('sample1')->foreign('sample_id');
-        $this->assertSame(AbstractReference::NO_ACTION, $fk->getDeleteRule());
-        $this->assertSame(AbstractReference::NO_ACTION, $fk->getUpdateRule());
+        $fk = $this->schema('sample1')->foreignKey('sample_id');
+        $this->assertSame(ForeignKeyInterface::NO_ACTION, $fk->getDeleteRule());
+        $this->assertSame(ForeignKeyInterface::NO_ACTION, $fk->getUpdateRule());
 
         $this->migrator->rollback();
         $this->assertTrue($this->db->hasTable('sample'));
         $this->assertTrue($this->db->hasTable('sample1'));
 
-        $fk = $this->schema('sample1')->foreign('sample_id');
-        $this->assertSame(AbstractReference::CASCADE, $fk->getDeleteRule());
-        $this->assertSame(AbstractReference::CASCADE, $fk->getUpdateRule());
+        $fk = $this->schema('sample1')->foreignKey('sample_id');
+        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getDeleteRule());
+        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getUpdateRule());
 
         $this->migrator->rollback();
         $this->assertFalse($this->db->hasTable('sample'));
@@ -104,13 +107,13 @@ abstract class ComplexAtomizerTest extends BaseTest
         $schema1->primary('id');
         $schema1->float('value');
         $schema1->integer('sample_id');
-        $schema1->foreign('sample_id')->references('sample', 'id');
+        $schema1->foreignKey('sample_id')->references('sample', 'id');
 
         $schema2 = $this->schema('sample2');
         $schema2->integer('sample_id');
-        $schema2->foreign('sample_id')->references('sample', 'id');
+        $schema2->foreignKey('sample_id')->references('sample', 'id');
         $schema2->integer('sample1_id');
-        $schema2->foreign('sample1_id')->references('sample1', 'id');
+        $schema2->foreignKey('sample1_id')->references('sample1', 'id');
 
         $this->atomize('migration1', [$schema, $schema1, $schema2]);
         $this->migrator->run();
@@ -146,19 +149,19 @@ abstract class ComplexAtomizerTest extends BaseTest
 
         $schema1 = $this->schema('sample1');
         $schema1->integer('sample_id');
-        $schema1->foreign('sample_id')->references('sample', 'id');
+        $schema1->foreignKey('sample_id')->references('sample', 'id');
 
         $this->atomize('migration2', [$this->schema('sample'), $schema1]);
 
         $this->migrator->run();
         $this->assertTrue($this->db->hasTable('sample'));
         $this->assertTrue($this->db->hasTable('sample1'));
-        $this->assertTrue($this->schema('sample1')->hasForeign('sample_id'));
+        $this->assertTrue($this->schema('sample1')->hasForeignKey('sample_id'));
 
         $this->migrator->rollback();
         $this->assertTrue($this->db->hasTable('sample'));
         $this->assertTrue($this->db->hasTable('sample1'));
-        $this->assertFalse($this->schema('sample1')->hasForeign('sample_id'));
+        $this->assertFalse($this->schema('sample1')->hasForeignKey('sample_id'));
 
         $this->migrator->rollback();
         $this->assertFalse($this->db->hasTable('sample'));

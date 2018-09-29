@@ -22,23 +22,30 @@ use Spiral\Database\Driver\AbstractDriver;
 use Spiral\Database\Driver\AbstractHandler;
 use Spiral\Database\Schema\AbstractTable;
 use Spiral\Database\Schema\Comparator;
+use Spiral\Database\Schema\Reflector;
+use Spiral\Files\Files;
+use Spiral\Migrations\Atomizer\Atomizer;
+use Spiral\Migrations\Atomizer\Renderer;
 use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\FileRepository;
+use Spiral\Migrations\Migration;
 use Spiral\Migrations\Migrator;
+use Spiral\Reactor\ClassDeclaration;
+use Spiral\Reactor\FileDeclaration;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Tokenizer;
 use Spiral\Tokenizer\TokenizerInterface;
 
-class BaseTest extends TestCase
+abstract class BaseTest extends TestCase
 {
     public static $config;
     public const DRIVER = null;
     protected static $driverCache = [];
 
     public const CONFIG = [
-        'directories' => [__DIR__ . '/fixtures/'],
-        'table'       => 'migrations',
-        'safe'        => true
+        'directory' => __DIR__ . '/../fixtures/',
+        'table'     => 'migrations',
+        'safe'      => true
     ];
 
     /** @var AbstractDriver */
@@ -71,41 +78,58 @@ class BaseTest extends TestCase
             $this->dbal,
             $this->repository = new FileRepository(
                 $config,
-                $this->getTokenizer(),
-                new Files(),
-                $this->container
+                $this->container,
+                $this->getTokenizer()
             )
         );
     }
 
+    /**
+     * @throws \Throwable
+     */
+    public function tearDown()
+    {
+        $files = new Files();
+        foreach ($files->getFiles(__DIR__ . '/../fixtures/', '*.php') as $file) {
+            $files->delete($file);
+        }
 
-//    protected function atomize(string $name, array $tables)
-//    {
-//        //Make sure name is unique
-//        $name = $name . '_' . crc32(microtime(true));
-//
-//        $atomizer = new Atomizer(
-//            new Atomizer\MigrationRenderer(new Atomizer\AliasLookup($this->dbal))
-//        );
-//
-//        foreach ($tables as $table) {
-//            $atomizer->addTable($table);
-//        }
-//
-//        //Rendering
-//        $declaration = new ClassDeclaration($name, Migration::class);
-//
-//        $declaration->method('up')->setPublic();
-//        $declaration->method('down')->setPublic();
-//
-//        $atomizer->declareChanges($declaration->method('up')->getSource());
-//        $atomizer->revertChanges($declaration->method('down')->getSource());
-//
-//        $file = new FileDeclaration();
-//        $file->addElement($declaration);
-//
-//        $this->repository->registerMigration($name, $name, $file);
-//    }
+        //Clean up
+        $reflector = new Reflector();
+        foreach ($this->dbal->database()->getTables() as $table) {
+            $schema = $table->getSchema();
+            $schema->declareDropped();
+            $reflector->addTable($schema);
+        }
+
+        $reflector->run();
+    }
+
+    protected function atomize(string $name, array $tables)
+    {
+        $atomizer = new Atomizer(new Renderer());
+
+        //Make sure name is unique
+        $name = $name . '_' . crc32(microtime(true));
+
+        foreach ($tables as $table) {
+            $atomizer->addTable($table);
+        }
+
+        //Rendering
+        $declaration = new ClassDeclaration($name, Migration::class);
+
+        $declaration->method('up')->setPublic();
+        $declaration->method('down')->setPublic();
+
+        $atomizer->declareChanges($declaration->method('up')->getSource());
+        $atomizer->revertChanges($declaration->method('down')->getSource());
+
+        $file = new FileDeclaration();
+        $file->addElement($declaration);
+
+        $this->repository->registerMigration($name, $name, $file);
+    }
 
     /**
      * @param string $name
@@ -122,6 +146,15 @@ class BaseTest extends TestCase
         }
 
         return new Database($name, $prefix, $driver);
+    }
+
+    /**
+     * @param string $table
+     * @return AbstractTable
+     */
+    protected function schema(string $table): AbstractTable
+    {
+        return $this->db->table($table)->getSchema();
     }
 
     /**

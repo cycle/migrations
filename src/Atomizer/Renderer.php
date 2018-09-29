@@ -287,7 +287,7 @@ class Renderer implements RendererInterface
         );
 
         if ($column->getName() != $original->getName()) {
-            $this->render($source, '    ->renameColumn(%s, %s, %s)', $name, $column->getName());
+            $this->render($source, '    ->renameColumn(%s, %s)', $name, $column->getName());
         }
     }
 
@@ -335,7 +335,10 @@ class Renderer implements RendererInterface
             $rendered[] = $serializer->serialize($value);
         }
 
-        $source->addLine(sprintf($format, ...$rendered));
+        $lines = sprintf($format, ...$rendered);
+        foreach (explode("\n", $lines) as $line) {
+            $source->addLine($line);
+        }
     }
 
     /**

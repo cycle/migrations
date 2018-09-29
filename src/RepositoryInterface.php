@@ -8,7 +8,7 @@
 
 namespace Spiral\Migrations;
 
-use Spiral\Migrations\Exceptions\RepositoryException;
+use Spiral\Migrations\Exception\RepositoryException;
 
 interface RepositoryInterface
 {

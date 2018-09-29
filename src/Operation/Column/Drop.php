@@ -9,7 +9,7 @@
 namespace Spiral\Migrations\Operation\Column;
 
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exceptions\Operation\ColumnException;
+use Spiral\Migrations\Exception\Operation\ColumnException;
 use Spiral\Migrations\Operation\AbstractOperation;
 
 class Drop extends AbstractOperation
