@@ -1,14 +1,14 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations\Postgres;
 
-use Spiral\Tests\Database\Postgres\DriverTrait;
+namespace Spiral\Migrations\Tests\Postgres;
 
-class AtomizerTest extends \Spiral\Tests\Migrations\AtomizerTest
+class AtomizerTest extends \Spiral\Migrations\Tests\AtomizerTest
 {
-    use DriverTrait;
+    const DRIVER = 'postgres';
 }

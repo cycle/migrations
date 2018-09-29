@@ -4,17 +4,18 @@
  *
  * @author Wolfy-J
  */
-namespace Spiral\Tests\Migrations;
 
-use Spiral\Database\Schemas\Prototypes\AbstractReference;
-use Spiral\Migrations\MigrationCapsule;
+namespace Spiral\Migrations\Tests;
+
+use Spiral\Database\ForeignKeyInterface;
+use Spiral\Migrations\Capsule;
 use Spiral\Migrations\TableBlueprint;
 
 abstract class BlueprintTest extends BaseTest
 {
     public function testCreateButNot()
     {
-        $blueprint = new TableBlueprint(new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary');
 
@@ -24,7 +25,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreate()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')->create();
 
@@ -34,7 +35,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithColumns()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -46,7 +47,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithIndexesAndDropIndex()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -56,7 +57,7 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->dropIndex(['value'])->update();
 
@@ -66,34 +67,34 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithNamedIndex()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
             ->addIndex(['value'], ['unique' => true, 'name' => 'super_index'])
             ->create();
 
-        $this->assertSame('super_index',$this->schema('sample')->index(['value'])->getName());
+        $this->assertSame('super_index', $this->schema('sample')->index(['value'])->getName());
     }
 
     public function testCreateWithForeign()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample1');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample1');
 
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
             ->addIndex(['value'], ['unique' => true])
             ->addColumn('sample_id', 'int')
             ->addForeignKey('sample_id', 'sample1', 'id', [
-                'onDelete' => AbstractReference::CASCADE,
-                'onUpdate' => AbstractReference::NO_ACTION,
+                'onDelete' => ForeignKeyInterface::CASCADE,
+                'onUpdate' => ForeignKeyInterface::NO_ACTION,
             ])
             ->create();
 
@@ -103,22 +104,22 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithForeignAliased()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample1');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample1');
 
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
             ->addIndex(['value'], ['unique' => true])
             ->addColumn('sample_id', 'int')
             ->addForeignKey('sample_id', 'sample1', 'id', [
-                'delete' => AbstractReference::CASCADE,
-                'update' => AbstractReference::NO_ACTION,
+                'delete' => ForeignKeyInterface::CASCADE,
+                'update' => ForeignKeyInterface::NO_ACTION,
             ])
             ->create();
 
@@ -127,11 +128,11 @@ abstract class BlueprintTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Migrations\Exceptions\Operations\TableException
+     * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
     public function testUpdateTableError()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -141,7 +142,7 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->dropColumn('value')
             ->create(); //wrong
@@ -152,7 +153,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testUpdateTable()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -162,18 +163,18 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->dropColumn('value')
             ->update();
     }
 
     /**
-     * @expectedException \Spiral\Migrations\Exceptions\Operations\ColumnException
+     * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
     public function testUpdateTableError2()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -183,17 +184,17 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('value', 'int')->update();
     }
 
     /**
-     * @expectedException \Spiral\Migrations\Exceptions\Operations\ColumnException
+     * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
     public function testUpdateTableError5()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'enum', ['default' => 1])
@@ -203,17 +204,17 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('value', 'int')->update();
     }
 
     /**
-     * @expectedException \Spiral\Migrations\Exceptions\Operations\IndexException
+     * @expectedException \Spiral\Migrations\Exception\Operation\IndexException
      */
     public function testUpdateTableError3()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -223,14 +224,14 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addIndex(['value'])->update();
     }
 
     public function testDropTable()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -240,14 +241,14 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->drop();
     }
 
     public function testRenameTable()
     {
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -257,7 +258,7 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new MigrationCapsule($this->dbal), 'sample');
+        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->rename('new_name');
     }

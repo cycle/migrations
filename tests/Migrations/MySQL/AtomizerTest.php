@@ -1,14 +1,14 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations\MySQL;
 
-use Spiral\Tests\Database\MySQL\DriverTrait;
+namespace Spiral\Migrations\Tests\MySQL;
 
-class AtomizerTest extends \Spiral\Tests\Migrations\AtomizerTest
+class AtomizerTest extends \Spiral\Migrations\Tests\AtomizerTest
 {
-    use DriverTrait;
+    const DRIVER = 'mysql';
 }

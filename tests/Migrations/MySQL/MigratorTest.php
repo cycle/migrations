@@ -1,14 +1,14 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations\MySQL;
 
-use Spiral\Tests\Database\MySQL\DriverTrait;
+namespace Spiral\Migrations\Tests\MySQL;
 
-class MigratorTest extends \Spiral\Tests\Migrations\MigratorTest
+class MigratorTest extends \Spiral\Migrations\Tests\MigratorTest
 {
-    use DriverTrait;
+    const DRIVER = 'mysql';
 }

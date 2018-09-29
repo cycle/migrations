@@ -1,14 +1,14 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations\SQLite;
 
-use Spiral\Tests\Database\SQLite\DriverTrait;
+namespace Spiral\Migrations\Tests\SQLite;
 
-class AtomizerTest extends \Spiral\Tests\Migrations\AtomizerTest
+class AtomizerTest extends \Spiral\Migrations\Tests\AtomizerTest
 {
-    use DriverTrait;
+    const DRIVER = 'sqlite';
 }

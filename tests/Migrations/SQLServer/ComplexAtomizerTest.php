@@ -1,14 +1,14 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations\SQLServer;
 
-use Spiral\Tests\Database\SQLServer\DriverTrait;
+namespace Spiral\Migrations\Tests\SQLServer;
 
-class ComplexAtomizerTest extends \Spiral\Tests\Migrations\ComplexAtomizerTest
+class ComplexAtomizerTest extends \Spiral\Migrations\Tests\ComplexAtomizerTest
 {
-    use DriverTrait;
+    const DRIVER = 'sqlserver';
 }

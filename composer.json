@@ -10,24 +10,25 @@
     }
   ],
   "require": {
-    "php": ">=7.0",
-    "spiral/common": "^1.0",
-    "spiral/tokenizer": "^1.0",
-    "spiral/database": "^1.0",
-    "spiral/reactor": "^1.0"
+    "php": ">=7.1",
+    "spiral/core": "^1.1",
+    "spiral/files": "^1.1",
+    "spiral/tokenizer": "^2.0",
+    "spiral/database": "^2.0",
+    "spiral/reactor": "^2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~5.0",
-    "mockery/mockery": "^0.9.4"
+    "phpunit/phpunit": "~7.0",
+    "mockery/mockery": "^1.1"
   },
   "autoload": {
     "psr-4": {
-      "Spiral\\": "source/Spiral/"
+      "Spiral\\Migrations\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Spiral\\Tests\\": "tests/"
+      "Spiral\\Migrations\\Tests\\": "tests/Migrations/"
     }
   }
 }

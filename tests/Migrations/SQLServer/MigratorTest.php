@@ -1,14 +1,14 @@
 <?php
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Migrations\SQLServer;
 
-use Spiral\Tests\Database\SQLServer\DriverTrait;
+namespace Spiral\Migrations\Tests\SQLServer;
 
-class MigratorTest extends \Spiral\Tests\Migrations\MigratorTest
+class MigratorTest extends \Spiral\Migrations\Tests\MigratorTest
 {
-    use DriverTrait;
+    const DRIVER = 'sqlserver';
 }
