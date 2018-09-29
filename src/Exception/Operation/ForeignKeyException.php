@@ -10,7 +10,7 @@ namespace Spiral\Migrations\Exception\Operation;
 
 use Spiral\Migrations\Exception\OperationException;
 
-class ReferenceException extends OperationException
+class ForeignKeyException extends OperationException
 {
 
 }

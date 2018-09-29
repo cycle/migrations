@@ -9,7 +9,7 @@
 namespace Spiral\Migrations\Operation\ForeignKey;
 
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\ReferenceException;
+use Spiral\Migrations\Exception\Operation\ForeignKeyException;
 
 class Drop extends ForeignKey
 {
@@ -21,7 +21,7 @@ class Drop extends ForeignKey
         $schema = $capsule->getSchema($this->getTable());
 
         if (!$schema->hasForeignKey($this->column)) {
-            throw new ReferenceException(
+            throw new ForeignKeyException(
                 "Unable to drop foreign key '{$schema->getName()}'.'{$this->column}', "
                 . "foreign key does not exists"
             );

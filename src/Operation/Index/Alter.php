@@ -37,7 +37,7 @@ class Alter extends Index
         if (!$schema->hasIndex($this->columns)) {
             $columns = join(',', $this->columns);
             throw new IndexException(
-                "Unable to alter index '{$schema->getName()}'.({$columns}), index already exists"
+                "Unable to alter index '{$schema->getName()}'.({$columns}), no such index"
             );
         }
 

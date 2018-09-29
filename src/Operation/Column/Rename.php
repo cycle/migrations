@@ -41,7 +41,7 @@ class Rename extends AbstractOperation
 
         if (!$schema->hasColumn($this->name)) {
             throw new ColumnException(
-                "Unable to drop column '{$schema->getName()}'.'{$this->name}', column does not exists"
+                "Unable to rename column '{$schema->getName()}'.'{$this->name}', column does not exists"
             );
         }
 

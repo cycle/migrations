@@ -10,7 +10,7 @@ namespace Spiral\Migrations\Operation\ForeignKey;
 
 use Spiral\Database\ForeignKeyInterface;
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\ReferenceException;
+use Spiral\Migrations\Exception\Operation\ForeignKeyException;
 use Spiral\Migrations\Operation\Traits\OptionsTrait;
 
 class Alter extends ForeignKey
@@ -51,23 +51,23 @@ class Alter extends ForeignKey
         $schema = $capsule->getSchema($this->getTable());
 
         if (!$schema->hasForeignKey($this->column)) {
-            throw new ReferenceException(
+            throw new ForeignKeyException(
                 "Unable to alter foreign key '{$schema->getName()}'.({$this->column}), "
-                . "foreign does not exists"
+                . "key does not exists"
             );
         }
 
         $outerSchema = $capsule->getSchema($this->foreignTable);
 
         if ($this->foreignTable != $this->table && !$outerSchema->exists()) {
-            throw new ReferenceException(
+            throw new ForeignKeyException(
                 "Unable to alter foreign key '{$schema->getName()}'.'{$this->column}', "
                 . "foreign table '{$this->foreignTable}' does not exists"
             );
         }
 
         if ($this->foreignTable != $this->table && !$outerSchema->hasColumn($this->foreignKey)) {
-            throw new ReferenceException(
+            throw new ForeignKeyException(
                 "Unable to alter foreign key '{$schema->getName()}'.'{$this->column}',"
                 . " foreign column '{$this->foreignTable}'.'{$this->foreignKey}' does not exists"
             );

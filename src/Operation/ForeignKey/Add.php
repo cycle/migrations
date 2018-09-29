@@ -10,7 +10,7 @@ namespace Spiral\Migrations\Operation\ForeignKey;
 
 use Spiral\Database\ForeignKeyInterface;
 use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\ReferenceException;
+use Spiral\Migrations\Exception\Operation\ForeignKeyException;
 use Spiral\Migrations\Operation\Traits\OptionsTrait;
 
 class Add extends ForeignKey
@@ -53,7 +53,7 @@ class Add extends ForeignKey
         $schema = $capsule->getSchema($this->getTable());
 
         if ($schema->hasForeignKey($this->column)) {
-            throw new ReferenceException(
+            throw new ForeignKeyException(
                 "Unable to add foreign key '{$schema->getName()}'.({$this->column}), "
                 . "foreign key already exists"
             );
@@ -62,14 +62,14 @@ class Add extends ForeignKey
         $foreignSchema = $capsule->getSchema($this->foreignTable);
 
         if ($this->foreignTable != $this->table && !$foreignSchema->exists()) {
-            throw new ReferenceException(
+            throw new ForeignKeyException(
                 "Unable to add foreign key '{$schema->getName()}'.'{$this->column}', "
                 . "foreign table '{$this->foreignTable}' does not exists"
             );
         }
 
         if ($this->foreignTable != $this->table && !$foreignSchema->hasColumn($this->foreignKey)) {
-            throw new ReferenceException(
+            throw new ForeignKeyException(
                 "Unable to add foreign key '{$schema->getName()}'.'{$this->column}',"
                 . " foreign column '{$this->foreignTable}'.'{$this->foreignKey}' does not exists"
             );
