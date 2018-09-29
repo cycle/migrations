@@ -131,8 +131,15 @@ abstract class ExceptionsTest extends BaseTest
      */
     public function testDuplicateMigration()
     {
-        file_put_contents(__DIR__ . '/../files/mmm.php', 'test');
         $this->repository->registerMigration('m', DuplicateColumnMigration::class);
         $this->repository->registerMigration('m', DuplicateColumnMigration::class);
+    }
+
+    /**
+     * @expectedException \Spiral\Migrations\Exception\RepositoryException
+     */
+    public function testInvalidMigration()
+    {
+        $this->repository->registerMigration('m', 'invalid');
     }
 }
