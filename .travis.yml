@@ -26,18 +26,6 @@ after_success:
 
 jobs:
   include:
-    # PHP Nightly builds does not support SQLServer yet
-    - stage: Test
-      php: nightly
-      before_install:
-        - cd tests
-        - docker-compose up -d
-        - cd ..
-      script:
-        - vendor/bin/phpunit tests/Migrations/SQLite
-        - vendor/bin/phpunit tests/Migrations/MySQL
-        - vendor/bin/phpunit tests/Migrations/Postgres
-
     # Testing various PostgresSQL version
     - stage: Test
       php: 7.2
