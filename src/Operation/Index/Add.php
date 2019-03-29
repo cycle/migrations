@@ -12,7 +12,7 @@ use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\IndexException;
 use Spiral\Migrations\Operation\Traits\OptionsTrait;
 
-class Add extends Index
+final class Add extends Index
 {
     use OptionsTrait;
 

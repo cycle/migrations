@@ -11,7 +11,7 @@ namespace Spiral\Migrations\Operation\ForeignKey;
 use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\ForeignKeyException;
 
-class Drop extends ForeignKey
+final class Drop extends ForeignKey
 {
     /**
      * {@inheritdoc}

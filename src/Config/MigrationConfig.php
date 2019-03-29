@@ -30,7 +30,7 @@ class MigrationConfig extends InjectableConfig
      */
     public function getDirectory(): string
     {
-        return $this->config['directory'];
+        return $this->config['directory'] ?? '';
     }
 
     /**
@@ -40,7 +40,7 @@ class MigrationConfig extends InjectableConfig
      */
     public function getTable(): string
     {
-        return $this->config['table'];
+        return $this->config['table'] ?? 'migrations';
     }
 
     /**
@@ -51,6 +51,6 @@ class MigrationConfig extends InjectableConfig
      */
     public function isSafe(): bool
     {
-        return $this->config['safe'];
+        return $this->config['safe'] ?? false;
     }
 }

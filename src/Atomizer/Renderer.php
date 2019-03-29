@@ -17,7 +17,7 @@ use Spiral\Reactor\Partial\Source;
 use Spiral\Reactor\Serializer;
 use Spiral\Reactor\Traits\SerializerTrait;
 
-class Renderer implements RendererInterface
+final class Renderer implements RendererInterface
 {
     use SerializerTrait;
 

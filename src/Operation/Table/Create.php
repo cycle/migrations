@@ -13,7 +13,7 @@ use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\TableException;
 use Spiral\Migrations\Operation\AbstractOperation;
 
-class Create extends AbstractOperation
+final class Create extends AbstractOperation
 {
     /**
      * {@inheritdoc}

@@ -11,7 +11,7 @@ namespace Spiral\Migrations\Operation\Column;
 use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\ColumnException;
 
-class Add extends Column
+final class Add extends Column
 {
     /**
      * {@inheritdoc}

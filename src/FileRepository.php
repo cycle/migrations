@@ -19,7 +19,7 @@ use Spiral\Tokenizer\TokenizerInterface;
 /**
  * Stores migrations as files.
  */
-class FileRepository implements RepositoryInterface
+final class FileRepository implements RepositoryInterface
 {
     // Migrations file name format. This format will be used when requesting new migration filename.
     private const FILENAME_FORMAT = '%s_%s_%s.php';

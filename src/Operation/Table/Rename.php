@@ -13,7 +13,7 @@ use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\TableException;
 use Spiral\Migrations\Operation\AbstractOperation;
 
-class Rename extends AbstractOperation
+final class Rename extends AbstractOperation
 {
     /** @var string */
     private $newName = '';

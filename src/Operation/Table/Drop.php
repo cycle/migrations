@@ -13,7 +13,7 @@ use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\TableException;
 use Spiral\Migrations\Operation\AbstractOperation;
 
-class Drop extends AbstractOperation
+final class Drop extends AbstractOperation
 {
     /**
      * {@inheritdoc}

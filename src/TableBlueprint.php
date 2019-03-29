@@ -16,7 +16,7 @@ use Spiral\Migrations\Operation;
  * TableBlueprint is abstraction wrapper at top of AbstractTable which converts command based
  * definitions into declarative.
  */
-class TableBlueprint
+final class TableBlueprint
 {
     /** @var CapsuleInterface */
     private $capsule = null;

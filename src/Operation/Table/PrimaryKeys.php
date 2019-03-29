@@ -12,7 +12,7 @@ use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\TableException;
 use Spiral\Migrations\Operation\AbstractOperation;
 
-class PrimaryKeys extends AbstractOperation
+final class PrimaryKeys extends AbstractOperation
 {
     /** @var array */
     private $columns = [];

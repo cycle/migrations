@@ -13,7 +13,7 @@ use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\ForeignKeyException;
 use Spiral\Migrations\Operation\Traits\OptionsTrait;
 
-class Alter extends ForeignKey
+final class Alter extends ForeignKey
 {
     use OptionsTrait;
 

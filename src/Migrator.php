@@ -13,7 +13,7 @@ use Spiral\Database\Table;
 use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\Exception\MigrationException;
 
-class Migrator
+final class Migrator
 {
     /** @var MigrationConfig */
     private $config;

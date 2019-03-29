@@ -11,7 +11,7 @@ namespace Spiral\Migrations\Operation\Index;
 use Spiral\Migrations\CapsuleInterface;
 use Spiral\Migrations\Exception\Operation\IndexException;
 
-class Drop extends Index
+final class Drop extends Index
 {
     /**
      * {@inheritdoc}

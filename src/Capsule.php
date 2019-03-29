@@ -18,7 +18,7 @@ use Spiral\Migrations\Exception\CapsuleException;
 /**
  * Isolates set of table specific operations and schemas into one place. Kinda repository.
  */
-class Capsule implements CapsuleInterface
+final class Capsule implements CapsuleInterface
 {
     /** @var DatabaseManager */
     private $database = null;

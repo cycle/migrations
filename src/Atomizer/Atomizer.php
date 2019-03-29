@@ -17,7 +17,7 @@ use Spiral\Reactor\Partial\Source;
  * Atomizer provides ability to convert given AbstractTables and their changes into set of
  * migration commands.
  */
-class Atomizer
+final class Atomizer
 {
     /** @var RendererInterface */
     private $renderer;
