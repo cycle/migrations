@@ -380,11 +380,6 @@ abstract class BaseTest extends TestCase
                 "FK {$key->getName()} has been removed"
             );
 
-            if (!$key->compare($target->findForeignKey($key->getColumn()))) {
-                dump($key);
-                dump($target->findForeignKey($key->getColumn()));
-            }
-
             $this->assertTrue(
                 $key->compare($target->findForeignKey($key->getColumn())),
                 "FK {$key->getName()} has been changed"
