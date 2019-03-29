@@ -9,6 +9,7 @@
     "spiral/migrations": "^2.0"
   },
   "require-dev": {
+    "cycle/annotated": "dev-master",
     "phpunit/phpunit": "~7.0",
     "mockery/mockery": "^1.1",
     "spiral/debug": "^1.3"
