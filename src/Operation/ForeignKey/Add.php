@@ -80,6 +80,10 @@ final class Add extends ForeignKey
             $this->foreignKey
         );
 
+        if ($this->hasOption('name')) {
+            $foreignKey->setName($this->getOption('name'));
+        }
+
         /*
          * We are allowing both formats "NO_ACTION" and "NO ACTION".
          */

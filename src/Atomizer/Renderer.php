@@ -392,6 +392,7 @@ final class Renderer implements RendererInterface
         AbstractForeignKey $reference
     ): string {
         return $this->mountIndents($serializer->serialize([
+            'name'   => $reference->getName(),
             'delete' => $reference->getDeleteRule(),
             'update' => $reference->getUpdateRule()
         ]));
