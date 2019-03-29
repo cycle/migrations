@@ -121,7 +121,7 @@ final class Migrator
             }
 
             $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-            $capsule->getDatabase()->transaction(function () use ($migration, $capsule) {
+            $capsule->getDatabase($migration->getDatabase())->transaction(function () use ($migration, $capsule) {
                 $migration->withCapsule($capsule)->up();
             });
 
@@ -183,9 +183,9 @@ final class Migrator
 
         //Fetch migration information from database
         $data = $this->migrationTable($migration->getDatabase())
-            ->select('id', 'time_executed')
-            ->where(['migration' => $migration->getState()->getName()])
-            ->run()->fetch();
+                     ->select('id', 'time_executed')
+                     ->where(['migration' => $migration->getState()->getName()])
+                     ->run()->fetch();
 
         if (empty($data['time_executed'])) {
             return $migration->getState()->withStatus(State::STATUS_PENDING);
