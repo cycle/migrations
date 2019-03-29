@@ -4,11 +4,11 @@
   "description": "Cycle ORM Migration generation",
   "require": {
     "php": "^7.1|^8.0",
+    "cycle/orm": "dev-master",
     "cycle/schema-builder": "dev-master",
     "spiral/migrations": "^2.0"
   },
   "require-dev": {
-    "spiral/annotations": "dev-master",
     "phpunit/phpunit": "~7.0",
     "mockery/mockery": "^1.1",
     "spiral/debug": "^1.3"
