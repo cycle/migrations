@@ -8,7 +8,7 @@
  
 namespace Cycle\Migrations\Tests\Driver\SQLite; 
 
-class InitTest extends \Cycle\Migrations\Tests\InitTest 
+class ReflectTest extends \Cycle\Migrations\Tests\ReflectTest
 { 
     const DRIVER = "sqlite"; 
 }

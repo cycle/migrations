@@ -60,8 +60,9 @@ class GenerateMigrations implements GeneratorInterface
         $seq = 0;
         foreach ($databases as $database => $tables) {
             $name = sprintf(
-                "orm_update_%s_00%s_%s",
+                "orm_%s_%s_%s_%s",
                 $database,
+                str_replace('.', '_', microtime(false)),
                 ++$seq,
                 md5(microtime(true) . microtime(false))
             );
@@ -76,6 +77,7 @@ class GenerateMigrations implements GeneratorInterface
 
     /**
      * @param string $name
+     * @param string $database
      * @param array  $tables
      * @return array [string, FileDeclaration]
      */

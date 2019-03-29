@@ -6,15 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Cycle\Migrations\Tests\Fixtures\Init;
+namespace Cycle\Migrations\Tests\Fixtures\Alter;
 
 /**
  * @entity
- * @table(
- *     indexes={@index(columns={email},unique=true)}
- * )
  */
-class User
+class Post
 {
     /**
      * @column(type=primary)
@@ -23,8 +20,8 @@ class User
     protected $id;
 
     /**
-     * @column(type=string)
-     * @var string
+     * @refersTo(target=Other,nullable=true)
+     * @var Other
      */
-    protected $email;
+    protected $other;
 }

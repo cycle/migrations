@@ -8,10 +8,23 @@
 
 namespace Cycle\Migrations\Tests;
 
+use Cycle\Annotated\Columns;
+use Cycle\Annotated\Entities;
+use Cycle\Annotated\Generator;
+use Cycle\Annotated\Indexes;
+use Cycle\Migrations\GenerateMigrations;
 use Cycle\ORM\Config\RelationConfig;
 use Cycle\ORM\Factory;
 use Cycle\ORM\ORM;
 use Cycle\ORM\SchemaInterface;
+use Cycle\Schema\Compiler;
+use Cycle\Schema\Generator\CleanTables;
+use Cycle\Schema\Generator\GenerateRelations;
+use Cycle\Schema\Generator\GenerateTypecast;
+use Cycle\Schema\Generator\RenderRelations;
+use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\ValidateEntities;
+use Cycle\Schema\Registry;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
@@ -151,6 +164,38 @@ abstract class BaseTest extends TestCase
         $this->dropDatabase($this->dbal->database('default'));
         $this->orm = null;
         $this->dbal = null;
+    }
+
+    protected function migrate(string $directory): array
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [$directory],
+            'exclude'     => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $p = Generator::defaultParser();
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $p),
+            new CleanTables(),
+            new Columns($p),
+            GenerateRelations::defaultGenerator(),
+            new ValidateEntities(),
+            new RenderTables(),
+            new RenderRelations(),
+            new Indexes($p),
+            new GenerateTypecast(),
+            new GenerateMigrations($this->migrator->getRepository())
+        ]);
+
+        $tables = [];
+        foreach ($r as $e) {
+            $tables[] = $r->getTableSchema($e);
+        }
+        return $tables;
     }
 
     /**

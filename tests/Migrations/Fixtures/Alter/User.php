@@ -6,13 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Cycle\Migrations\Tests\Fixtures\Init;
+namespace Cycle\Migrations\Tests\Fixtures\Alter;
 
 /**
  * @entity
- * @table(
- *     indexes={@index(columns={email},unique=true)}
- * )
  */
 class User
 {
@@ -21,10 +18,4 @@ class User
      * @var int
      */
     protected $id;
-
-    /**
-     * @column(type=string)
-     * @var string
-     */
-    protected $email;
 }

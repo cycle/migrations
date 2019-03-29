@@ -8,7 +8,7 @@
  
 namespace Cycle\Migrations\Tests\Driver\SQLServer; 
 
-class InitTest extends \Cycle\Migrations\Tests\InitTest 
+class ReflectTest extends \Cycle\Migrations\Tests\ReflectTest
 { 
     const DRIVER = "sqlserver"; 
 }

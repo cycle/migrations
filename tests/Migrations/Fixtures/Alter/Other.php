@@ -6,15 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Cycle\Migrations\Tests\Fixtures\Init;
+namespace Cycle\Migrations\Tests\Fixtures\Alter;
 
 /**
- * @entity
- * @table(
- *     indexes={@index(columns={email},unique=true)}
- * )
+ * @entity(database=secondary)
  */
-class User
+class Other
 {
     /**
      * @column(type=primary)
@@ -23,8 +20,8 @@ class User
     protected $id;
 
     /**
-     * @column(type=string)
+     * @column(type="enum(active,disabled,pending)",castDefault=true)
      * @var string
      */
-    protected $email;
+    protected $status;
 }
