@@ -68,7 +68,6 @@ class GenerateMigrations implements GeneratorInterface
             );
 
             list($class, $file) = $this->generate($name, $database, $tables);
-
             $this->repository->registerMigration($name, $class, $file->render());
         }
 

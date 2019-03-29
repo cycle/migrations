@@ -10,19 +10,19 @@ namespace Cycle\Migrations\Tests;
 
 abstract class ReflectTest extends BaseTest
 {
-//    public function testInit()
-//    {
-//        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
-//
-//        $this->assertCount(2, $this->migrator->getMigrations());
-//        foreach ($this->migrator->getMigrations() as $m) {
-//            $this->migrator->run();
-//        }
-//
-//        foreach ($tables as $t) {
-//            $this->assertSameAsInDB($t);
-//        }
-//    }
+    public function testInit()
+    {
+        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
+
+        $this->assertCount(2, $this->migrator->getMigrations());
+        foreach ($this->migrator->getMigrations() as $m) {
+            $this->migrator->run();
+        }
+
+        foreach ($tables as $t) {
+            $this->assertSameAsInDB($t);
+        }
+    }
 
     public function testAlter()
     {
