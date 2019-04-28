@@ -14,7 +14,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
 use Spiral\Core\Container;
-use Spiral\Core\NullMemory;
 use Spiral\Database\Config\DatabaseConfig;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
@@ -32,9 +31,6 @@ use Spiral\Migrations\Migration;
 use Spiral\Migrations\Migrator;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
-use Spiral\Tokenizer\Config\TokenizerConfig;
-use Spiral\Tokenizer\Tokenizer;
-use Spiral\Tokenizer\TokenizerInterface;
 
 abstract class BaseTest extends TestCase
 {
@@ -80,11 +76,7 @@ abstract class BaseTest extends TestCase
         $this->migrator = new Migrator(
             $config,
             $this->dbal,
-            $this->repository = new FileRepository(
-                $config,
-                $this->container,
-                $this->getTokenizer()
-            )
+            $this->repository = new FileRepository($config, $this->container)
         );
     }
 
@@ -200,19 +192,6 @@ abstract class BaseTest extends TestCase
         ));
 
         return $dbal;
-    }
-
-    protected function getTokenizer(): TokenizerInterface
-    {
-        return new Tokenizer(
-            new TokenizerConfig([
-                'directories' => [
-                    __DIR__ . '/fixtures/'
-                ],
-                'exclude'     => []
-            ]),
-            new NullMemory()
-        );
     }
 
     /**

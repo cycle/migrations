@@ -1,17 +1,17 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @license MIT
+ * @author  Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Migrations\Atomizer;
 
 use Spiral\Database\Schema\AbstractTable;
 use Spiral\Database\Schema\Reflector;
 use Spiral\Reactor\Partial\Source;
-
 
 /**
  * Atomizer provides ability to convert given AbstractTables and their changes into set of

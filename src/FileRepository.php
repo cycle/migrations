@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @license MIT
+ * @author  Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Migrations;
 
@@ -14,6 +15,7 @@ use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\Exception\RepositoryException;
+use Spiral\Tokenizer\Reflection\ReflectionFile;
 use Spiral\Tokenizer\TokenizerInterface;
 
 /**
@@ -40,25 +42,16 @@ final class FileRepository implements RepositoryInterface
     /** @var FactoryInterface */
     private $factory;
 
-    /** @var TokenizerInterface */
-    private $tokenizer;
-
     /** @var FilesInterface */
     private $files;
 
     /**
-     * @param MigrationConfig    $config
-     * @param FactoryInterface   $factory
-     * @param TokenizerInterface $tokenizer
+     * @param MigrationConfig  $config
+     * @param FactoryInterface $factory
      */
-    public function __construct(
-        MigrationConfig $config,
-        FactoryInterface $factory,
-        TokenizerInterface $tokenizer
-    ) {
+    public function __construct(MigrationConfig $config, FactoryInterface $factory)
+    {
         $this->config = $config;
-
-        $this->tokenizer = $tokenizer;
         $this->files = new Files();
         $this->factory = $factory;
     }
@@ -133,7 +126,7 @@ final class FileRepository implements RepositoryInterface
     private function getFiles(): \Generator
     {
         foreach ($this->files->getFiles($this->config->getDirectory(), '*.php') as $filename) {
-            $reflection = $this->tokenizer->fileReflection($filename);
+            $reflection = new ReflectionFile($filename);
             $definition = explode('_', basename($filename));
 
             if (count($definition) < 3) {
