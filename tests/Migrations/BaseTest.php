@@ -8,21 +8,21 @@
 
 namespace Cycle\Migrations\Tests;
 
-use Cycle\Annotated\Columns;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Generator;
-use Cycle\Annotated\Indexes;
+use Cycle\Annotated\MergeColumns;
+use Cycle\Annotated\MergeIndexes;
 use Cycle\Migrations\GenerateMigrations;
 use Cycle\ORM\Config\RelationConfig;
 use Cycle\ORM\Factory;
 use Cycle\ORM\ORM;
 use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
-use Cycle\Schema\Generator\CleanTables;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
 use Cycle\Schema\Generator\RenderRelations;
 use Cycle\Schema\Generator\RenderTables;
+use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
 use PHPUnit\Framework\TestCase;
@@ -175,18 +175,18 @@ abstract class BaseTest extends TestCase
 
         $locator = $tokenizer->classLocator();
 
-        $p = Generator::defaultParser();
+        $p = Generator::getDefaultParser();
         $r = new Registry($this->dbal);
 
         $schema = (new Compiler())->compile($r, [
             new Entities($locator, $p),
-            new CleanTables(),
-            new Columns($p),
-            GenerateRelations::defaultGenerator(),
+            new ResetTables(),
+            new MergeColumns($p),
+            new GenerateRelations(),
             new ValidateEntities(),
             new RenderTables(),
             new RenderRelations(),
-            new Indexes($p),
+            new MergeIndexes($p),
             new GenerateTypecast(),
             new GenerateMigrations($this->migrator->getRepository())
         ]);
