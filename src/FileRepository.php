@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Spiral\Migrations;
 
 use Doctrine\Common\Inflector\Inflector;
+use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
@@ -46,14 +47,14 @@ final class FileRepository implements RepositoryInterface
     private $files;
 
     /**
-     * @param MigrationConfig  $config
-     * @param FactoryInterface $factory
+     * @param MigrationConfig       $config
+     * @param FactoryInterface|null $factory
      */
-    public function __construct(MigrationConfig $config, FactoryInterface $factory)
+    public function __construct(MigrationConfig $config, FactoryInterface $factory = null)
     {
         $this->config = $config;
         $this->files = new Files();
-        $this->factory = $factory;
+        $this->factory = $factory ?? new Container();
     }
 
     /**
