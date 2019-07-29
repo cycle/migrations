@@ -257,7 +257,7 @@ abstract class BaseTest extends TestCase
             $schema = $table->getSchema();
 
             foreach ($schema->getForeignKeys() as $foreign) {
-                $schema->dropForeignKey($foreign->getColumn());
+                $schema->dropForeignKey($foreign->getColumns());
             }
 
             $schema->save(Handler::DROP_FOREIGN_KEYS);
@@ -376,24 +376,24 @@ abstract class BaseTest extends TestCase
         // FK
         foreach ($source->getForeignKeys() as $key) {
             $this->assertTrue(
-                $target->hasForeignKey($key->getColumn()),
+                $target->hasForeignKey($key->getColumns()),
                 "FK {$key->getName()} has been removed"
             );
 
             $this->assertTrue(
-                $key->compare($target->findForeignKey($key->getColumn())),
+                $key->compare($target->findForeignKey($key->getColumns())),
                 "FK {$key->getName()} has been changed"
             );
         }
 
         foreach ($target->getForeignKeys() as $key) {
             $this->assertTrue(
-                $source->hasForeignKey($key->getColumn()),
+                $source->hasForeignKey($key->getColumns()),
                 "FK {$key->getName()} has been removed"
             );
 
             $this->assertTrue(
-                $key->compare($source->findForeignKey($key->getColumn())),
+                $key->compare($source->findForeignKey($key->getColumns())),
                 "FK {$key->getName()} has been changed"
             );
         }
