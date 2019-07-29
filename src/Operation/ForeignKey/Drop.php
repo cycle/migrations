@@ -21,13 +21,13 @@ final class Drop extends ForeignKey
     {
         $schema = $capsule->getSchema($this->getTable());
 
-        if (!$schema->hasForeignKey($this->column)) {
+        if (!$schema->hasForeignKey($this->columns)) {
             throw new ForeignKeyException(
-                "Unable to drop foreign key '{$schema->getName()}'.'{$this->column}', "
+                "Unable to drop foreign key '{$schema->getName()}'.'{$this->columnNames()}', "
                 . "foreign key does not exists"
             );
         }
 
-        $schema->dropForeignKey($this->column);
+        $schema->dropForeignKey($this->columns);
     }
 }

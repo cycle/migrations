@@ -12,9 +12,9 @@
   "require": {
     "php": ">=7.1",
     "spiral/core": "^1.1",
+    "spiral/database": "^2.4",
     "spiral/files": "^2.0",
     "spiral/tokenizer": "^2.0",
-    "spiral/database": "^2.0",
     "spiral/reactor": "^2.0"
   },
   "require-dev": {

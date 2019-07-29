@@ -15,7 +15,7 @@ class DropForeignKeyMigration extends Migration
     public function up()
     {
         $this->table('sample')
-            ->dropForeignKey('column')
+            ->dropForeignKey(['column'])
             ->update();
     }
 

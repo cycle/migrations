@@ -21,26 +21,26 @@ final class Alter extends ForeignKey
     /** @var string */
     protected $foreignTable = '';
 
-    /** @var string */
-    protected $foreignKey = '';
+    /** @var array */
+    protected $foreignKeys = [];
 
     /**
      * @param string $table
-     * @param string $column
+     * @param array  $columns
      * @param string $foreignTable
-     * @param string $foreignKey
+     * @param array  $foreignKeys
      * @param array  $options
      */
     public function __construct(
         string $table,
-        string $column,
+        array $columns,
         string $foreignTable,
-        string $foreignKey,
+        array $foreignKeys,
         array $options
     ) {
-        parent::__construct($table, $column);
+        parent::__construct($table, $columns);
         $this->foreignTable = $foreignTable;
-        $this->foreignKey = $foreignKey;
+        $this->foreignKeys = $foreignKeys;
         $this->options = $options;
     }
 
@@ -51,9 +51,9 @@ final class Alter extends ForeignKey
     {
         $schema = $capsule->getSchema($this->getTable());
 
-        if (!$schema->hasForeignKey($this->column)) {
+        if (!$schema->hasForeignKey($this->columns)) {
             throw new ForeignKeyException(
-                "Unable to alter foreign key '{$schema->getName()}'.({$this->column}), "
+                "Unable to alter foreign key '{$schema->getName()}'.({$this->columnNames()}), "
                 . "key does not exists"
             );
         }
@@ -62,21 +62,24 @@ final class Alter extends ForeignKey
 
         if ($this->foreignTable != $this->table && !$outerSchema->exists()) {
             throw new ForeignKeyException(
-                "Unable to alter foreign key '{$schema->getName()}'.'{$this->column}', "
+                "Unable to alter foreign key '{$schema->getName()}'.'{$this->columnNames()}', "
                 . "foreign table '{$this->foreignTable}' does not exists"
             );
         }
 
-        if ($this->foreignTable != $this->table && !$outerSchema->hasColumn($this->foreignKey)) {
-            throw new ForeignKeyException(
-                "Unable to alter foreign key '{$schema->getName()}'.'{$this->column}',"
-                . " foreign column '{$this->foreignTable}'.'{$this->foreignKey}' does not exists"
-            );
+
+        foreach ($this->foreignKeys as $fk) {
+            if ($this->foreignTable != $this->table && !$outerSchema->hasColumn($fk)) {
+                throw new ForeignKeyException(
+                    "Unable to alter foreign key '{$schema->getName()}'.'{$this->columnNames()}',"
+                    . " foreign column '{$this->foreignTable}'.'{$fk}' does not exists"
+                );
+            }
         }
 
-        $foreignKey = $schema->foreignKey($this->column)->references(
+        $foreignKey = $schema->foreignKey($this->columns)->references(
             $this->foreignTable,
-            $this->foreignKey
+            $this->foreignKeys
         );
 
         /*

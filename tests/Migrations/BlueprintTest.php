@@ -92,7 +92,7 @@ abstract class BlueprintTest extends BaseTest
             ->addColumn('value', 'float', ['default' => 1])
             ->addIndex(['value'], ['unique' => true])
             ->addColumn('sample_id', 'int')
-            ->addForeignKey('sample_id', 'sample1', 'id', [
+            ->addForeignKey(['sample_id'], 'sample1', ['id'], [
                 'onDelete' => ForeignKeyInterface::CASCADE,
                 'onUpdate' => ForeignKeyInterface::NO_ACTION,
             ])
@@ -117,7 +117,7 @@ abstract class BlueprintTest extends BaseTest
             ->addColumn('value', 'float', ['default' => 1])
             ->addIndex(['value'], ['unique' => true])
             ->addColumn('sample_id', 'int')
-            ->addForeignKey('sample_id', 'sample1', 'id', [
+            ->addForeignKey(['sample_id'], 'sample1', ['id'], [
                 'delete' => ForeignKeyInterface::CASCADE,
                 'update' => ForeignKeyInterface::NO_ACTION,
             ])

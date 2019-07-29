@@ -163,24 +163,24 @@ final class TableBlueprint
      * Example:
      * $table->addForeignKey('user_id', 'users', 'id', ['delete' => 'CASCADE']);
      *
-     * @param string $column
+     * @param array  $columns
      * @param string $foreignTable Database isolation prefix will be automatically added.
-     * @param string $foreignKey
+     * @param array  $foreignKeys
      * @param array  $options
      * @return TableBlueprint
      */
     public function addForeignKey(
-        string $column,
+        array $columns,
         string $foreignTable,
-        string $foreignKey,
+        array $foreignKeys,
         array $options = []
     ): self {
         return $this->addOperation(
             new Operation\ForeignKey\Add(
                 $this->table,
-                $column,
+                $columns,
                 $foreignTable,
-                $foreignKey,
+                $foreignKeys,
                 $options
             )
         );
@@ -190,24 +190,24 @@ final class TableBlueprint
      * Example:
      * $table->alterForeignKey('user_id', 'users', 'id', ['delete' => 'NO ACTION']);
      *
-     * @param string $column
+     * @param array  $columns
      * @param string $foreignTable
-     * @param string $foreignKey
+     * @param array  $foreignKeys
      * @param array  $options
      * @return TableBlueprint
      */
     public function alterForeignKey(
-        string $column,
+        array $columns,
         string $foreignTable,
-        string $foreignKey,
+        array $foreignKeys,
         array $options = []
     ): self {
         return $this->addOperation(
             new Operation\ForeignKey\Alter(
                 $this->table,
-                $column,
+                $columns,
                 $foreignTable,
-                $foreignKey,
+                $foreignKeys,
                 $options
             )
         );
@@ -217,13 +217,13 @@ final class TableBlueprint
      * Example:
      * $table->dropForeignKey('user_id');
      *
-     * @param string $column
+     * @param array $columns
      * @return TableBlueprint
      */
-    public function dropForeignKey(string $column): self
+    public function dropForeignKey(array $columns): self
     {
         return $this->addOperation(
-            new Operation\ForeignKey\Drop($this->table, $column)
+            new Operation\ForeignKey\Drop($this->table, $columns)
         );
     }
 

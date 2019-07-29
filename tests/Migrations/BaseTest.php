@@ -36,6 +36,7 @@ abstract class BaseTest extends TestCase
 {
     public static $config;
     public const DRIVER = null;
+
     protected static $driverCache = [];
 
     public const CONFIG = [

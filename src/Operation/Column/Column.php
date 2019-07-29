@@ -38,18 +38,18 @@ abstract class Column extends AbstractOperation
 
     /**
      * @param string $table
-     * @param string $column
+     * @param string $columns
      * @param string $type
      * @param array  $options
      */
     public function __construct(
         string $table,
-        string $column,
+        string $columns,
         string $type = 'string',
         array $options = []
     ) {
         parent::__construct($table);
-        $this->name = $column;
+        $this->name = $columns;
         $this->type = $type;
         $this->options = $options;
     }

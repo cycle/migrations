@@ -26,17 +26,25 @@ abstract class ForeignKey extends AbstractOperation
     /**
      * Column foreign key associated to.
      *
-     * @var string
+     * @var array
      */
-    protected $column = '';
+    protected $columns = [];
 
     /**
      * @param string $table
-     * @param string $column
+     * @param array  $columns
      */
-    public function __construct(string $table, string $column)
+    public function __construct(string $table, array $columns)
     {
         parent::__construct($table);
-        $this->column = $column;
+        $this->columns = $columns;
+    }
+
+    /**
+     * @return string
+     */
+    public function columnNames(): string
+    {
+        return join(', ', $this->columns);
     }
 }

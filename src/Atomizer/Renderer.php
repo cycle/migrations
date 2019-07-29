@@ -153,9 +153,9 @@ final class Renderer implements RendererInterface
             $this->render(
                 $source,
                 '    ->addForeignKey(%s, %s, %s, %s)',
-                $key->getColumn(),
+                $key->getColumns(),
                 substr($key->getForeignTable(), strlen($prefix)),
-                $key->getForeignKey(),
+                $key->getForeignKeys(),
                 $key
             );
         }
@@ -166,15 +166,15 @@ final class Renderer implements RendererInterface
             $this->render(
                 $source,
                 '    ->alterForeignKey(%s, %s, %s, %s)',
-                $key->getColumn(),
+                $key->getColumns(),
                 substr($key->getForeignTable(), strlen($prefix)),
-                $key->getForeignKey(),
+                $key->getForeignKeys(),
                 $key
             );
         }
 
         foreach ($comparator->droppedForeignKeys() as $key) {
-            $this->render($source, '    ->dropForeignKey(%s)', $key->getColumn());
+            $this->render($source, '    ->dropForeignKey(%s)', $key->getColumns());
         }
     }
 
@@ -238,9 +238,9 @@ final class Renderer implements RendererInterface
             $this->render(
                 $source,
                 '    ->addForeignKey(%s, %s, %s, %s)',
-                $key->getColumn(),
+                $key->getColumns(),
                 substr($key->getForeignTable(), strlen($prefix)),
-                $key->getForeignKey(),
+                $key->getForeignKeys(),
                 $key
             );
         }
@@ -251,15 +251,15 @@ final class Renderer implements RendererInterface
             $this->render(
                 $source,
                 '    ->alterForeignKey(%s, %s, %s, %s)',
-                $key->getColumn(),
+                $key->getColumns(),
                 substr($key->getForeignTable(), strlen($prefix)),
-                $key->getForeignKey(),
+                $key->getForeignKeys(),
                 $key
             );
         }
 
         foreach ($comparator->addedForeignKeys() as $key) {
-            $this->render($source, '    ->dropForeignKey(%s)', $key->getColumn());
+            $this->render($source, '    ->dropForeignKey(%s)', $key->getColumns());
         }
     }
 

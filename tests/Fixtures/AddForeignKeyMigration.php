@@ -15,7 +15,7 @@ class AddForeignKeyMigration extends Migration
     public function up()
     {
         $this->table('sample')
-            ->addForeignKey('column', 'target', 'id')
+            ->addForeignKey(['column'], 'target', ['id'])
             ->update();
     }
 

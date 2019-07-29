@@ -278,7 +278,7 @@ abstract class ExceptionsTest extends BaseTest
         $s = $this->db->table('sample')->getSchema();
         $s->primary('id');
         $s->integer('column');
-        $s->foreignKey('column')->references('target', 'id');
+        $s->foreignKey(['column'])->references('target', ['id']);
         $s->save();
 
         $this->repository->registerMigration('m', AlterForeignKeyMigration::class);
@@ -304,7 +304,7 @@ abstract class ExceptionsTest extends BaseTest
         $s = $this->db->table('sample')->getSchema();
         $s->primary('id');
         $s->integer('column');
-        $s->foreignKey('column')->references('target', 'id');
+        $s->foreignKey(['column'])->references('target', ['id']);
         $s->save();
 
         $this->repository->registerMigration('m', AlterForeignKeyMigration::class);
@@ -343,7 +343,7 @@ abstract class ExceptionsTest extends BaseTest
         $s = $this->db->table('sample')->getSchema();
         $s->primary('id');
         $s->integer('column');
-        $s->foreignKey('column')->references('target', 'id');
+        $s->foreignKey(['column'])->references('target', ['id']);
         $s->save();
 
         $this->repository->registerMigration('m', AddForeignKeyMigration::class);
