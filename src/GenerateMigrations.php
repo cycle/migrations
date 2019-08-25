@@ -90,7 +90,7 @@ class GenerateMigrations implements GeneratorInterface
 
         //Rendering
         $class = new ClassDeclaration($name, Migration::class);
-        $class->constant('DATABASE')->setValue($database);
+        $class->constant('DATABASE')->setProtected()->setValue($database);
 
         $class->method('up')->setPublic();
         $class->method('down')->setPublic();
