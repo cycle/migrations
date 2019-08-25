@@ -19,7 +19,7 @@ use Spiral\Migrations\Exception\MigrationException;
 abstract class Migration implements MigrationInterface
 {
     // Target migration database
-    protected const DATABASE = null;
+    const DATABASE = null;
 
     /** @var State|null */
     private $state = null;
