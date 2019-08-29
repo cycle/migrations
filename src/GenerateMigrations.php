@@ -15,6 +15,7 @@ use Spiral\Migrations\Atomizer\Renderer;
 use Spiral\Migrations\Atomizer\RendererInterface;
 use Spiral\Migrations\Migration;
 use Spiral\Migrations\RepositoryInterface;
+use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
 
@@ -30,17 +31,23 @@ class GenerateMigrations implements GeneratorInterface
     /** @var RendererInterface */
     private $renderer;
 
+    /** @var MigrationConfig $migrationConfig */
+    private $migrationConfig;
+
     /**
      * GenerateMigrations constructor.
      *
      * @param RepositoryInterface    $migrationRepository
+     * @param MigrationConfig        $migrationConfig
      * @param RendererInterface|null $renderer
      */
     public function __construct(
         RepositoryInterface $migrationRepository,
+        MigrationConfig $migrationConfig,
         RendererInterface $renderer = null
     ) {
         $this->repository = $migrationRepository;
+        $this->migrationConfig = $migrationConfig;
         $this->renderer = $renderer ?? new Renderer();
     }
 
@@ -98,7 +105,7 @@ class GenerateMigrations implements GeneratorInterface
         $atomizer->declareChanges($class->method('up')->getSource());
         $atomizer->revertChanges($class->method('down')->getSource());
 
-        $file = new FileDeclaration();
+        $file = new FileDeclaration($this->migrationConfig->getNamespace());
         $file->addElement($class);
 
         return [$class->getName(), $file];

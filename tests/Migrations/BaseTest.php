@@ -56,7 +56,8 @@ abstract class BaseTest extends TestCase
     public const CONFIG = [
         'directory' => __DIR__ . '/../files/',
         'table'     => 'migrations',
-        'safe'      => true
+        'safe'      => true,
+        'namespace' => 'Migration'
     ];
 
     // cross test driver cache
@@ -188,7 +189,7 @@ abstract class BaseTest extends TestCase
             new RenderRelations(),
             new MergeIndexes($p),
             new GenerateTypecast(),
-            new GenerateMigrations($this->migrator->getRepository())
+            new GenerateMigrations($this->migrator->getRepository(), MigrationConfig(static::CONFIG))
         ]);
 
         $tables = [];
