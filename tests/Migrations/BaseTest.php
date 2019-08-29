@@ -430,15 +430,16 @@ abstract class BaseTest extends TestCase
         }
 
         if ($comparator->alteredColumns()) {
-
             $names = [];
             foreach ($comparator->alteredColumns() as $pair) {
                 $names[] = $pair[0]->getName();
                 print_r($pair);
             }
 
-            return "Table '{$table}' not synced, column(s) '" . join("', '",
-                    $names) . "' have been changed.";
+            return "Table '{$table}' not synced, column(s) '" . join(
+                "', '",
+                $names
+            ) . "' have been changed.";
         }
 
         if ($comparator->droppedForeignKeys()) {
