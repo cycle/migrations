@@ -21,7 +21,8 @@ final class MigrationConfig extends InjectableConfig
     protected $config = [
         'directory' => '',
         'table'     => 'migrations',
-        'safe'      => false
+        'safe'      => false,
+        'namespace' => 'Migration',
     ];
 
     /**
@@ -53,5 +54,15 @@ final class MigrationConfig extends InjectableConfig
     public function isSafe(): bool
     {
         return $this->config['safe'] ?? false;
+    }
+
+    /**
+     * Namespace for generated migration class
+     *
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->config['namespace'] ?? 'Migration';
     }
 }
