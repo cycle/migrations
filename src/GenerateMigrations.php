@@ -18,6 +18,7 @@ use Spiral\Migrations\RepositoryInterface;
 use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
+use Spiral\Reactor\AbstractDeclaration;
 
 /**
  * Migration generator creates set of migrations needed to sync database schema with desired state. Each database will
@@ -96,8 +97,8 @@ class GenerateMigrations implements GeneratorInterface
         }
 
         //Rendering
-        $class = new ClassDeclaration($name, Migration::class);
-        $class->constant('DATABASE')->setValue($database);
+        $class = new ClassDeclaration($name,'Migration');
+        $class->constant('DATABASE')->setAccess(AbstractDeclaration::ACCESS_PROTECTED)->setValue($database);
 
         $class->method('up')->setPublic();
         $class->method('down')->setPublic();
@@ -106,6 +107,7 @@ class GenerateMigrations implements GeneratorInterface
         $atomizer->revertChanges($class->method('down')->getSource());
 
         $file = new FileDeclaration($this->migrationConfig->getNamespace());
+        $file->addUse(Migration::class);
         $file->addElement($class);
 
         return [$class->getName(), $file];
