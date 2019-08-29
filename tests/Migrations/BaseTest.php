@@ -189,7 +189,7 @@ abstract class BaseTest extends TestCase
             new RenderRelations(),
             new MergeIndexes($p),
             new GenerateTypecast(),
-            new GenerateMigrations($this->migrator->getRepository(), MigrationConfig(static::CONFIG))
+            new GenerateMigrations($this->migrator->getRepository(), new MigrationConfig(static::CONFIG))
         ]);
 
         $tables = [];
