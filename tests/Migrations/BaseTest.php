@@ -57,7 +57,7 @@ abstract class BaseTest extends TestCase
         'directory' => __DIR__ . '/../files/',
         'table'     => 'migrations',
         'safe'      => true,
-        'namespace' => 'Migration',
+        'namespace' => '',
     ];
 
     // cross test driver cache
