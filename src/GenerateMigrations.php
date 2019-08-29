@@ -98,7 +98,7 @@ class GenerateMigrations implements GeneratorInterface
 
         //Rendering
         $class = new ClassDeclaration($name, 'Migration');
-        $class->constant('DATABASE')->setAccess(AbstractDeclaration::ACCESS_PROTECTED)->setValue($database);
+        $class->constant('DATABASE')->setProtected()->setValue($database);
 
         $class->method('up')->setPublic();
         $class->method('down')->setPublic();
