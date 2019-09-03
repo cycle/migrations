@@ -70,7 +70,7 @@ class GenerateMigrations implements GeneratorInterface
             $name = sprintf(
                 "orm_%s_%s_%s_%s",
                 $database,
-                str_replace('.', '_', microtime(false)),
+                str_replace('.', '_', microtime(true)),
                 ++$seq,
                 md5(microtime(true) . microtime(false))
             );
