@@ -350,9 +350,12 @@ final class Renderer implements RendererInterface
     private function columnOptions(Serializer $serializer, AbstractColumn $column): string
     {
         $options = [
-            'nullable' => $column->isNullable(),
-            'default'  => $column->getDefaultValue()
+            'nullable' => $column->isNullable()
         ];
+
+        if ($column->hasDefaultValue()) {
+            $options['default'] = $column->getDefaultValue();
+        }
 
         if ($column->getAbstractType() == 'enum') {
             $options['values'] = $column->getEnumValues();
