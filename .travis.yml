@@ -45,18 +45,6 @@ jobs:
 
     # Testing various PostgresSQL version
     - stage: Test
-      php: 7.1
-      addons:
-        postgresql: "9.2"
-      env:
-        - "DB=postgres POSTGRES=9.2 PHP=7.1"
-      before_install:
-        - psql -c 'create database spiral;' -U postgres
-      script:
-        - vendor/bin/phpunit tests/Migrations/Driver/Postgres
-
-    # Testing various PostgresSQL version
-    - stage: Test
       php: 7.2
       addons:
         postgresql: "9.2"
