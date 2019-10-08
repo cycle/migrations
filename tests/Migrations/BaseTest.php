@@ -111,7 +111,7 @@ abstract class BaseTest extends TestCase
     {
         $atomizer = new Atomizer(new Renderer());
 
-        //Make sure name is unique
+        //Make sure name is unique\
         $name = $name . '_' . md5(microtime(true) . microtime(false));
 
         foreach ($tables as $table) {

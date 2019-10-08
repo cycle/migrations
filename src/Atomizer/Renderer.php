@@ -104,7 +104,7 @@ final class Renderer implements RendererInterface
                 $source,
                 '    ->addColumn(%s, %s, %s)',
                 $column->getName(),
-                $column->getAbstractType(),
+                $column->getDeclaredType() ?? $column->getAbstractType(),
                 $column
             );
         }
@@ -189,7 +189,7 @@ final class Renderer implements RendererInterface
                 $source,
                 '    ->addColumn(%s, %s, %s)',
                 $column->getName(),
-                $column->getAbstractType(),
+                $column->getDeclaredType() ?? $column->getAbstractType(),
                 $column
             );
         }
@@ -283,7 +283,7 @@ final class Renderer implements RendererInterface
             $source,
             '    ->alterColumn(%s, %s, %s)',
             $name,
-            $column->getAbstractType(),
+            $column->getDeclaredType() ?? $column->getAbstractType(),
             $column
         );
 
