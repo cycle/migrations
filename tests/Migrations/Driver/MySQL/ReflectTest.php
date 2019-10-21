@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,9 +7,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Cycle\Migrations\Tests\Driver\MySQL;
 
 class ReflectTest extends \Cycle\Migrations\Tests\ReflectTest
 {
-    const DRIVER = "mysql";
+    public const DRIVER = 'mysql';
 }

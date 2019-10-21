@@ -1,5 +1,5 @@
 language: php
-
+dist: trusty
 sudo: required
 
 services:
@@ -23,6 +23,7 @@ install:
 
 script:
   - vendor/bin/phpunit --coverage-clover=coverage.xml
+  - vendor/bin/spiral-cs check src tests
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -f coverage.xml

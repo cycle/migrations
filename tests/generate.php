@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,10 +7,12 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 use Spiral\Tokenizer;
 
 error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', true);
+ini_set('display_errors', '1');
 
 //Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -49,7 +52,7 @@ foreach ($classes as $class) {
 
     echo "Found {$class->getName()}\n";
     foreach ($databases as $driver => $details) {
-        $filename = sprintf("%s/%s.php", $details['directory'], $class->getShortName());
+        $filename = sprintf('%s/%s.php', $details['directory'], $class->getShortName());
 
         file_put_contents(
             $filename,
@@ -61,12 +64,12 @@ foreach ($classes as $class) {
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
- 
-namespace %s; 
 
-class %s extends \%s 
-{ 
-    const DRIVER = "%s"; 
+namespace %s;
+
+class %s extends \%s
+{
+    const DRIVER = "%s";
 }',
                 $details['namespace'],
                 $class->getShortName(),

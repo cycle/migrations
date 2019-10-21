@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
  * Spiral Framework.
  *
@@ -6,11 +7,13 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Cycle\Migrations\Tests;
 
 abstract class ReflectTest extends BaseTest
 {
-    public function testInit()
+    public function testInit(): void
     {
         $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
 
@@ -24,7 +27,20 @@ abstract class ReflectTest extends BaseTest
         }
     }
 
-    public function testAlter()
+    public function testNoChanges(): void
+    {
+        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
+
+        $this->assertCount(2, $this->migrator->getMigrations());
+        foreach ($this->migrator->getMigrations() as $m) {
+            $this->migrator->run();
+        }
+
+        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
+        $this->assertCount(2, $this->migrator->getMigrations());
+    }
+
+    public function testAlter(): void
     {
         $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
 

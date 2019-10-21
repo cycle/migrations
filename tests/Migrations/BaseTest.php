@@ -1,10 +1,13 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
+declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests;
 
@@ -47,8 +50,6 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class BaseTest extends TestCase
 {
-    // tests configuration
-    public static $config;
 
     // currently active driver
     public const DRIVER = null;
@@ -59,6 +60,8 @@ abstract class BaseTest extends TestCase
         'safe'      => true,
         'namespace' => 'Migration',
     ];
+    // tests configuration
+    public static $config;
 
     // cross test driver cache
     public static $driverCache = [];
@@ -86,7 +89,7 @@ abstract class BaseTest extends TestCase
     /**
      * Init all we need.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -153,7 +156,7 @@ abstract class BaseTest extends TestCase
     /**
      * Cleanup.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $files = new Files();
         foreach ($files->getFiles(__DIR__ . '/../files/', '*.php') as $file) {
@@ -165,38 +168,6 @@ abstract class BaseTest extends TestCase
         $this->dropDatabase($this->dbal->database('default'));
         $this->orm = null;
         $this->dbal = null;
-    }
-
-    protected function migrate(string $directory): array
-    {
-        $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [$directory],
-            'exclude'     => [],
-        ]));
-
-        $locator = $tokenizer->classLocator();
-
-        $p = Generator::getDefaultParser();
-        $r = new Registry($this->dbal);
-
-        $schema = (new Compiler())->compile($r, [
-            new Entities($locator, $p),
-            new ResetTables(),
-            new MergeColumns($p),
-            new GenerateRelations(),
-            new ValidateEntities(),
-            new RenderTables(),
-            new RenderRelations(),
-            new MergeIndexes($p),
-            new GenerateTypecast(),
-            new GenerateMigrations($this->migrator->getRepository(), new MigrationConfig(static::CONFIG))
-        ]);
-
-        $tables = [];
-        foreach ($r as $e) {
-            $tables[] = $r->getTableSchema($e);
-        }
-        return $tables;
     }
 
     /**
@@ -237,6 +208,38 @@ abstract class BaseTest extends TestCase
         return static::$driverCache[static::DRIVER] = $this->driver;
     }
 
+    protected function migrate(string $directory): array
+    {
+        $tokenizer = new Tokenizer(new TokenizerConfig([
+            'directories' => [$directory],
+            'exclude'     => [],
+        ]));
+
+        $locator = $tokenizer->classLocator();
+
+        $p = Generator::getDefaultParser();
+        $r = new Registry($this->dbal);
+
+        $schema = (new Compiler())->compile($r, [
+            new Entities($locator, $p),
+            new ResetTables(),
+            new MergeColumns($p),
+            new GenerateRelations(),
+            new ValidateEntities(),
+            new RenderTables(),
+            new RenderRelations(),
+            new MergeIndexes($p),
+            new GenerateTypecast(),
+            new GenerateMigrations($this->migrator->getRepository(), new MigrationConfig(static::CONFIG))
+        ]);
+
+        $tables = [];
+        foreach ($r as $e) {
+            $tables[] = $r->getTableSchema($e);
+        }
+        return $tables;
+    }
+
     /**
      * @return Database
      */
@@ -248,7 +251,7 @@ abstract class BaseTest extends TestCase
     /**
      * @param Database|null $database
      */
-    protected function dropDatabase(Database $database = null)
+    protected function dropDatabase(Database $database = null): void
     {
         if (empty($database)) {
             return;
@@ -274,7 +277,7 @@ abstract class BaseTest extends TestCase
     /**
      * For debug purposes only.
      */
-    protected function enableProfiling()
+    protected function enableProfiling(): void
     {
         if (!is_null($this->logger)) {
             $this->logger->display();
@@ -284,14 +287,14 @@ abstract class BaseTest extends TestCase
     /**
      * For debug purposes only.
      */
-    protected function disableProfiling()
+    protected function disableProfiling(): void
     {
         if (!is_null($this->logger)) {
             $this->logger->hide();
         }
     }
 
-    protected function assertSameAsInDB(AbstractTable $current)
+    protected function assertSameAsInDB(AbstractTable $current): void
     {
         $source = $current->getState();
         $target = $current->getDriver()->getSchema($current->getName())->getState();
@@ -452,102 +455,5 @@ abstract class BaseTest extends TestCase
 
 
         return "Table '{$table}' not synced, no idea why, add more messages :P";
-    }
-}
-
-class TestLogger implements LoggerInterface
-{
-    use LoggerTrait;
-
-    private $display;
-
-    private $countWrites;
-    private $countReads;
-
-    public function __construct()
-    {
-        $this->countWrites = 0;
-        $this->countReads = 0;
-    }
-
-    public function countWriteQueries(): int
-    {
-        return $this->countWrites;
-    }
-
-    public function countReadQueries(): int
-    {
-        return $this->countReads;
-    }
-
-    public function log($level, $message, array $context = [])
-    {
-        if (!empty($context['query'])) {
-            $sql = strtolower($context['query']);
-            if (
-                strpos($sql, 'insert') === 0
-                || strpos($sql, 'update') === 0
-                || strpos($sql, 'delete') === 0
-            ) {
-                $this->countWrites++;
-            } else {
-                if (!$this->isPostgresSystemQuery($sql)) {
-                    $this->countReads++;
-                }
-            }
-        }
-
-        if (!$this->display) {
-            return;
-        }
-
-        if ($level == LogLevel::ERROR) {
-            echo " \n! \033[31m" . $message . "\033[0m";
-        } elseif ($level == LogLevel::ALERT) {
-            echo " \n! \033[35m" . $message . "\033[0m";
-        } elseif (strpos($message, 'SHOW') === 0) {
-            echo " \n> \033[34m" . $message . "\033[0m";
-        } else {
-            if ($this->isPostgresSystemQuery($message)) {
-                echo " \n> \033[90m" . $message . "\033[0m";
-
-                return;
-            }
-
-            if (strpos($message, 'SELECT') === 0) {
-                echo " \n> \033[32m" . $message . "\033[0m";
-            } elseif (strpos($message, 'INSERT') === 0) {
-                echo " \n> \033[36m" . $message . "\033[0m";
-            } else {
-                echo " \n> \033[33m" . $message . "\033[0m";
-            }
-        }
-    }
-
-    public function display()
-    {
-        $this->display = true;
-    }
-
-    public function hide()
-    {
-        $this->display = false;
-    }
-
-    protected function isPostgresSystemQuery(string $query): bool
-    {
-        $query = strtolower($query);
-        if (
-            strpos($query, 'tc.constraint_name')
-            || strpos($query, 'pg_indexes')
-            || strpos($query, 'tc.constraint_name')
-            || strpos($query, 'pg_constraint')
-            || strpos($query, 'information_schema')
-            || strpos($query, 'pg_class')
-        ) {
-            return true;
-        }
-
-        return false;
     }
 }

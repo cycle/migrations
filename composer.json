@@ -7,13 +7,13 @@
     "php": "^7.2",
     "cycle/orm": "^1.0",
     "cycle/schema-builder": "^1.0",
-    "spiral/migrations": "^2.0.7"
+    "spiral/migrations": "^2.0"
   },
   "require-dev": {
-    "cycle/annotated": "^1.0",
     "phpunit/phpunit": "~7.0",
-    "mockery/mockery": "^1.1",
-    "spiral/debug": "^1.3"
+    "cycle/annotated": "^1.0",
+    "spiral/debug": "^1.3",
+    "spiral/code-style": "^1.0"
   },
   "autoload": {
     "psr-4": {
