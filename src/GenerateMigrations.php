@@ -29,6 +29,9 @@ use Spiral\Reactor\FileDeclaration;
  */
 class GenerateMigrations implements GeneratorInterface
 {
+    /** @var int */
+    private static $sec = 0;
+
     /** @var RepositoryInterface */
     private $repository;
 
@@ -68,17 +71,8 @@ class GenerateMigrations implements GeneratorInterface
             }
         }
 
-        $seq = 0;
         foreach ($databases as $database => $tables) {
-            $name = sprintf(
-                'orm_%s_%s_%s_%s',
-                $database,
-                str_replace('.', '_', microtime(true)),
-                ++$seq,
-                md5(microtime(true) . microtime(false))
-            );
-
-            list($class, $file) = $this->generate($name, $database, $tables);
+            list($name, $class, $file) = $this->generate($database, $tables);
             if ($class === null || $file === null) {
                 // no changes
                 continue;
@@ -91,29 +85,33 @@ class GenerateMigrations implements GeneratorInterface
     }
 
     /**
-     * @param string          $name
      * @param string          $database
      * @param AbstractTable[] $tables
      * @return array [string, FileDeclaration]
      */
-    protected function generate(string $name, string $database, array $tables): array
+    protected function generate(string $database, array $tables): array
     {
         $atomizer = new Atomizer(new Renderer());
 
         $reasonable = false;
         foreach ($tables as $table) {
-            $atomizer->addTable($table);
-
             if ($table->getComparator()->hasChanges()) {
                 $reasonable = true;
+                $atomizer->addTable($table);
             }
         }
 
         if (!$reasonable) {
-            return [null, null];
+            return [null, null, null];
         }
 
-        //Rendering
+        // unique class name for the migration
+        $name = sprintf(
+            'orm_%s_%s',
+            $database,
+            md5(microtime(true) . microtime(false))
+        );
+
         $class = new ClassDeclaration($name, 'Migration');
         $class->constant('DATABASE')->setProtected()->setValue($database);
 
@@ -127,6 +125,83 @@ class GenerateMigrations implements GeneratorInterface
         $file->addUse(Migration::class);
         $file->addElement($class);
 
-        return [$class->getName(), $file];
+        return [
+            substr(sprintf(
+                '%s_%s_%s',
+                self::$sec++,
+                $database,
+                $this->generateName($atomizer)
+            ), 0, 128),
+            $class->getName(),
+            $file
+        ];
+    }
+
+    /**
+     * @param Atomizer $atomizer
+     * @return string
+     */
+    private function generateName(Atomizer $atomizer): string
+    {
+        $name = [];
+
+        foreach ($atomizer->getTables() as $table) {
+            if ($table->getStatus() === AbstractTable::STATUS_NEW) {
+                $name[] = 'create_' . $table->getName();
+                continue;
+            }
+
+            if ($table->getStatus() === AbstractTable::STATUS_DECLARED_DROPPED) {
+                $name[] = 'drop_' . $table->getName();
+                continue;
+            }
+
+            if ($table->getComparator()->isRenamed()) {
+                $name[] = 'rename_' . $table->getInitialName();
+                continue;
+            }
+
+            $name[] = 'change_' . $table->getName();
+
+            $comparator = $table->getComparator();
+
+            foreach ($comparator->addedColumns() as $column) {
+                $name[] = 'add_' . $column->getName();
+            }
+
+            foreach ($comparator->droppedColumns() as $column) {
+                $name[] = 'rm_' . $column->getName();
+            }
+
+            foreach ($comparator->alteredColumns() as $column) {
+                $name[] = 'alter_' . $column[0]->getName();
+            }
+
+            foreach ($comparator->addedIndexes() as $index) {
+                $name[] = 'add_index_' . $index->getName();
+            }
+
+            foreach ($comparator->droppedIndexes() as $index) {
+                $name[] = 'rm_index_' . $index->getName();
+            }
+
+            foreach ($comparator->alteredIndexes() as $index) {
+                $name[] = 'alter_index_' . $index[0]->getName();
+            }
+
+            foreach ($comparator->addedForeignKeys() as $fk) {
+                $name[] = 'add_fk_' . $fk->getName();
+            }
+
+            foreach ($comparator->droppedForeignKeys() as $fk) {
+                $name[] = 'rm_fk_' . $fk->getName();
+            }
+
+            foreach ($comparator->alteredForeignKeys() as $fk) {
+                $name[] = 'alter_fk_' . $fk[0]->getName();
+            }
+        }
+
+        return join('_', $name);
     }
 }
