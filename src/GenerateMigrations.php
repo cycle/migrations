@@ -72,13 +72,15 @@ class GenerateMigrations implements GeneratorInterface
         }
 
         foreach ($databases as $database => $tables) {
-            list($name, $class, $file) = $this->generate($database, $tables);
-            if ($class === null || $file === null) {
+            $image = $this->generate($database, $tables);
+            if (!$image) {
                 // no changes
                 continue;
             }
+            $class = $image->getClass()->getName();
+            $name = substr($image->buildFileName(), 0, 128);
 
-            $this->repository->registerMigration($name, $class, $file->render());
+            $this->repository->registerMigration($name, $class, $image->getFile()->render());
         }
 
         return $registry;
@@ -89,7 +91,7 @@ class GenerateMigrations implements GeneratorInterface
      * @param AbstractTable[] $tables
      * @return array [string, FileDeclaration]
      */
-    protected function generate(string $database, array $tables): array
+    protected function generate(string $database, array $tables): ?MigrationImage
     {
         $atomizer = new Atomizer(new Renderer());
 
@@ -102,39 +104,17 @@ class GenerateMigrations implements GeneratorInterface
         }
 
         if (!$reasonable) {
-            return [null, null, null];
+            return null;
         }
 
-        // unique class name for the migration
-        $name = sprintf(
-            'orm_%s_%s',
-            $database,
-            md5(microtime(true) . microtime(false))
-        );
+        $image = new MigrationImage($this->migrationConfig, $database);
+        $image->setName($this->generateName($atomizer));
+        $image->fileNamePattern = self::$sec++ . '_{database}_{name}';
 
-        $class = new ClassDeclaration($name, 'Migration');
-        $class->constant('DATABASE')->setProtected()->setValue($database);
+        $atomizer->declareChanges($image->getClass()->method('up')->getSource());
+        $atomizer->revertChanges($image->getClass()->method('down')->getSource());
 
-        $class->method('up')->setPublic();
-        $class->method('down')->setPublic();
-
-        $atomizer->declareChanges($class->method('up')->getSource());
-        $atomizer->revertChanges($class->method('down')->getSource());
-
-        $file = new FileDeclaration($this->migrationConfig->getNamespace());
-        $file->addUse(Migration::class);
-        $file->addElement($class);
-
-        return [
-            substr(sprintf(
-                '%s_%s_%s',
-                self::$sec++,
-                $database,
-                $this->generateName($atomizer)
-            ), 0, 128),
-            $class->getName(),
-            $file
-        ];
+        return $image;
     }
 
     /**
