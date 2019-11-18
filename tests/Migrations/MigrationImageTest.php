@@ -15,7 +15,7 @@ class MigrationImageTest extends TestCase
     /** @var MigrationConfig */
     protected static $defaultMigrationConfig;
 
-    const DATABASE_DEFAULT = 'defaultDatabaseName';
+    protected const DATABASE_DEFAULT = 'defaultDatabaseName';
 
     public static function setUpBeforeClass()
     {
