@@ -362,10 +362,19 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\RepositoryException
      */
-    public function testDuplicateMigration()
+    public function testDuplicateClassMigration()
     {
-        $this->repository->registerMigration('m', DuplicateColumnMigration::class);
-        $this->repository->registerMigration('m', DuplicateColumnMigration::class);
+        $this->repository->registerMigration('unique_name_1', DuplicateColumnMigration::class);
+        $this->repository->registerMigration('unique_name_2', DuplicateColumnMigration::class);
+    }
+
+    /**
+     * @expectedException \Spiral\Migrations\Exception\RepositoryException
+     */
+    public function testDuplicateFileNameMigration()
+    {
+        $this->repository->registerMigration('camel_case_duplicate', DuplicateColumnMigration::class);
+        $this->repository->registerMigration('camelCaseDuplicate', CreateEmptyMigration::class);
     }
 
     /**
