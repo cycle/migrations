@@ -18,7 +18,7 @@ class MigrationImage
     /** @var string */
     protected $database;
     /** @var string */
-    protected $name;
+    protected $name = '';
 
     public $fileNamePattern = '{database}_{name}';
 
@@ -74,6 +74,11 @@ class MigrationImage
     public function buildFileName(): string
     {
         return str_replace(['{database}', '{name}'], [$this->database, $this->name], $this->fileNamePattern);
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     public function setName(string $name): void
