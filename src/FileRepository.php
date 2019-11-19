@@ -94,6 +94,8 @@ final class FileRepository implements RepositoryInterface
             );
         }
 
+        $inflectedName = Inflector::tableize($name);
+
         foreach ($this->getMigrations() as $migration) {
             if (get_class($migration) == $class) {
                 throw new RepositoryException(
@@ -101,9 +103,9 @@ final class FileRepository implements RepositoryInterface
                 );
             }
 
-            if ($migration->getState()->getName() == $name) {
+            if ($migration->getState()->getName() == $inflectedName) {
                 throw new RepositoryException(
-                    "Unable to register migration '{$name}', migration under the same name already exists"
+                    "Unable to register migration '{$inflectedName}', migration under the same name already exists"
                 );
             }
         }
