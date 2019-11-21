@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations\Operation\Column;
@@ -36,7 +38,7 @@ final class Rename extends AbstractOperation
     /**
      * {@inheritdoc}
      */
-    public function execute(CapsuleInterface $capsule)
+    public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
@@ -47,9 +49,12 @@ final class Rename extends AbstractOperation
         }
 
         if ($schema->hasColumn($this->newName)) {
-            throw new ColumnException(
-                "Unable to rename column '{$schema->getName()}'.'{$this->name}', column '{$this->newName}' already exists"
-            );
+            throw new ColumnException(sprintf(
+                "Unable to rename column '%s'.'%s', column '%s' already exists",
+                $schema->getName(),
+                $this->name,
+                $this->newName
+            ));
         }
 
         //Declaring column

@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations;
@@ -63,7 +65,7 @@ abstract class Migration implements MigrationInterface
     public function getState(): State
     {
         if (empty($this->state)) {
-            throw new MigrationException("Unable to get migration state, no state are set");
+            throw new MigrationException('Unable to get migration state, no state are set');
         }
 
         return $this->state;
@@ -75,7 +77,7 @@ abstract class Migration implements MigrationInterface
     protected function database(): DatabaseInterface
     {
         if (empty($this->capsule)) {
-            throw new MigrationException("Unable to get database, no capsule are set");
+            throw new MigrationException('Unable to get database, no capsule are set');
         }
 
         return $this->capsule->getDatabase();
@@ -90,7 +92,7 @@ abstract class Migration implements MigrationInterface
     protected function table(string $table): TableBlueprint
     {
         if (empty($this->capsule)) {
-            throw new MigrationException("Unable to get table blueprint, no capsule are set");
+            throw new MigrationException('Unable to get table blueprint, no capsule are set');
         }
 
         return new TableBlueprint($this->capsule, $table);

@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations\Atomizer;
@@ -19,11 +21,11 @@ use Spiral\Reactor\Partial\Source;
  */
 final class Atomizer
 {
-    /** @var RendererInterface */
-    private $renderer;
 
     /** @var AbstractTable[] */
     protected $tables = [];
+    /** @var RendererInterface */
+    private $renderer;
 
     /**
      * @param RendererInterface $renderer
@@ -61,7 +63,7 @@ final class Atomizer
      *
      * @param Source $source
      */
-    public function declareChanges(Source $source)
+    public function declareChanges(Source $source): void
     {
         foreach ($this->sortedTables() as $table) {
             if (!$table->getComparator()->hasChanges()) {
@@ -84,7 +86,7 @@ final class Atomizer
      *
      * @param Source $source
      */
-    public function revertChanges(Source $source)
+    public function revertChanges(Source $source): void
     {
         foreach ($this->sortedTables(true) as $table) {
             if (!$table->getComparator()->hasChanges()) {
@@ -128,10 +130,10 @@ final class Atomizer
      *
      * @param Source $source
      */
-    private function declareBlock(Source $source)
+    private function declareBlock(Source $source): void
     {
         if (!empty($source->getLines())) {
-            $source->addLine("");
+            $source->addLine('');
         }
     }
 }

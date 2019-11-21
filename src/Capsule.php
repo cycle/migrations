@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations;
@@ -69,12 +71,12 @@ final class Capsule implements CapsuleInterface
      *
      * @throws \Throwable
      */
-    public function execute(array $operations)
+    public function execute(array $operations): void
     {
         foreach ($operations as $operation) {
             if (!$operation instanceof OperationInterface) {
                 throw new CapsuleException(sprintf(
-                    "Migration operation expected to be an instance of `OperationInterface`, `%s` given",
+                    'Migration operation expected to be an instance of `OperationInterface`, `%s` given',
                     get_class($operation)
                 ));
             }

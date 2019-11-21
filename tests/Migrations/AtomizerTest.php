@@ -1,10 +1,13 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
+declare(strict_types=1);
 
 namespace Spiral\Migrations\Tests;
 
@@ -13,7 +16,7 @@ use Spiral\Migrations\State;
 
 abstract class AtomizerTest extends BaseTest
 {
-    public function testCreateAndDiff()
+    public function testCreateAndDiff(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -37,7 +40,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testCreateAndThenUpdate()
+    public function testCreateAndThenUpdate(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -67,7 +70,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testCreateAndThenRenameColumn()
+    public function testCreateAndThenRenameColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -98,7 +101,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testCreateAndThenRenameColumnWithIndex()
+    public function testCreateAndThenRenameColumnWithIndex(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -131,7 +134,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testCreateAndThenUpdateAddDefault()
+    public function testCreateAndThenUpdateAddDefault(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -166,7 +169,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testCreateAndTThenAddIndexAndMakeUnique()
+    public function testCreateAndTThenAddIndexAndMakeUnique(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -213,7 +216,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testCreateAndDropIndex()
+    public function testCreateAndDropIndex(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -245,7 +248,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testCreateAndDropColumn()
+    public function testCreateAndDropColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -280,7 +283,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testSetPrimaryKeys()
+    public function testSetPrimaryKeys(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -303,7 +306,7 @@ abstract class AtomizerTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testChangePrimaryKeys()
+    public function testChangePrimaryKeys(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -328,7 +331,7 @@ abstract class AtomizerTest extends BaseTest
     }
 
 
-    public function testCreateAndThenUpdateEnumDefault()
+    public function testCreateAndThenUpdateEnumDefault(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -364,7 +367,7 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    public function testChangeColumnScale()
+    public function testChangeColumnScale(): void
     {
         //Create thought migration
         $this->migrator->configure();

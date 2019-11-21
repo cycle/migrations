@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,20 +7,22 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Migrations\Fixtures;
 
 use Spiral\Migrations\Migration;
 
 class DropForeignKeyMigration extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('sample')
             ->dropForeignKey(['column'])
             ->update();
     }
 
-    public function down()
+    public function down(): void
     {
     }
 }

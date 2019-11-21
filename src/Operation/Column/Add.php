@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations\Operation\Column;
@@ -17,7 +19,7 @@ final class Add extends Column
     /**
      * {@inheritdoc}
      */
-    public function execute(CapsuleInterface $capsule)
+    public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 

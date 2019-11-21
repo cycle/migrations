@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations\Atomizer;
@@ -25,13 +27,13 @@ final class Renderer implements RendererInterface
     /**
      * Comparator alteration states.
      */
-    const NEW_STATE      = 0;
-    const ORIGINAL_STATE = 1;
+    public const NEW_STATE      = 0;
+    public const ORIGINAL_STATE = 1;
 
     /**
      * {@inheritdoc}
      */
-    public function createTable(Source $source, AbstractTable $table)
+    public function createTable(Source $source, AbstractTable $table): void
     {
         $this->render($source, '$this->table(%s)', $table);
         $comparator = $table->getComparator();
@@ -45,13 +47,13 @@ final class Renderer implements RendererInterface
         }
 
         //Finalization
-        $source->addLine("    ->create();");
+        $source->addLine('    ->create();');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateTable(Source $source, AbstractTable $table)
+    public function updateTable(Source $source, AbstractTable $table): void
     {
         $this->render($source, '$this->table(%s)', $table);
         $comparator = $table->getComparator();
@@ -65,13 +67,13 @@ final class Renderer implements RendererInterface
         $this->declareForeignKeys($source, $comparator, $table->getPrefix());
 
         //Finalization
-        $source->addLine("    ->update();");
+        $source->addLine('    ->update();');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function revertTable(Source $source, AbstractTable $table)
+    public function revertTable(Source $source, AbstractTable $table): void
     {
         //Get table blueprint
         $this->render($source, '$this->table(%s)', $table);
@@ -82,13 +84,13 @@ final class Renderer implements RendererInterface
         $this->revertColumns($source, $comparator);
 
         //Finalization
-        $source->addLine("    ->update();");
+        $source->addLine('    ->update();');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dropTable(Source $source, AbstractTable $table)
+    public function dropTable(Source $source, AbstractTable $table): void
     {
         $this->render($source, '$this->table(%s)->drop();', $table);
     }
@@ -97,7 +99,7 @@ final class Renderer implements RendererInterface
      * @param Source     $source
      * @param Comparator $comparator
      */
-    protected function declareColumns(Source $source, Comparator $comparator)
+    protected function declareColumns(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->addedColumns() as $column) {
             $this->render(
@@ -122,7 +124,7 @@ final class Renderer implements RendererInterface
      * @param Source     $source
      * @param Comparator $comparator
      */
-    protected function declareIndexes(Source $source, Comparator $comparator)
+    protected function declareIndexes(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->addedIndexes() as $index) {
             $this->render($source, '    ->addIndex(%s, %s)', $index->getColumns(), $index);
@@ -148,7 +150,7 @@ final class Renderer implements RendererInterface
         Source $source,
         Comparator $comparator,
         string $prefix = ''
-    ) {
+    ): void {
         foreach ($comparator->addedForeignKeys() as $key) {
             $this->render(
                 $source,
@@ -182,7 +184,7 @@ final class Renderer implements RendererInterface
      * @param Source     $source
      * @param Comparator $comparator
      */
-    protected function revertColumns(Source $source, Comparator $comparator)
+    protected function revertColumns(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->droppedColumns() as $column) {
             $this->render(
@@ -207,7 +209,7 @@ final class Renderer implements RendererInterface
      * @param Source     $source
      * @param Comparator $comparator
      */
-    protected function revertIndexes(Source $source, Comparator $comparator)
+    protected function revertIndexes(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->droppedIndexes() as $index) {
             $this->render($source, '    ->addIndex(%s, %s)', $index->getColumns(), $index);
@@ -233,7 +235,7 @@ final class Renderer implements RendererInterface
         Source $source,
         Comparator $comparator,
         string $prefix = ''
-    ) {
+    ): void {
         foreach ($comparator->droppedForeignKeys() as $key) {
             $this->render(
                 $source,
@@ -272,7 +274,7 @@ final class Renderer implements RendererInterface
         Source $source,
         AbstractColumn $column,
         AbstractColumn $original
-    ) {
+    ): void {
         if ($column->getName() != $original->getName()) {
             $name = $original->getName();
         } else {
@@ -299,7 +301,7 @@ final class Renderer implements RendererInterface
      * @param string $format
      * @param array  ...$values
      */
-    protected function render(Source $source, string $format, ...$values)
+    protected function render(Source $source, string $format, ...$values): void
     {
         $serializer = $this->getSerializer();
 
@@ -409,7 +411,7 @@ final class Renderer implements RendererInterface
     {
         $lines = explode("\n", $serialized);
         foreach ($lines as &$line) {
-            $line = "    " . $line;
+            $line = '    ' . $line;
             unset($line);
         }
 

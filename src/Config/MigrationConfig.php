@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations\Config;
@@ -13,7 +15,7 @@ use Spiral\Core\InjectableConfig;
 
 final class MigrationConfig extends InjectableConfig
 {
-    const CONFIG = 'migration';
+    public const CONFIG = 'migration';
 
     /**
      * @var array

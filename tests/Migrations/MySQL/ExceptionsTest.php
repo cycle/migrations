@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,9 +7,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Migrations\Tests\MySQL;
 
 class ExceptionsTest extends \Spiral\Migrations\Tests\ExceptionsTest
 {
-    const DRIVER = 'mysql';
+    public const DRIVER = 'mysql';
 }

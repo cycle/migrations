@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,13 +7,12 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Migrations\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerTrait;
-use Psr\Log\LogLevel;
 use Spiral\Core\Container;
 use Spiral\Database\Config\DatabaseConfig;
 use Spiral\Database\Database;
@@ -34,16 +34,16 @@ use Spiral\Reactor\FileDeclaration;
 
 abstract class BaseTest extends TestCase
 {
-    public static $config;
     public const DRIVER = null;
-
-    protected static $driverCache = [];
 
     public const CONFIG = [
         'directory' => __DIR__ . '/../files/',
         'table'     => 'migrations',
         'safe'      => true
     ];
+    public static $config;
+
+    protected static $driverCache = [];
 
     /** @var Driver */
     protected $driver;
@@ -63,7 +63,7 @@ abstract class BaseTest extends TestCase
     /** @var FileRepository */
     protected $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (static::$config['debug']) {
             echo "\n\n-------- BEGIN: " . $this->getName() . " --------------\n\n";
@@ -84,7 +84,7 @@ abstract class BaseTest extends TestCase
     /**
      * @throws \Throwable
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $files = new Files();
         foreach ($files->getFiles(__DIR__ . '/../files/', '*.php') as $file) {
@@ -107,7 +107,32 @@ abstract class BaseTest extends TestCase
         }
     }
 
-    protected function atomize(string $name, array $tables)
+    /**
+     * @return Driver
+     */
+    public function getDriver(): Driver
+    {
+        $config = self::$config[static::DRIVER];
+        if (!isset($this->driver)) {
+            $class = $config['driver'];
+
+            $this->driver = new $class([
+                'connection' => $config['conn'],
+                'username'   => $config['user'],
+                'password'   => $config['pass'],
+                'options'    => []
+            ]);
+        }
+
+        if (self::$config['debug']) {
+            $this->driver->setProfiling(true);
+            $this->driver->setLogger(new TestLogger());
+        }
+
+        return $this->driver;
+    }
+
+    protected function atomize(string $name, array $tables): void
     {
         $atomizer = new Atomizer(new Renderer());
 
@@ -132,7 +157,7 @@ abstract class BaseTest extends TestCase
         $file = new FileDeclaration();
         $file->addElement($declaration);
 
-        $this->repository->registerMigration($name, $name, $file);
+        $this->repository->registerMigration($name, $name, $file->render());
     }
 
     /**
@@ -180,15 +205,15 @@ abstract class BaseTest extends TestCase
 
         $dbal->addDatabase(
             $this->db = new Database(
-                "default",
-                "tests_",
+                'default',
+                'tests_',
                 $this->getDriver()
             )
         );
 
         $dbal->addDatabase(new Database(
-            "slave",
-            "slave_",
+            'slave',
+            'slave_',
             $this->getDriver()
         ));
 
@@ -196,34 +221,9 @@ abstract class BaseTest extends TestCase
     }
 
     /**
-     * @return Driver
-     */
-    public function getDriver(): Driver
-    {
-        $config = self::$config[static::DRIVER];
-        if (!isset($this->driver)) {
-            $class = $config['driver'];
-
-            $this->driver = new $class([
-                'connection' => $config['conn'],
-                'username'   => $config['user'],
-                'password'   => $config['pass'],
-                'options'    => []
-            ]);
-        }
-
-        if (self::$config['debug']) {
-            $this->driver->setProfiling(true);
-            $this->driver->setLogger(new TestLogger());
-        }
-
-        return $this->driver;
-    }
-
-    /**
      * @param Database|null $database
      */
-    protected function dropDatabase(Database $database = null)
+    protected function dropDatabase(Database $database = null): void
     {
         if (empty($database)) {
             return;
@@ -246,7 +246,7 @@ abstract class BaseTest extends TestCase
         }
     }
 
-    protected function assertSameAsInDB(AbstractTable $current)
+    protected function assertSameAsInDB(AbstractTable $current): void
     {
         $source = $current->getState();
         $target = $this->fetchSchema($current)->getState();
@@ -394,15 +394,16 @@ abstract class BaseTest extends TestCase
         }
 
         if ($comparator->alteredColumns()) {
-
             $names = [];
             foreach ($comparator->alteredColumns() as $pair) {
                 $names[] = $pair[0]->getName();
                 print_r($pair);
             }
 
-            return "Table '{$table}' not synced, column(s) '" . join("', '",
-                    $names) . "' have been changed.";
+            return "Table '{$table}' not synced, column(s) '" . join(
+                "', '",
+                $names
+            ) . "' have been changed.";
         }
 
         if ($comparator->droppedForeignKeys()) {
@@ -415,27 +416,5 @@ abstract class BaseTest extends TestCase
 
 
         return "Table '{$table}' not synced, no idea why, add more messages :P";
-    }
-}
-
-class TestLogger implements LoggerInterface
-{
-    use LoggerTrait;
-
-    public function log($level, $message, array $context = [])
-    {
-        if ($level == LogLevel::ERROR) {
-            echo " \n! \033[31m" . $message . "\033[0m";
-        } elseif ($level == LogLevel::ALERT) {
-            echo " \n! \033[35m" . $message . "\033[0m";
-        } elseif (strpos($message, 'SHOW') === 0) {
-            echo " \n> \033[34m" . $message . "\033[0m";
-        } else {
-            if (strpos($message, 'SELECT') === 0) {
-                echo " \n> \033[32m" . $message . "\033[0m";
-            } else {
-                echo " \n> \033[33m" . $message . "\033[0m";
-            }
-        }
     }
 }

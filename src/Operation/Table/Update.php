@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations\Operation\Table;
@@ -19,7 +21,7 @@ final class Update extends AbstractOperation
     /**
      * {@inheritdoc}
      */
-    public function execute(CapsuleInterface $capsule)
+    public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
         $database = $this->database ?? '[default]';

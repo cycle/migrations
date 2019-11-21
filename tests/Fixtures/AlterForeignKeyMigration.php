@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,13 +7,15 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Migrations\Fixtures;
 
 use Spiral\Migrations\Migration;
 
 class AlterForeignKeyMigration extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('sample')
             ->alterForeignKey(['column'], 'target2', ['id2'], [
@@ -21,7 +24,7 @@ class AlterForeignKeyMigration extends Migration
             ->update();
     }
 
-    public function down()
+    public function down(): void
     {
     }
 }

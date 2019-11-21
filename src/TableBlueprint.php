@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations;
@@ -243,7 +245,7 @@ final class TableBlueprint
     /**
      * Create table schema. Must be last operation in the sequence.
      */
-    public function create()
+    public function create(): void
     {
         $this->addOperation(
             new Operation\Table\Create($this->table)
@@ -255,7 +257,7 @@ final class TableBlueprint
     /**
      * Update table schema. Must be last operation in the sequence.
      */
-    public function update()
+    public function update(): void
     {
         $this->addOperation(
             new Operation\Table\Update($this->table)
@@ -267,7 +269,7 @@ final class TableBlueprint
     /**
      * Drop table. Must be last operation in the sequence.
      */
-    public function drop()
+    public function drop(): void
     {
         $this->addOperation(
             new Operation\Table\Drop($this->table)
@@ -281,7 +283,7 @@ final class TableBlueprint
      *
      * @param string $newName
      */
-    public function rename(string $newName)
+    public function rename(string $newName): void
     {
         $this->addOperation(
             new Operation\Table\Rename($this->table, $newName)
@@ -306,10 +308,10 @@ final class TableBlueprint
     /**
      * Execute blueprint operations.
      */
-    private function execute()
+    private function execute(): void
     {
         if ($this->executed) {
-            throw new BlueprintException("Only one create/update/rename/drop is allowed per blueprint.");
+            throw new BlueprintException('Only one create/update/rename/drop is allowed per blueprint.');
         }
 
         $this->capsule->execute($this->operations);

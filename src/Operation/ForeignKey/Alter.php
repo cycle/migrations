@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations\Operation\ForeignKey;
@@ -47,14 +49,14 @@ final class Alter extends ForeignKey
     /**
      * {@inheritdoc}
      */
-    public function execute(CapsuleInterface $capsule)
+    public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
         if (!$schema->hasForeignKey($this->columns)) {
             throw new ForeignKeyException(
                 "Unable to alter foreign key '{$schema->getName()}'.({$this->columnNames()}), "
-                . "key does not exists"
+                . 'key does not exists'
             );
         }
 

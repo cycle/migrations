@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations;
@@ -67,7 +69,7 @@ final class Migrator
     /**
      * Configure all related databases with migration table.
      */
-    public function configure()
+    public function configure(): void
     {
         if ($this->isConfigured()) {
             return;
@@ -113,7 +115,7 @@ final class Migrator
     public function run(CapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
-            throw new MigrationException("Unable to run migration, Migrator not configured");
+            throw new MigrationException('Unable to run migration, Migrator not configured');
         }
 
         foreach ($this->getMigrations() as $migration) {
@@ -122,7 +124,7 @@ final class Migrator
             }
 
             $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-            $capsule->getDatabase($migration->getDatabase())->transaction(function () use ($migration, $capsule) {
+            $capsule->getDatabase($migration->getDatabase())->transaction(function () use ($migration, $capsule): void {
                 $migration->withCapsule($capsule)->up();
             });
 
@@ -148,7 +150,7 @@ final class Migrator
     public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
-            throw new MigrationException("Unable to run migration, Migrator not configured");
+            throw new MigrationException('Unable to run migration, Migrator not configured');
         }
 
         /** @var MigrationInterface $migration */
@@ -158,7 +160,7 @@ final class Migrator
             }
 
             $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-            $capsule->getDatabase()->transaction(function () use ($migration, $capsule) {
+            $capsule->getDatabase()->transaction(function () use ($migration, $capsule): void {
                 $migration->withCapsule($capsule)->down();
             });
 

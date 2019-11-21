@@ -1,9 +1,13 @@
 <?php
+
 /**
- * Spiral, Core Components
+ * Spiral Framework.
  *
- * @author Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
+
+declare(strict_types=1);
 
 namespace Spiral\Migrations\Tests;
 
@@ -13,7 +17,7 @@ use Spiral\Migrations\TableBlueprint;
 
 abstract class BlueprintTest extends BaseTest
 {
-    public function testCreateButNot()
+    public function testCreateButNot(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
@@ -23,7 +27,7 @@ abstract class BlueprintTest extends BaseTest
         $this->assertFalse($blueprint->getSchema()->exists());
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -33,7 +37,7 @@ abstract class BlueprintTest extends BaseTest
         $this->assertTrue($blueprint->getSchema()->exists());
     }
 
-    public function testCreateWithColumns()
+    public function testCreateWithColumns(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -45,7 +49,7 @@ abstract class BlueprintTest extends BaseTest
         $this->assertTrue($blueprint->getSchema()->exists());
     }
 
-    public function testCreateWithIndexesAndDropIndex()
+    public function testCreateWithIndexesAndDropIndex(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -65,7 +69,7 @@ abstract class BlueprintTest extends BaseTest
         $this->assertTrue($blueprint->getSchema()->exists());
     }
 
-    public function testCreateWithNamedIndex()
+    public function testCreateWithNamedIndex(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -77,7 +81,7 @@ abstract class BlueprintTest extends BaseTest
         $this->assertSame('super_index', $this->schema('sample')->index(['value'])->getName());
     }
 
-    public function testCreateWithForeign()
+    public function testCreateWithForeign(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample1');
 
@@ -102,7 +106,7 @@ abstract class BlueprintTest extends BaseTest
         $this->assertTrue($blueprint->getSchema()->exists());
     }
 
-    public function testCreateWithForeignAliased()
+    public function testCreateWithForeignAliased(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample1');
 
@@ -130,7 +134,7 @@ abstract class BlueprintTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testUpdateTableError()
+    public function testUpdateTableError(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -151,7 +155,7 @@ abstract class BlueprintTest extends BaseTest
         $this->assertTrue($blueprint->getSchema()->exists());
     }
 
-    public function testUpdateTable()
+    public function testUpdateTable(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -172,7 +176,7 @@ abstract class BlueprintTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
-    public function testUpdateTableError2()
+    public function testUpdateTableError2(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -192,7 +196,7 @@ abstract class BlueprintTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
-    public function testUpdateTableError5()
+    public function testUpdateTableError5(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -212,7 +216,7 @@ abstract class BlueprintTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\IndexException
      */
-    public function testUpdateTableError3()
+    public function testUpdateTableError3(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -229,7 +233,7 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->addIndex(['value'])->update();
     }
 
-    public function testDropTable()
+    public function testDropTable(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -246,7 +250,7 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->drop();
     }
 
-    public function testRenameTable()
+    public function testRenameTable(): void
     {
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 

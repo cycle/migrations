@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Migrations;
@@ -163,7 +165,8 @@ final class FileRepository implements RepositoryInterface
     {
         $name = Inflector::tableize($name);
 
-        $filename = sprintf(self::FILENAME_FORMAT,
+        $filename = sprintf(
+            self::FILENAME_FORMAT,
             date(self::TIMESTAMP_FORMAT),
             $this->chunkID++,
             $name

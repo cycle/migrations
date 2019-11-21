@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,16 +7,16 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
 
 namespace Spiral\Migrations\Tests;
 
 use Spiral\Migrations\Capsule;
-use Spiral\Migrations\Migration;
 use Spiral\Migrations\State;
 
 abstract class MigratorTest extends BaseTest
 {
-    public function testConfigure()
+    public function testConfigure(): void
     {
         $this->assertFalse($this->migrator->isConfigured());
 
@@ -24,7 +25,7 @@ abstract class MigratorTest extends BaseTest
     }
 
     //no errors expected
-    public function testConfigureTwice()
+    public function testConfigureTwice(): void
     {
         $this->assertFalse($this->migrator->isConfigured());
 
@@ -34,13 +35,13 @@ abstract class MigratorTest extends BaseTest
         $this->migrator->configure();
     }
 
-    public function testGetEmptyMigrations()
+    public function testGetEmptyMigrations(): void
     {
         $this->migrator->configure();
         $this->assertSame([], $this->migrator->getMigrations());
     }
 
-    public function testRepository()
+    public function testRepository(): void
     {
         $this->assertSame($this->repository, $this->migrator->getRepository());
     }
@@ -48,7 +49,7 @@ abstract class MigratorTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
-    public function testRunUnconfigured()
+    public function testRunUnconfigured(): void
     {
         $this->migrator->run();
     }
@@ -56,12 +57,12 @@ abstract class MigratorTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
-    public function testRollbackUnconfigured()
+    public function testRollbackUnconfigured(): void
     {
         $this->migrator->rollback();
     }
 
-    public function testCapsule()
+    public function testCapsule(): void
     {
         $capsule = new Capsule($this->db);
 
@@ -75,7 +76,7 @@ abstract class MigratorTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\CapsuleException
      */
-    public function testCapsuleException()
+    public function testCapsuleException(): void
     {
         $capsule = new Capsule($this->db);
 
@@ -87,7 +88,7 @@ abstract class MigratorTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
-    public function testNoState()
+    public function testNoState(): void
     {
         $x = new TestMigration();
         $x->up();
@@ -96,7 +97,7 @@ abstract class MigratorTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
-    public function testNoCapsule()
+    public function testNoCapsule(): void
     {
         $x = new TestMigration();
         $x->getTable();
@@ -105,41 +106,23 @@ abstract class MigratorTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
-    public function testNoCapsule2()
+    public function testNoCapsule2(): void
     {
         $x = new TestMigration();
         $x->down();
     }
 
-    public function testDatabase()
+    public function testDatabase(): void
     {
         $x = new TestMigration();
         $this->assertSame($this->db, $x->withCapsule(new Capsule($this->db))->down());
     }
 
-    public function testState()
+    public function testState(): void
     {
         $x = new TestMigration();
 
-        $s = new State("name", new \DateTime());
+        $s = new State('name', new \DateTime());
         $this->assertSame($s, $x->withState($s)->up());
-    }
-}
-
-class TestMigration extends Migration
-{
-    public function up()
-    {
-        return $this->getState();
-    }
-
-    public function down()
-    {
-        return $this->database();
-    }
-
-    public function getTable()
-    {
-        return $this->table('table');
     }
 }

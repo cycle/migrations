@@ -1,10 +1,13 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
+declare(strict_types=1);
 
 namespace Spiral\Migrations\Tests;
 
@@ -26,7 +29,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testDropNonExisted()
+    public function testDropNonExisted(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -38,7 +41,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testCreateEmpty()
+    public function testCreateEmpty(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -50,7 +53,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testCreateDuplicate()
+    public function testCreateDuplicate(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -66,7 +69,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testUpdateNonExisted()
+    public function testUpdateNonExisted(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -78,7 +81,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testRenameNonExisted()
+    public function testRenameNonExisted(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -90,7 +93,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\TableException
      */
-    public function testRenameButBusy()
+    public function testRenameButBusy(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -110,7 +113,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
-    public function testDuplicateColumn()
+    public function testDuplicateColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -127,7 +130,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\IndexException
      */
-    public function testDropNonExistedIndex()
+    public function testDropNonExistedIndex(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -144,7 +147,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\IndexException
      */
-    public function testAlterNonExistedIndex()
+    public function testAlterNonExistedIndex(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -161,7 +164,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
-    public function testAlterNonExistedColumn()
+    public function testAlterNonExistedColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -177,7 +180,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
-    public function testRenameNonExistedColumn()
+    public function testRenameNonExistedColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -193,7 +196,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
      */
-    public function testRenameDuplicateExistedColumn()
+    public function testRenameDuplicateExistedColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -211,7 +214,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ForeignKeyException
      */
-    public function testAddForeignNoTarget()
+    public function testAddForeignNoTarget(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -228,7 +231,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ForeignKeyException
      */
-    public function testAddForeignNoTargetColumn()
+    public function testAddForeignNoTargetColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -249,7 +252,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ForeignKeyException
      */
-    public function testAlterForeignNoFK()
+    public function testAlterForeignNoFK(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -266,7 +269,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ForeignKeyException
      */
-    public function testAlterForeignNoTable()
+    public function testAlterForeignNoTable(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -288,7 +291,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ForeignKeyException
      */
-    public function testAlterForeignNoColumn()
+    public function testAlterForeignNoColumn(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -314,7 +317,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ForeignKeyException
      */
-    public function testDropNonExistedFK()
+    public function testDropNonExistedFK(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -331,7 +334,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\Operation\ForeignKeyException
      */
-    public function testAddExisted()
+    public function testAddExisted(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -353,7 +356,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\RepositoryException
      */
-    public function testBadMigrationFile()
+    public function testBadMigrationFile(): void
     {
         file_put_contents(__DIR__ . '/../files/mmm.php', 'test');
         $this->repository->getMigrations();
@@ -362,7 +365,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\RepositoryException
      */
-    public function testDuplicateClassMigration()
+    public function testDuplicateClassMigration(): void
     {
         $this->repository->registerMigration('unique_name_1', DuplicateColumnMigration::class);
         $this->repository->registerMigration('unique_name_2', DuplicateColumnMigration::class);
@@ -371,7 +374,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\RepositoryException
      */
-    public function testDuplicateFileNameMigration()
+    public function testDuplicateFileNameMigration(): void
     {
         $this->repository->registerMigration('camel_case_duplicate', DuplicateColumnMigration::class);
         $this->repository->registerMigration('camelCaseDuplicate', CreateEmptyMigration::class);
@@ -380,7 +383,7 @@ abstract class ExceptionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Migrations\Exception\RepositoryException
      */
-    public function testInvalidMigration()
+    public function testInvalidMigration(): void
     {
         $this->repository->registerMigration('m', 'invalid');
     }

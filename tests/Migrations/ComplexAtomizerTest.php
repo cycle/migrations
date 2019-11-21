@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,13 +7,15 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Migrations\Tests;
 
 use Spiral\Database\ForeignKeyInterface;
 
 abstract class ComplexAtomizerTest extends BaseTest
 {
-    public function testCreateMultiple()
+    public function testCreateMultiple(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -39,7 +42,7 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample1'));
     }
 
-    public function testCreateMultipleChangeFK()
+    public function testCreateMultipleChangeFK(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -92,7 +95,7 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample1'));
     }
 
-    public function testCreateMultipleWithPivot()
+    public function testCreateMultipleWithPivot(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -127,7 +130,7 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample2'));
     }
 
-    public function testCreateAndAddFK()
+    public function testCreateAndAddFK(): void
     {
         //Create thought migration
         $this->migrator->configure();
@@ -167,7 +170,7 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample1'));
     }
 
-    public function testDropFK()
+    public function testDropFK(): void
     {
         //Create thought migration
         $this->migrator->configure();
