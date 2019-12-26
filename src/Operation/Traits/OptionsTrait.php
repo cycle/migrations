@@ -30,12 +30,14 @@ trait OptionsTrait
             return true;
         }
 
-        if (!isset($this->aliases) || !isset($this->aliases[$name])) {
+        if (!isset($this->aliases[$name])) {
             return false;
         }
 
-        foreach ($this->aliases[$name] as $name) {
-            return $this->hasOption($name);
+        foreach ($this->aliases as $source => $aliases) {
+            if (in_array($name, $aliases, true)) {
+                return true;
+            }
         }
 
         return false;
@@ -57,12 +59,14 @@ trait OptionsTrait
             return $this->options[$name];
         }
 
-        if (!isset($this->aliases) || !isset($this->aliases[$name])) {
-            return false;
+        if (!isset($this->aliases[$name])) {
+            return $default;
         }
 
-        foreach ($this->aliases[$name] as $name) {
-            return $this->hasOption($name);
+        foreach ($this->aliases as $source => $aliases) {
+            if (in_array($name, $aliases, true)) {
+                return $this->getOption($source);
+            }
         }
 
         return false;

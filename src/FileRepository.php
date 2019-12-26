@@ -19,7 +19,6 @@ use Spiral\Files\FilesInterface;
 use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\Exception\RepositoryException;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
-use Spiral\Tokenizer\TokenizerInterface;
 
 /**
  * Stores migrations as files.
@@ -33,13 +32,9 @@ final class FileRepository implements RepositoryInterface
     private const TIMESTAMP_FORMAT = 'Ymd.His';
 
     /** @var MigrationConfig */
-    private $config = null;
+    private $config;
 
-    /**
-     * Required when multiple migrations added at once.
-     *
-     * @var int
-     */
+    /** @var int */
     private $chunkID = 0;
 
     /** @var FactoryInterface */
@@ -99,13 +94,13 @@ final class FileRepository implements RepositoryInterface
         $inflectedName = Inflector::tableize($name);
 
         foreach ($this->getMigrations() as $migration) {
-            if (get_class($migration) == $class) {
+            if (get_class($migration) === $class) {
                 throw new RepositoryException(
                     "Unable to register migration '{$class}', migration already exists"
                 );
             }
 
-            if ($migration->getState()->getName() == $inflectedName) {
+            if ($migration->getState()->getName() === $inflectedName) {
                 throw new RepositoryException(
                     "Unable to register migration '{$inflectedName}', migration under the same name already exists"
                 );

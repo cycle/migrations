@@ -49,12 +49,14 @@ final class Rename extends AbstractOperation
         }
 
         if ($schema->hasColumn($this->newName)) {
-            throw new ColumnException(sprintf(
-                "Unable to rename column '%s'.'%s', column '%s' already exists",
-                $schema->getName(),
-                $this->name,
-                $this->newName
-            ));
+            throw new ColumnException(
+                sprintf(
+                    "Unable to rename column '%s'.'%s', column '%s' already exists",
+                    $schema->getName(),
+                    $this->name,
+                    $this->newName
+                )
+            );
         }
 
         //Declaring column

@@ -18,16 +18,6 @@ final class MigrationConfig extends InjectableConfig
     public const CONFIG = 'migration';
 
     /**
-     * @var array
-     */
-    protected $config = [
-        'directory' => '',
-        'table'     => 'migrations',
-        'safe'      => false,
-        'namespace' => 'Migration',
-    ];
-
-    /**
      * Migrations directory.
      *
      * @return string

@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Migrations\Exception;
 
-/**
- * Invalid blueprint configuration.
- */
 class BlueprintException extends MigrationException
 {
 }

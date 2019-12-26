@@ -21,10 +21,10 @@ final class Alter extends ForeignKey
     use OptionsTrait;
 
     /** @var string */
-    protected $foreignTable = '';
+    protected $foreignTable;
 
     /** @var array */
-    protected $foreignKeys = [];
+    protected $foreignKeys;
 
     /**
      * @param string $table
@@ -88,16 +88,20 @@ final class Alter extends ForeignKey
          * We are allowing both formats "NO_ACTION" and "NO ACTION".
          */
 
-        $foreignKey->onDelete(str_replace(
-            '_',
-            ' ',
-            $this->getOption('delete', ForeignKeyInterface::NO_ACTION)
-        ));
+        $foreignKey->onDelete(
+            str_replace(
+                '_',
+                ' ',
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION)
+            )
+        );
 
-        $foreignKey->onUpdate(str_replace(
-            '_',
-            ' ',
-            $this->getOption('update', ForeignKeyInterface::NO_ACTION)
-        ));
+        $foreignKey->onUpdate(
+            str_replace(
+                '_',
+                ' ',
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION)
+            )
+        );
     }
 }

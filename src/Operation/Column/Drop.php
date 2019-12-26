@@ -22,7 +22,7 @@ final class Drop extends AbstractOperation
      *
      * @var string
      */
-    private $name = '';
+    private $name;
 
     /**
      * @param string $table

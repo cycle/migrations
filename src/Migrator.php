@@ -119,19 +119,23 @@ final class Migrator
         }
 
         foreach ($this->getMigrations() as $migration) {
-            if ($migration->getState()->getStatus() != State::STATUS_PENDING) {
+            if ($migration->getState()->getStatus() !== State::STATUS_PENDING) {
                 continue;
             }
 
             $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-            $capsule->getDatabase($migration->getDatabase())->transaction(function () use ($migration, $capsule): void {
-                $migration->withCapsule($capsule)->up();
-            });
+            $capsule->getDatabase($migration->getDatabase())->transaction(
+                static function () use ($migration, $capsule): void {
+                    $migration->withCapsule($capsule)->up();
+                }
+            );
 
-            $this->migrationTable($migration->getDatabase())->insertOne([
-                'migration'     => $migration->getState()->getName(),
-                'time_executed' => new \DateTime('now')
-            ]);
+            $this->migrationTable($migration->getDatabase())->insertOne(
+                [
+                    'migration'     => $migration->getState()->getName(),
+                    'time_executed' => new \DateTime('now')
+                ]
+            );
 
             return $migration->withState($this->resolveState($migration));
         }
@@ -155,18 +159,22 @@ final class Migrator
 
         /** @var MigrationInterface $migration */
         foreach (array_reverse($this->getMigrations()) as $migration) {
-            if ($migration->getState()->getStatus() != State::STATUS_EXECUTED) {
+            if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
                 continue;
             }
 
             $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-            $capsule->getDatabase()->transaction(function () use ($migration, $capsule): void {
-                $migration->withCapsule($capsule)->down();
-            });
+            $capsule->getDatabase()->transaction(
+                static function () use ($migration, $capsule): void {
+                    $migration->withCapsule($capsule)->down();
+                }
+            );
 
-            $this->migrationTable($migration->getDatabase())->delete([
-                'migration' => $migration->getState()->getName()
-            ])->run();
+            $this->migrationTable($migration->getDatabase())->delete(
+                [
+                    'migration' => $migration->getState()->getName()
+                ]
+            )->run();
 
             return $migration->withState($this->resolveState($migration));
         }
@@ -186,9 +194,9 @@ final class Migrator
 
         //Fetch migration information from database
         $data = $this->migrationTable($migration->getDatabase())
-                     ->select('id', 'time_executed')
-                     ->where(['migration' => $migration->getState()->getName()])
-                     ->run()->fetch();
+            ->select('id', 'time_executed')
+            ->where(['migration' => $migration->getState()->getName()])
+            ->run()->fetch();
 
         if (empty($data['time_executed'])) {
             return $migration->getState()->withStatus(State::STATUS_PENDING);
@@ -196,7 +204,7 @@ final class Migrator
 
         return $migration->getState()->withStatus(
             State::STATUS_EXECUTED,
-            new \DateTime($data['time_executed'], $db->getDriver()->getTimezone())
+            new \DateTimeImmutable($data['time_executed'], $db->getDriver()->getTimezone())
         );
     }
 

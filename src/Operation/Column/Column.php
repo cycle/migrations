@@ -33,10 +33,10 @@ abstract class Column extends AbstractOperation
     ];
 
     /** @var string */
-    protected $name = '';
+    protected $name;
 
     /** @var string */
-    protected $type = '';
+    protected $type;
 
     /**
      * @param string $table

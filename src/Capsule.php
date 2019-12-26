@@ -75,10 +75,12 @@ final class Capsule implements CapsuleInterface
     {
         foreach ($operations as $operation) {
             if (!$operation instanceof OperationInterface) {
-                throw new CapsuleException(sprintf(
-                    'Migration operation expected to be an instance of `OperationInterface`, `%s` given',
-                    get_class($operation)
-                ));
+                throw new CapsuleException(
+                    sprintf(
+                        'Migration operation expected to be an instance of `OperationInterface`, `%s` given',
+                        get_class($operation)
+                    )
+                );
             }
 
             $operation->execute($this);

@@ -22,28 +22,28 @@ final class State
     public const STATUS_EXECUTED  = 1;
 
     /** @var string */
-    private $name = '';
+    private $name;
 
     /** @var int */
-    private $status = self::STATUS_PENDING;
+    private $status;
 
-    /** @var \DateTime */
-    private $timeCreated = null;
+    /** @var \DateTimeInterface */
+    private $timeCreated;
 
-    /** @var \DateTime|null */
-    private $timeExecuted = null;
+    /** @var \DateTimeInterface|null */
+    private $timeExecuted;
 
     /**
-     * @param string    $name
-     * @param \DateTime $timeCreated
-     * @param int       $status
-     * @param \DateTime $timeExecuted
+     * @param string             $name
+     * @param \DateTimeInterface $timeCreated
+     * @param int                $status
+     * @param \DateTimeInterface $timeExecuted
      */
     public function __construct(
         string $name,
-        \DateTime $timeCreated,
+        \DateTimeInterface $timeCreated,
         int $status = self::STATUS_UNDEFINED,
-        \DateTime $timeExecuted = null
+        \DateTimeInterface $timeExecuted = null
     ) {
         $this->name = $name;
         $this->status = $status;
@@ -72,9 +72,9 @@ final class State
     /**
      * Get migration creation time.
      *
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getTimeCreated(): \DateTime
+    public function getTimeCreated(): \DateTimeInterface
     {
         return $this->timeCreated;
     }
@@ -82,20 +82,20 @@ final class State
     /**
      * Get migration execution time if any.
      *
-     * @return \DateTime|null
+     * @return \DateTimeInterface|null
      */
-    public function getTimeExecuted()
+    public function getTimeExecuted(): ?\DateTimeInterface
     {
         return $this->timeExecuted;
     }
 
     /**
-     * @param int            $status
-     * @param \DateTime|null $timeExecuted
+     * @param int                     $status
+     * @param \DateTimeInterface|null $timeExecuted
      *
      * @return State
      */
-    public function withStatus(int $status, \DateTime $timeExecuted = null): State
+    public function withStatus(int $status, \DateTimeInterface $timeExecuted = null): State
     {
         $state = clone $this;
         $state->status = $status;

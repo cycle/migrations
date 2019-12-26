@@ -24,10 +24,10 @@ abstract class Migration implements MigrationInterface
     protected const DATABASE = null;
 
     /** @var State|null */
-    private $state = null;
+    private $state;
 
     /** @var CapsuleInterface */
-    private $capsule = null;
+    private $capsule;
 
     /**
      * {@inheritdoc}

@@ -132,7 +132,7 @@ final class Atomizer
      */
     private function declareBlock(Source $source): void
     {
-        if (!empty($source->getLines())) {
+        if ($source->getLines() !== []) {
             $source->addLine('');
         }
     }

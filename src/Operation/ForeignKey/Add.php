@@ -64,7 +64,7 @@ final class Add extends ForeignKey
 
         $foreignSchema = $capsule->getSchema($this->foreignTable);
 
-        if ($this->foreignTable != $this->table && !$foreignSchema->exists()) {
+        if ($this->foreignTable !== $this->table && !$foreignSchema->exists()) {
             throw new ForeignKeyException(
                 "Unable to add foreign key '{$schema->getName()}'.'{$this->columnNames()}', "
                 . "foreign table '{$this->foreignTable}' does not exists"
@@ -72,7 +72,7 @@ final class Add extends ForeignKey
         }
 
         foreach ($this->foreignKeys as $fk) {
-            if ($this->foreignTable != $this->table && !$foreignSchema->hasColumn($fk)) {
+            if ($this->foreignTable !== $this->table && !$foreignSchema->hasColumn($fk)) {
                 throw new ForeignKeyException(
                     "Unable to add foreign key '{$schema->getName()}'.'{$this->columnNames()}',"
                     . " foreign column '{$this->foreignTable}'.'{$fk}' does not exists"
@@ -93,16 +93,20 @@ final class Add extends ForeignKey
          * We are allowing both formats "NO_ACTION" and "NO ACTION".
          */
 
-        $foreignKey->onDelete(str_replace(
-            '_',
-            ' ',
-            $this->getOption('delete', ForeignKeyInterface::NO_ACTION)
-        ));
+        $foreignKey->onDelete(
+            str_replace(
+                '_',
+                ' ',
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION)
+            )
+        );
 
-        $foreignKey->onUpdate(str_replace(
-            '_',
-            ' ',
-            $this->getOption('update', ForeignKeyInterface::NO_ACTION)
-        ));
+        $foreignKey->onUpdate(
+            str_replace(
+                '_',
+                ' ',
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION)
+            )
+        );
     }
 }

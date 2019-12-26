@@ -38,7 +38,7 @@ final class Add extends Index
         $schema = $capsule->getSchema($this->getTable());
 
         if ($schema->hasIndex($this->columns)) {
-            $columns = join(',', $this->columns);
+            $columns = implode(',', $this->columns);
             throw new IndexException(
                 "Unable to create index '{$schema->getName()}'.({$columns}), index already exists"
             );
