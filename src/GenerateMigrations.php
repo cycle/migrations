@@ -11,17 +11,14 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Spiral\Database\Schema\AbstractTable;
 use Spiral\Migrations\Atomizer\Atomizer;
 use Spiral\Migrations\Atomizer\Renderer;
-use Spiral\Migrations\Atomizer\RendererInterface;
 use Spiral\Migrations\Config\MigrationConfig;
-use Spiral\Migrations\Migration;
 use Spiral\Migrations\RepositoryInterface;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\FileDeclaration;
 
 /**
  * Migration generator creates set of migrations needed to sync database schema with desired state. Each database will
@@ -35,27 +32,21 @@ class GenerateMigrations implements GeneratorInterface
     /** @var RepositoryInterface */
     private $repository;
 
-    /** @var RendererInterface */
-    private $renderer;
-
     /** @var MigrationConfig $migrationConfig */
     private $migrationConfig;
 
     /**
      * GenerateMigrations constructor.
      *
-     * @param RepositoryInterface    $migrationRepository
-     * @param MigrationConfig        $migrationConfig
-     * @param RendererInterface|null $renderer
+     * @param RepositoryInterface $migrationRepository
+     * @param MigrationConfig     $migrationConfig
      */
     public function __construct(
         RepositoryInterface $migrationRepository,
-        MigrationConfig $migrationConfig,
-        RendererInterface $renderer = null
+        MigrationConfig $migrationConfig
     ) {
         $this->repository = $migrationRepository;
         $this->migrationConfig = $migrationConfig;
-        $this->renderer = $renderer ?? new Renderer();
     }
 
     /**
@@ -66,7 +57,7 @@ class GenerateMigrations implements GeneratorInterface
     {
         $databases = [];
         foreach ($registry as $e) {
-            if ($registry->hasTable($e)) {
+            if ($registry->hasTable($e) && !$e->getOptions()->has(SyncTables::READONLY_SCHEMA)) {
                 $databases[$registry->getDatabase($e)][] = $registry->getTableSchema($e);
             }
         }
@@ -182,6 +173,6 @@ class GenerateMigrations implements GeneratorInterface
             }
         }
 
-        return join('_', $name);
+        return implode('_', $name);
     }
 }
