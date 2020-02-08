@@ -36,15 +36,6 @@ require dirname(__DIR__) . '/vendor/autoload.php';
         'user'   => 'root',
         'pass'   => 'root'
     ],
-    'mysql56'   => [
-        'driver' => \Spiral\Database\Driver\MySQL\MySQLDriver::class,
-        'check'  => function () {
-            return !in_array('mysql', \PDO::getAvailableDrivers());
-        },
-        'conn'   => 'mysql:host=127.0.0.1:13305;dbname=spiral',
-        'user'   => 'root',
-        'pass'   => 'root'
-    ],
     'postgres'  => [
         'driver' => \Spiral\Database\Driver\Postgres\PostgresDriver::class,
         'check'  => function () {
