@@ -10,7 +10,7 @@
     "spiral/migrations": "^2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~7.0",
+    "phpunit/phpunit": "~8.0",
     "cycle/annotated": "^1.0",
     "spiral/debug": "^1.3",
     "spiral/code-style": "^1.0"
