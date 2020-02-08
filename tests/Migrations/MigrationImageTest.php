@@ -17,12 +17,12 @@ class MigrationImageTest extends TestCase
 
     protected const DATABASE_DEFAULT = 'defaultDatabaseName';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::$defaultMigrationConfig = new MigrationConfig();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->migrationImage = new MigrationImage(static::$defaultMigrationConfig, static::DATABASE_DEFAULT);
