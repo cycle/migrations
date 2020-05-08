@@ -43,6 +43,9 @@ final class FileRepository implements RepositoryInterface
     /** @var FilesInterface */
     private $files;
 
+    /** @var \Doctrine\Inflector\Inflector */
+    private $inflector;
+
     /**
      * @param MigrationConfig       $config
      * @param FactoryInterface|null $factory
@@ -52,6 +55,7 @@ final class FileRepository implements RepositoryInterface
         $this->config = $config;
         $this->files = new Files();
         $this->factory = $factory ?? new Container();
+        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
     }
 
     /**
@@ -91,7 +95,7 @@ final class FileRepository implements RepositoryInterface
             );
         }
 
-        $inflectedName = Inflector::tableize($name);
+        $inflectedName = $this->inflector->tableize($name);
 
         foreach ($this->getMigrations() as $migration) {
             if (get_class($migration) === $class) {
@@ -158,7 +162,7 @@ final class FileRepository implements RepositoryInterface
      */
     private function createFilename(string $name): string
     {
-        $name = Inflector::tableize($name);
+        $name = $this->inflector->tableize($name);
 
         $filename = sprintf(
             self::FILENAME_FORMAT,
