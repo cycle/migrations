@@ -137,13 +137,15 @@ final class FileRepository implements RepositoryInterface
                 throw new RepositoryException("Invalid migration filename '{$filename}'");
             }
 
+            $created = \DateTime::createFromFormat(self::TIMESTAMP_FORMAT, $definition[0]);
+            if (false === $created) {
+                throw new RepositoryException("Invalid migration filename '{$filename}' - corrupted date format");
+            }
+
             yield [
                 'filename' => $filename,
                 'class'    => $reflection->getClasses()[0],
-                'created'  => \DateTime::createFromFormat(
-                    self::TIMESTAMP_FORMAT,
-                    $definition[0]
-                ),
+                'created'  => $created,
                 'chunk'    => $definition[1],
                 'name'     => str_replace(
                     '.php',

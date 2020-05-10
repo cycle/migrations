@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Migrations\Tests;
 
+use DateTime;
 use Spiral\Migrations\Fixtures\AddForeignKeyMigration;
 use Spiral\Migrations\Fixtures\AlterForeignKeyMigration;
 use Spiral\Migrations\Fixtures\AlterNonExistedColumnMigration;
@@ -353,12 +354,22 @@ abstract class ExceptionsTest extends BaseTest
         $this->migrator->run();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\RepositoryException
-     */
     public function testBadMigrationFile(): void
     {
         file_put_contents(__DIR__ . '/../files/mmm.php', 'test');
+
+        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
+        $this->expectExceptionMessageMatches("/Invalid migration filename '.+'/");
+        $this->repository->getMigrations();
+    }
+
+    public function testBadDateFormatMigrationFile(): void
+    {
+        $fileName = (new \DateTime())->format('dmY-his') . '_0_test.php';
+        file_put_contents(__DIR__ . "/../files/{$fileName}", 'test');
+
+        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
+        $this->expectExceptionMessageMatches("/Invalid migration filename '.+' - corrupted date format/");
         $this->repository->getMigrations();
     }
 
