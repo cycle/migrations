@@ -40,8 +40,8 @@ class MigrationImage
         $this->migrationConfig = $config;
         $this->class = new ClassDeclaration('newMigration', 'Migration');
 
-        $this->class->method('up')->setPublic();
-        $this->class->method('down')->setPublic();
+        $this->class->method('up')->setReturn('void')->setPublic();
+        $this->class->method('down')->setReturn('void')->setPublic();
 
         $this->file = new FileDeclaration($config->getNamespace());
         $this->file->addUse(Migration::class);
