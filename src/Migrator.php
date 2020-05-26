@@ -43,6 +43,14 @@ final class Migrator
     }
 
     /**
+     * @return MigrationConfig
+     */
+    public function getConfig(): MigrationConfig
+    {
+        return $this->config;
+    }
+
+    /**
      * @return RepositoryInterface
      */
     public function getRepository(): RepositoryInterface
