@@ -54,6 +54,9 @@ abstract class BaseTest extends TestCase
     /**  @var Migrator */
     protected $migrator;
 
+    /**  @var MigrationConfig */
+    protected $migrationConfig;
+
     /** @var DatabaseManager */
     protected $dbal;
 
@@ -72,12 +75,12 @@ abstract class BaseTest extends TestCase
         $this->container = $container = new Container();
         $this->dbal = $this->getDBAL($this->container);
 
-        $config = new MigrationConfig(static::CONFIG);
+        $this->migrationConfig = new MigrationConfig(static::CONFIG);
 
         $this->migrator = new Migrator(
-            $config,
+            $this->migrationConfig,
             $this->dbal,
-            $this->repository = new FileRepository($config, $this->container)
+            $this->repository = new FileRepository($this->migrationConfig, $this->container)
         );
     }
 
