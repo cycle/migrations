@@ -46,6 +46,11 @@ abstract class MigratorTest extends BaseTest
         $this->assertSame($this->repository, $this->migrator->getRepository());
     }
 
+    public function testConfig(): void
+    {
+        $this->assertSame($this->migrationConfig, $this->migrator->getConfig());
+    }
+
     /**
      * @expectedException \Spiral\Migrations\Exception\MigrationException
      */
