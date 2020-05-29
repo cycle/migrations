@@ -95,6 +95,7 @@ final class FileRepository implements RepositoryInterface
             );
         }
 
+        $currentTimeStamp = date(self::TIMESTAMP_FORMAT);
         $inflectedName = $this->inflector->tableize($name);
 
         foreach ($this->getMigrations() as $migration) {
@@ -104,7 +105,10 @@ final class FileRepository implements RepositoryInterface
                 );
             }
 
-            if ($migration->getState()->getName() === $inflectedName) {
+            if (
+                $migration->getState()->getName() === $inflectedName
+                && $migration->getState()->getTimeCreated()->format(self::TIMESTAMP_FORMAT) === $currentTimeStamp
+            ) {
                 throw new RepositoryException(
                     "Unable to register migration '{$inflectedName}', migration under the same name already exists"
                 );

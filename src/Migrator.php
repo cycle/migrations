@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Migrations;
 
+use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Table;
 use Spiral\Migrations\Config\MigrationConfig;
@@ -19,6 +20,13 @@ use Spiral\Migrations\Exception\MigrationException;
 final class Migrator
 {
     private const DB_DATE_FORMAT = 'Y-m-d H:i:s';
+
+    private const MIGRATION_TABLE_FIELDS_LIST = [
+        'id',
+        'migration',
+        'time_executed',
+        'created_at'
+    ];
 
     /** @var MigrationConfig */
     private $config;
@@ -68,12 +76,12 @@ final class Migrator
     public function isConfigured(): bool
     {
         foreach ($this->dbal->getDatabases() as $db) {
-            if (!$db->hasTable($this->config->getTable())) {
+            if (!$db->hasTable($this->config->getTable()) || !$this->checkMigrationTableStructure($db)) {
                 return false;
             }
         }
 
-        return true;
+        return !$this->isRestoreMigrationDataRequired();
     }
 
     /**
@@ -92,9 +100,19 @@ final class Migrator
             $schema->primary('id');
             $schema->string('migration', 255)->nullable(false);
             $schema->datetime('time_executed')->datetime();
-            $schema->index(['migration']);
+            $schema->datetime('created_at')->datetime();
+            $schema->index(['migration', 'created_at'])
+                ->unique(true);
+
+            if ($schema->hasIndex(['migration'])) {
+                $schema->dropIndex(['migration']);
+            }
 
             $schema->save();
+        }
+
+        if ($this->isRestoreMigrationDataRequired()) {
+            $this->restoreMigrationData();
         }
     }
 
@@ -145,7 +163,8 @@ final class Migrator
                 $this->migrationTable($migration->getDatabase())->insertOne(
                     [
                         'migration' => $migration->getState()->getName(),
-                        'time_executed' => new \DateTime('now')
+                        'time_executed' => new \DateTime('now'),
+                        'created_at' => $this->getMigrationCreatedAtForDb($migration),
                     ]
                 );
 
@@ -197,11 +216,13 @@ final class Migrator
                 }
             );
 
-            $this->migrationTable($migration->getDatabase())->delete(
-                [
-                    'migration' => $migration->getState()->getName()
-                ]
-            )->run();
+            $migrationData = $this->fetchMigrationData($migration);
+
+            if (!empty($migrationData)) {
+                $this->migrationTable($migration->getDatabase())
+                    ->delete(['id' => $migrationData['id']])
+                    ->run();
+            }
 
             return $migration->withState($this->resolveState($migration));
         }
@@ -219,11 +240,7 @@ final class Migrator
     {
         $db = $this->dbal->database($migration->getDatabase());
 
-        //Fetch migration information from database
-        $data = $this->migrationTable($migration->getDatabase())
-            ->select('id', 'time_executed')
-            ->where(['migration' => $migration->getState()->getName()])
-            ->run()->fetch();
+        $data = $this->fetchMigrationData($migration);
 
         if (empty($data['time_executed'])) {
             return $migration->getState()->withStatus(State::STATUS_PENDING);
@@ -244,5 +261,103 @@ final class Migrator
     protected function migrationTable(string $database = null): Table
     {
         return $this->dbal->database($database)->table($this->config->getTable());
+    }
+
+    protected function checkMigrationTableStructure(Database $db): bool
+    {
+        $table = $db->table($this->config->getTable());
+
+        foreach (self::MIGRATION_TABLE_FIELDS_LIST as $field) {
+            if (!$table->hasColumn($field)) {
+                return false;
+            }
+        }
+
+        if (!$table->hasIndex(['migration', 'created_at'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Fetch migration information from database
+     *
+     * @param MigrationInterface $migration
+     *
+     * @return array|null
+     */
+    protected function fetchMigrationData(MigrationInterface $migration): ?array
+    {
+        $migrationData = $this->migrationTable($migration->getDatabase())
+            ->select('id', 'time_executed', 'created_at')
+            ->where(
+                [
+                    'migration' => $migration->getState()->getName(),
+                    'created_at' => $this->getMigrationCreatedAtForDb($migration)->format(self::DB_DATE_FORMAT),
+                ]
+            )
+            ->run()
+            ->fetch();
+
+        return is_array($migrationData) ? $migrationData : [];
+    }
+
+    protected function restoreMigrationData(): void
+    {
+        foreach ($this->repository->getMigrations() as $migration) {
+            $migrationData = $this->migrationTable($migration->getDatabase())
+                ->select('id')
+                ->where(
+                    [
+                        'migration' => $migration->getState()->getName(),
+                        'created_at' => null,
+                    ]
+                )
+                ->run()
+                ->fetch();
+
+            if (!empty($migrationData)) {
+                $this->migrationTable($migration->getDatabase())
+                    ->update(
+                        ['created_at' => $this->getMigrationCreatedAtForDb($migration)],
+                        ['id' => $migrationData['id']]
+                    )
+                    ->run();
+            }
+        }
+    }
+
+    /**
+     * Check if some data modification required
+     *
+     * @return bool
+     */
+    protected function isRestoreMigrationDataRequired(): bool
+    {
+        foreach ($this->dbal->getDatabases() as $db) {
+            $table = $db->table($this->config->getTable());
+
+            if (
+                $table->select('id')
+                    ->where(['created_at' => null])
+                    ->count() > 0
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function getMigrationCreatedAtForDb(MigrationInterface $migration): \DateTimeInterface
+    {
+        $db = $this->dbal->database($migration->getDatabase());
+
+        return \DateTimeImmutable::createFromFormat(
+            self::DB_DATE_FORMAT,
+            $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT),
+            $db->getDriver()->getTimezone()
+        );
     }
 }
