@@ -17,6 +17,14 @@ use Spiral\Migrations\Exception\MigrationException;
 
 abstract class MigratorTest extends BaseTest
 {
+    public function testIsConfigured(): void
+    {
+        $this->assertFalse($this->migrator->isConfigured());
+
+        $this->migrator->configure();
+        $this->assertTrue($this->migrator->isConfigured());
+    }
+
     public function testConfigure(): void
     {
         $this->assertFalse($this->migrator->isConfigured());
@@ -34,6 +42,20 @@ abstract class MigratorTest extends BaseTest
         $this->assertTrue($this->db->hasTable('migrations'));
 
         $this->migrator->configure();
+    }
+
+    public function testConfiguredTableStructure(): void
+    {
+        $this->migrator->configure();
+        $table = $this->db->table('migrations');
+
+        $this->assertTrue($table->hasColumn('id'));
+        $this->assertTrue($table->hasColumn('migration'));
+        $this->assertTrue($table->hasColumn('time_executed'));
+        $this->assertTrue($table->hasColumn('created_at'));
+
+        $this->assertFalse($table->hasIndex(['migration']));
+        $this->assertTrue($table->hasIndex(['migration', 'created_at']));
     }
 
     public function testGetEmptyMigrations(): void
