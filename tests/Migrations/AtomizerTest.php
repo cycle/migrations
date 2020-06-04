@@ -303,9 +303,6 @@ abstract class AtomizerTest extends BaseTest
         $this->assertFalse($this->db->hasTable('sample'));
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\Operation\TableException
-     */
     public function testChangePrimaryKeys(): void
     {
         //Create thought migration
@@ -327,6 +324,13 @@ abstract class AtomizerTest extends BaseTest
         $schema->setPrimaryKeys(['id']);
 
         $this->atomize('migration2', [$schema]);
+
+        $this->expectException(\Spiral\Migrations\Exception\MigrationException::class);
+        $this->expectExceptionMessageMatches(
+            "/Error in the migration \([0-9a-z_\-]+ \(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)\) occurred: "
+            . "Unable to set primary keys for table \'.+\'\.\'.+\', table already exists/"
+        );
+
         $this->migrator->run();
     }
 
