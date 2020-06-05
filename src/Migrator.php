@@ -18,6 +18,8 @@ use Spiral\Migrations\Exception\MigrationException;
 
 final class Migrator
 {
+    private const DB_DATE_FORMAT = 'Y-m-d H:i:s';
+
     /** @var MigrationConfig */
     private $config;
 
@@ -116,9 +118,10 @@ final class Migrator
      * Execute one migration and return it's instance.
      *
      * @param CapsuleInterface $capsule
+     *
      * @return null|MigrationInterface
      *
-     * @throws \Throwable
+     * @throws MigrationException
      */
     public function run(CapsuleInterface $capsule = null): ?MigrationInterface
     {
@@ -131,21 +134,37 @@ final class Migrator
                 continue;
             }
 
-            $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-            $capsule->getDatabase($migration->getDatabase())->transaction(
-                static function () use ($migration, $capsule): void {
-                    $migration->withCapsule($capsule)->up();
-                }
-            );
+            try {
+                $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
+                $capsule->getDatabase($migration->getDatabase())->transaction(
+                    static function () use ($migration, $capsule): void {
+                        $migration->withCapsule($capsule)->up();
+                    }
+                );
 
-            $this->migrationTable($migration->getDatabase())->insertOne(
-                [
-                    'migration'     => $migration->getState()->getName(),
-                    'time_executed' => new \DateTime('now')
-                ]
-            );
+                $this->migrationTable($migration->getDatabase())->insertOne(
+                    [
+                        'migration' => $migration->getState()->getName(),
+                        'time_executed' => new \DateTime('now')
+                    ]
+                );
 
-            return $migration->withState($this->resolveState($migration));
+                return $migration->withState($this->resolveState($migration));
+            } catch (\Throwable $exception) {
+                throw new MigrationException(
+                    \sprintf(
+                        'Error in the migration (%s) occurred: %s',
+                        \sprintf(
+                            '%s (%s)',
+                            $migration->getState()->getName(),
+                            $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT)
+                        ),
+                        $exception->getMessage()
+                    ),
+                    $exception->getCode(),
+                    $exception
+                );
+            }
         }
 
         return null;

@@ -13,6 +13,7 @@ namespace Spiral\Migrations\Tests;
 
 use Spiral\Migrations\Capsule;
 use Spiral\Migrations\State;
+use Spiral\Migrations\Exception\MigrationException;
 
 abstract class MigratorTest extends BaseTest
 {
@@ -51,19 +52,19 @@ abstract class MigratorTest extends BaseTest
         $this->assertSame($this->migrationConfig, $this->migrator->getConfig());
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\MigrationException
-     */
     public function testRunUnconfigured(): void
     {
+        $this->expectException(MigrationException::class);
+        $this->expectExceptionMessage("Unable to run migration, Migrator not configured");
+
         $this->migrator->run();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\MigrationException
-     */
     public function testRollbackUnconfigured(): void
     {
+        $this->expectException(MigrationException::class);
+        $this->expectExceptionMessage("Unable to run migration, Migrator not configured");
+
         $this->migrator->rollback();
     }
 
@@ -90,29 +91,29 @@ abstract class MigratorTest extends BaseTest
         ]);
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\MigrationException
-     */
     public function testNoState(): void
     {
+        $this->expectException(MigrationException::class);
+        $this->expectExceptionMessage("Unable to get migration state, no state are set");
+
         $x = new TestMigration();
         $x->up();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\MigrationException
-     */
     public function testNoCapsule(): void
     {
+        $this->expectException(MigrationException::class);
+        $this->expectExceptionMessage("Unable to get table blueprint, no capsule are set");
+
         $x = new TestMigration();
         $x->getTable();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\MigrationException
-     */
     public function testNoCapsule2(): void
     {
+        $this->expectException(MigrationException::class);
+        $this->expectExceptionMessage("Unable to get database, no capsule are set");
+
         $x = new TestMigration();
         $x->down();
     }
