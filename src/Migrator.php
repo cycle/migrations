@@ -161,7 +161,8 @@ final class Migrator
                         ),
                         $exception->getMessage()
                     ),
-                    $exception->getCode()
+                    $exception->getCode(),
+                    $exception
                 );
             }
         }
