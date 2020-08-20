@@ -98,7 +98,7 @@ final class Migrator
 
             // Schema update will automatically sync all needed data
             $schema->primary('id');
-            $schema->string('migration', 255)->nullable(false);
+            $schema->string('migration', 191)->nullable(false);
             $schema->datetime('time_executed')->datetime();
             $schema->datetime('created_at')->datetime();
             $schema->index(['migration', 'created_at'])
