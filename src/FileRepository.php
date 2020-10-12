@@ -74,7 +74,7 @@ final class FileRepository implements RepositoryInterface
             /** @var MigrationInterface $migration */
             $migration = $this->factory->make($f['class']);
 
-            $migrations[$f['created']->getTimestamp() . $f['chunk']] = $migration->withState(
+            $migrations[$f['filename']] = $migration->withState(
                 new State($f['name'], $f['created'])
             );
         }
