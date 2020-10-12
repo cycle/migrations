@@ -21,10 +21,12 @@ abstract class MigratorTest extends BaseTest
     {
         $files = [
             '20200909.024119_333_333_migration_1.php'   => 'A3',
+            '20200909.030203_22_22_migration_1.php'     => 'B2',
+            '20200909.030203_1_1_migration_1.php'     => 'B1',
             '20200909.024119_1_1_migration_1.php'       => 'A1',
             '20200909.024119_22_22_migration_2.php'     => 'A2',
             '20200909.024119_4444_4444_migration_2.php' => 'A4',
-            '20200923.040608_0_0_migration_3.php'       => 'B',
+            '20200923.040608_0_0_migration_3.php'       => 'C',
         ];
         $stub = file_get_contents(__DIR__ . '/../files/migration.stub');
         foreach ($files as $name => $class) {
@@ -39,7 +41,7 @@ abstract class MigratorTest extends BaseTest
             array_values($migrations)
         );
 
-        $this->assertSame(['A1', 'A2', 'A3', 'A4', 'B'], $classes);
+        $this->assertSame(['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'C'], $classes);
     }
 
     public function testIsConfigured(): void
