@@ -19,12 +19,6 @@ abstract class MigratorTest extends BaseTest
 {
     public function testSortingOrder(): void
     {
-        $stub = "<?php\n"
-            . "class %s extends \\Spiral\\Migrations\\Migration\n"
-            . "{\n"
-            . "    public function up(){}\n"
-            . "    public function down(){}\n"
-            . '}';
         $files = [
             '20200909.024119_333_333_migration_1.php'   => 'A3',
             '20200909.024119_1_1_migration_1.php'       => 'A1',
@@ -32,6 +26,7 @@ abstract class MigratorTest extends BaseTest
             '20200909.024119_4444_4444_migration_2.php' => 'A4',
             '20200923.040608_0_0_migration_3.php'       => 'B',
         ];
+        $stub = file_get_contents(__DIR__ . '/../files/migration.stub');
         foreach ($files as $name => $class) {
             file_put_contents(__DIR__ . "/../files/$name", sprintf($stub, $class));
         }
