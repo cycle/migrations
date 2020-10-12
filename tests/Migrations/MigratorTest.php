@@ -131,11 +131,9 @@ abstract class MigratorTest extends BaseTest
         $this->assertTrue($capsule->getTable('test')->exists());
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\CapsuleException
-     */
     public function testCapsuleException(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\CapsuleException::class);
         $capsule = new Capsule($this->db);
 
         $capsule->execute(

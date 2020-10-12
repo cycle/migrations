@@ -131,11 +131,9 @@ abstract class BlueprintTest extends BaseTest
         $this->assertTrue($blueprint->getSchema()->exists());
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\Operation\TableException
-     */
     public function testUpdateTableError(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\Operation\TableException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -173,11 +171,9 @@ abstract class BlueprintTest extends BaseTest
             ->update();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
-     */
     public function testUpdateTableError2(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -193,11 +189,9 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->addColumn('value', 'int')->update();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\Operation\ColumnException
-     */
     public function testUpdateTableError5(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -213,11 +207,9 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->addColumn('value', 'int')->update();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\Operation\IndexException
-     */
     public function testUpdateTableError3(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\Operation\IndexException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
