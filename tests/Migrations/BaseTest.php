@@ -400,7 +400,6 @@ abstract class BaseTest extends TestCase
             $names = [];
             foreach ($comparator->alteredColumns() as $pair) {
                 $names[] = $pair[0]->getName();
-                print_r($pair);
             }
 
             return "Table '{$table}' not synced, column(s) '" . join(

@@ -436,29 +436,23 @@ abstract class ExceptionsTest extends BaseTest
         $this->repository->getMigrations();
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\RepositoryException
-     */
     public function testDuplicateClassMigration(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('unique_name_1', DuplicateColumnMigration::class);
         $this->repository->registerMigration('unique_name_2', DuplicateColumnMigration::class);
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\RepositoryException
-     */
     public function testDuplicateFileNameMigration(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('camel_case_duplicate', DuplicateColumnMigration::class);
         $this->repository->registerMigration('camelCaseDuplicate', CreateEmptyMigration::class);
     }
 
-    /**
-     * @expectedException \Spiral\Migrations\Exception\RepositoryException
-     */
     public function testInvalidMigration(): void
     {
+        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('m', 'invalid');
     }
 }
