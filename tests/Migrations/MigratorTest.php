@@ -77,7 +77,7 @@ abstract class MigratorTest extends BaseTest
     public function testRunUnconfigured(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to run migration, Migrator not configured");
+        $this->expectExceptionMessage('Unable to run migration, Migrator not configured');
 
         $this->migrator->run();
     }
@@ -85,7 +85,7 @@ abstract class MigratorTest extends BaseTest
     public function testRollbackUnconfigured(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to run migration, Migrator not configured");
+        $this->expectExceptionMessage('Unable to run migration, Migrator not configured');
 
         $this->migrator->rollback();
     }
@@ -116,7 +116,7 @@ abstract class MigratorTest extends BaseTest
     public function testNoState(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to get migration state, no state are set");
+        $this->expectExceptionMessage('Unable to get migration state, no state are set');
 
         $x = new TestMigration();
         $x->up();
@@ -125,7 +125,7 @@ abstract class MigratorTest extends BaseTest
     public function testNoCapsule(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to get table blueprint, no capsule are set");
+        $this->expectExceptionMessage('Unable to get table blueprint, no capsule are set');
 
         $x = new TestMigration();
         $x->getTable();
@@ -134,7 +134,7 @@ abstract class MigratorTest extends BaseTest
     public function testNoCapsule2(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to get database, no capsule are set");
+        $this->expectExceptionMessage('Unable to get database, no capsule are set');
 
         $x = new TestMigration();
         $x->down();

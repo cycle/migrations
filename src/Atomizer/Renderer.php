@@ -120,6 +120,90 @@ final class Renderer implements RendererInterface
     }
 
     /**
+     * @param Source         $source
+     * @param AbstractColumn $column
+     * @param AbstractColumn $original
+     */
+    protected function alterColumn(
+        Source $source,
+        AbstractColumn $column,
+        AbstractColumn $original
+    ): void {
+        if ($column->getName() !== $original->getName()) {
+            $name = $original->getName();
+        } else {
+            $name = $column->getName();
+        }
+
+        $this->render(
+            $source,
+            '    ->alterColumn(%s, %s, %s)',
+            $name,
+            $column->getDeclaredType() ?? $column->getAbstractType(),
+            $column
+        );
+
+        if ($column->getName() !== $original->getName()) {
+            $this->render(
+                $source,
+                '    ->renameColumn(%s, %s)',
+                $name,
+                $column->getName()
+            );
+        }
+    }
+
+    /**
+     * Render values and options into source.
+     *
+     * @param Source $source
+     * @param string $format
+     * @param array  ...$values
+     */
+    protected function render(Source $source, string $format, ...$values): void
+    {
+        $serializer = $this->getSerializer();
+
+        $rendered = [];
+        foreach ($values as $value) {
+            if ($value instanceof AbstractTable) {
+                $rendered[] = $serializer->serialize(
+                    substr($value->getName(), strlen($value->getPrefix()))
+                );
+                continue;
+            }
+
+            if ($value instanceof AbstractColumn) {
+                $rendered[] = $this->columnOptions($serializer, $value);
+                continue;
+            }
+
+            if ($value instanceof AbstractIndex) {
+                $rendered[] = $this->indexOptions($serializer, $value);
+                continue;
+            }
+
+            if ($value instanceof AbstractForeignKey) {
+                $rendered[] = $this->foreignKeyOptions($serializer, $value);
+                continue;
+            }
+
+            // numeric array
+            if (is_array($value) && count($value) > 0 && is_numeric(array_keys($value)[0])) {
+                $rendered[] = '["' . implode('", "', $value) . '"]';
+                continue;
+            }
+
+            $rendered[] = $serializer->serialize($value);
+        }
+
+        $lines = sprintf($format, ...$rendered);
+        foreach (explode("\n", $lines) as $line) {
+            $source->addLine($line);
+        }
+    }
+
+    /**
      * @param Source     $source
      * @param Comparator $comparator
      */
@@ -328,90 +412,6 @@ final class Renderer implements RendererInterface
 
         foreach ($comparator->addedForeignKeys() as $key) {
             $this->render($source, '    ->dropForeignKey(%s)', $key->getColumns());
-        }
-    }
-
-    /**
-     * @param Source         $source
-     * @param AbstractColumn $column
-     * @param AbstractColumn $original
-     */
-    protected function alterColumn(
-        Source $source,
-        AbstractColumn $column,
-        AbstractColumn $original
-    ): void {
-        if ($column->getName() !== $original->getName()) {
-            $name = $original->getName();
-        } else {
-            $name = $column->getName();
-        }
-
-        $this->render(
-            $source,
-            '    ->alterColumn(%s, %s, %s)',
-            $name,
-            $column->getDeclaredType() ?? $column->getAbstractType(),
-            $column
-        );
-
-        if ($column->getName() !== $original->getName()) {
-            $this->render(
-                $source,
-                '    ->renameColumn(%s, %s)',
-                $name,
-                $column->getName()
-            );
-        }
-    }
-
-    /**
-     * Render values and options into source.
-     *
-     * @param Source $source
-     * @param string $format
-     * @param array  ...$values
-     */
-    protected function render(Source $source, string $format, ...$values): void
-    {
-        $serializer = $this->getSerializer();
-
-        $rendered = [];
-        foreach ($values as $value) {
-            if ($value instanceof AbstractTable) {
-                $rendered[] = $serializer->serialize(
-                    substr($value->getName(), strlen($value->getPrefix()))
-                );
-                continue;
-            }
-
-            if ($value instanceof AbstractColumn) {
-                $rendered[] = $this->columnOptions($serializer, $value);
-                continue;
-            }
-
-            if ($value instanceof AbstractIndex) {
-                $rendered[] = $this->indexOptions($serializer, $value);
-                continue;
-            }
-
-            if ($value instanceof AbstractForeignKey) {
-                $rendered[] = $this->foreignKeyOptions($serializer, $value);
-                continue;
-            }
-
-            // numeric array
-            if (is_array($value) && count($value) > 0 && is_numeric(array_keys($value)[0])) {
-                $rendered[] = '["' . implode('", "', $value) . '"]';
-                continue;
-            }
-
-            $rendered[] = $serializer->serialize($value);
-        }
-
-        $lines = sprintf($format, ...$rendered);
-        foreach (explode("\n", $lines) as $line) {
-            $source->addLine($line);
         }
     }
 
