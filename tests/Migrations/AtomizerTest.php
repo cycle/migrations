@@ -31,6 +31,7 @@ abstract class AtomizerTest extends BaseTest
 
         $this->assertInstanceOf(Migration::class, $migration);
         $this->assertSame(State::STATUS_EXECUTED, $migration->getState()->getStatus());
+        $this->assertInstanceOf(\DateTimeInterface::class, $migration->getState()->getTimeCreated());
         $this->assertInstanceOf(\DateTimeInterface::class, $migration->getState()->getTimeExecuted());
 
         $this->assertTrue($this->db->hasTable('sample'));
@@ -160,7 +161,7 @@ abstract class AtomizerTest extends BaseTest
 
         $this->migrator->rollback();
         $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
-        $this->assertNull($this->schema('sample')->column('value')->getDefaultValue());
+        $this->assertSame(null, $this->schema('sample')->column('value')->getDefaultValue());
 
         $this->assertTrue($this->db->hasTable('sample'));
 
