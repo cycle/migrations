@@ -19,11 +19,11 @@ abstract class MigratorTest extends BaseTest
 {
     public function testSortingOrder(): void
     {
-        $stub = '<?php'
-            . 'class %s extends \\Spiral\\Migrations\\Migration'
-            . '{'
-            . '    public function up(){}'
-            . '    public function down(){}'
+        $stub = "<?php\n"
+            . "class %s extends \\Spiral\\Migrations\\Migration\n"
+            . "{\n"
+            . "    public function up(){}\n"
+            . "    public function down(){}\n"
             . '}';
         $files = [
             '20200909.024119_333_333_migration_1.php'   => 'A3',
