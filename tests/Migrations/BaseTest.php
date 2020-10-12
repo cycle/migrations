@@ -262,21 +262,21 @@ abstract class BaseTest extends TestCase
             'Primary keys changed'
         );
 
-        $this->assertSame(
+        $this->assertCount(
             count($source->getColumns()),
-            count($target->getColumns()),
+            $target->getColumns(),
             'Column number has changed'
         );
 
-        $this->assertSame(
+        $this->assertCount(
             count($source->getIndexes()),
-            count($target->getIndexes()),
+            $target->getIndexes(),
             'Index number has changed'
         );
 
-        $this->assertSame(
+        $this->assertCount(
             count($source->getForeignKeys()),
-            count($target->getForeignKeys()),
+            $target->getForeignKeys(),
             'FK number has changed'
         );
 
