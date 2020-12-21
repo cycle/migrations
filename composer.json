@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": ">=7.2",
     "spiral/core": "^1.1",
     "spiral/database": "^2.4",
     "spiral/files": "^2.0",
