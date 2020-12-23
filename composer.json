@@ -11,11 +11,11 @@
   ],
   "require": {
     "php": ">=7.2",
-    "spiral/core": "^1.1",
-    "spiral/database": "^2.4",
-    "spiral/files": "^2.0",
-    "spiral/tokenizer": "^2.0",
-    "spiral/reactor": "^2.0"
+    "spiral/core": "^2.7",
+    "spiral/database": "^2.7",
+    "spiral/files": "^2.7",
+    "spiral/tokenizer": "^2.7",
+    "spiral/reactor": "^2.7"
   },
   "require-dev": {
     "phpunit/phpunit": "~8.0",
