@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Migrations\Config\MigrationConfig;
+use Cycle\Migrations\Config\MigrationConfig;
 
 class ConfigTest extends TestCase
 {

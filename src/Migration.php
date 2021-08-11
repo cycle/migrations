@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseInterface;
-use Spiral\Migrations\Exception\MigrationException;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseInterface;
+use Cycle\Migrations\Exception\MigrationException;
 
 /**
  * Simple migration class with shortcut for database and blueprint instances.

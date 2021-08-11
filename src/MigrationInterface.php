@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Migrations\Exception\MigrationException;
+use Cycle\Migrations\Exception\MigrationException;
 
 interface MigrationInterface
 {

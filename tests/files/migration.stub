@@ -1,6 +1,6 @@
 <?php
 
-class %s extends \Spiral\Migrations\Migration
+class %s extends \Cycle\Migrations\Migration
 {
     public function up()
     {

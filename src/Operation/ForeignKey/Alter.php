@@ -9,12 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\ForeignKey;
+namespace Cycle\Migrations\Operation\ForeignKey;
 
-use Spiral\Database\ForeignKeyInterface;
-use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\ForeignKeyException;
-use Spiral\Migrations\Operation\Traits\OptionsTrait;
+use Cycle\Database\ForeignKeyInterface;
+use Cycle\Migrations\CapsuleInterface;
+use Cycle\Migrations\Exception\Operation\ForeignKeyException;
+use Cycle\Migrations\Operation\Traits\OptionsTrait;
 
 final class Alter extends ForeignKey
 {

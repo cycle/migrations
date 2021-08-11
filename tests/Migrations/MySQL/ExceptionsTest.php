@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\MySQL;
+namespace Cycle\Migrations\Tests\MySQL;
 
-class ExceptionsTest extends \Spiral\Migrations\Tests\ExceptionsTest
+class ExceptionsTest extends \Cycle\Migrations\Tests\ExceptionsTest
 {
     public const DRIVER = 'mysql';
 }

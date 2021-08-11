@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\SQLServer;
+namespace Cycle\Migrations\Tests\SQLServer;
 
-class MigratorTest extends \Spiral\Migrations\Tests\MigratorTest
+class MigratorTest extends \Cycle\Migrations\Tests\MigratorTest
 {
     public const DRIVER = 'sqlserver';
 }

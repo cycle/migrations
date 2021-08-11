@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\Column;
+namespace Cycle\Migrations\Operation\Column;
 
-use Spiral\Database\Schema\AbstractColumn;
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Migrations\Exception\Operation\ColumnException;
-use Spiral\Migrations\Operation\AbstractOperation;
-use Spiral\Migrations\Operation\Traits\OptionsTrait;
+use Cycle\Database\Schema\AbstractColumn;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Migrations\Exception\Operation\ColumnException;
+use Cycle\Migrations\Operation\AbstractOperation;
+use Cycle\Migrations\Operation\Traits\OptionsTrait;
 
 abstract class Column extends AbstractOperation
 {

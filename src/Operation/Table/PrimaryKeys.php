@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\Table;
+namespace Cycle\Migrations\Operation\Table;
 
-use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\TableException;
-use Spiral\Migrations\Operation\AbstractOperation;
+use Cycle\Migrations\CapsuleInterface;
+use Cycle\Migrations\Exception\Operation\TableException;
+use Cycle\Migrations\Operation\AbstractOperation;
 
 final class PrimaryKeys extends AbstractOperation
 {

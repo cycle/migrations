@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\ForeignKey;
+namespace Cycle\Migrations\Operation\ForeignKey;
 
-use Spiral\Migrations\Operation\AbstractOperation;
+use Cycle\Migrations\Operation\AbstractOperation;
 
 abstract class ForeignKey extends AbstractOperation
 {

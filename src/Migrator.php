@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseManager;
-use Spiral\Database\Table;
-use Spiral\Migrations\Config\MigrationConfig;
-use Spiral\Migrations\Exception\MigrationException;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseManager;
+use Cycle\Database\Table;
+use Cycle\Migrations\Config\MigrationConfig;
+use Cycle\Migrations\Exception\MigrationException;
 
 final class Migrator
 {

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Exception;
+namespace Cycle\Migrations\Exception;
 
 class ContextException extends MigrationException
 {

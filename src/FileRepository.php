@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
-use Spiral\Migrations\Config\MigrationConfig;
-use Spiral\Migrations\Exception\RepositoryException;
+use Cycle\Migrations\Config\MigrationConfig;
+use Cycle\Migrations\Exception\RepositoryException;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
 
 /**

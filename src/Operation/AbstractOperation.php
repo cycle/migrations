@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation;
+namespace Cycle\Migrations\Operation;
 
-use Spiral\Migrations\OperationInterface;
+use Cycle\Migrations\OperationInterface;
 
 abstract class AbstractOperation implements OperationInterface
 {

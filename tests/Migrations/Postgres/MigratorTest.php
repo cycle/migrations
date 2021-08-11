@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\Postgres;
+namespace Cycle\Migrations\Tests\Postgres;
 
-class MigratorTest extends \Spiral\Migrations\Tests\MigratorTest
+class MigratorTest extends \Cycle\Migrations\Tests\MigratorTest
 {
     public const DRIVER = 'postgres';
 }

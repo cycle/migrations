@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Exception\Operation;
+namespace Cycle\Migrations\Exception\Operation;
 
-use Spiral\Migrations\Exception\OperationException;
+use Cycle\Migrations\Exception\OperationException;
 
 class TableException extends OperationException
 {

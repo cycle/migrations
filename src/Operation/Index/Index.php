@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\Index;
+namespace Cycle\Migrations\Operation\Index;
 
-use Spiral\Migrations\Operation\AbstractOperation;
+use Cycle\Migrations\Operation\AbstractOperation;
 
 abstract class Index extends AbstractOperation
 {

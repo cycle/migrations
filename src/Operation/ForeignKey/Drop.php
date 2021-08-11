@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\ForeignKey;
+namespace Cycle\Migrations\Operation\ForeignKey;
 
-use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\ForeignKeyException;
+use Cycle\Migrations\CapsuleInterface;
+use Cycle\Migrations\Exception\Operation\ForeignKeyException;
 
 final class Drop extends ForeignKey
 {

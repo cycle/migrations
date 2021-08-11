@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
-use Spiral\Migrations\Migration;
+use Cycle\Migrations\Migration;
 
 class TestMigration extends Migration
 {

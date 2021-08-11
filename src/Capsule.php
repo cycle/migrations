@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseInterface;
-use Spiral\Database\DatabaseManager;
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Database\TableInterface;
-use Spiral\Migrations\Exception\CapsuleException;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseInterface;
+use Cycle\Database\DatabaseManager;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Database\TableInterface;
+use Cycle\Migrations\Exception\CapsuleException;
 
 /**
  * Isolates set of table specific operations and schemas into one place. Kinda repository.

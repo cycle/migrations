@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\SQLServer;
+namespace Cycle\Migrations\Tests\SQLServer;
 
-class BlueprintTest extends \Spiral\Migrations\Tests\BlueprintTest
+class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'sqlserver';
 }

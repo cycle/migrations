@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Fixtures;
+namespace Cycle\Migrations\Fixtures;
 
-use Spiral\Migrations\Migration;
+use Cycle\Migrations\Migration;
 
 class AlterNonExistedColumnMigration extends Migration
 {

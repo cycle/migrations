@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Atomizer;
+namespace Cycle\Migrations\Atomizer;
 
-use Spiral\Database\Schema\AbstractColumn;
-use Spiral\Database\Schema\AbstractForeignKey;
-use Spiral\Database\Schema\AbstractIndex;
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Database\Schema\Comparator;
+use Cycle\Database\Schema\AbstractColumn;
+use Cycle\Database\Schema\AbstractForeignKey;
+use Cycle\Database\Schema\AbstractIndex;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Database\Schema\Comparator;
 use Spiral\Reactor\Partial\Source;
 use Spiral\Reactor\Serializer;
 use Spiral\Reactor\Traits\SerializerTrait;
