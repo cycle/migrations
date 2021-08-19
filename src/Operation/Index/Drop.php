@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\Index;
+namespace Cycle\Migrations\Operation\Index;
 
-use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\IndexException;
+use Cycle\Migrations\CapsuleInterface;
+use Cycle\Migrations\Exception\Operation\IndexException;
 
 final class Drop extends Index
 {

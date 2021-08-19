@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Atomizer;
+namespace Cycle\Migrations\Atomizer;
 
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Database\Schema\Reflector;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Database\Schema\Reflector;
 use Spiral\Reactor\Partial\Source;
 
 /**

@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Migrations\Exception\RepositoryException;
+use Cycle\Migrations\Exception\RepositoryException;
 
 interface RepositoryInterface
 {

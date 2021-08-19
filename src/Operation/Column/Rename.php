@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\Column;
+namespace Cycle\Migrations\Operation\Column;
 
-use Spiral\Migrations\CapsuleInterface;
-use Spiral\Migrations\Exception\Operation\ColumnException;
-use Spiral\Migrations\Operation\AbstractOperation;
+use Cycle\Migrations\CapsuleInterface;
+use Cycle\Migrations\Exception\Operation\ColumnException;
+use Cycle\Migrations\Operation\AbstractOperation;
 
 final class Rename extends AbstractOperation
 {

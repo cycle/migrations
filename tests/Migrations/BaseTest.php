@@ -9,26 +9,26 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
-use Spiral\Database\Config\DatabaseConfig;
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseManager;
-use Spiral\Database\Driver\Driver;
-use Spiral\Database\Driver\HandlerInterface;
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Database\Schema\Comparator;
-use Spiral\Database\Schema\Reflector;
+use Cycle\Database\Config\DatabaseConfig;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseManager;
+use Cycle\Database\Driver\Driver;
+use Cycle\Database\Driver\HandlerInterface;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Database\Schema\Comparator;
+use Cycle\Database\Schema\Reflector;
 use Spiral\Files\Files;
-use Spiral\Migrations\Atomizer\Atomizer;
-use Spiral\Migrations\Atomizer\Renderer;
-use Spiral\Migrations\Config\MigrationConfig;
-use Spiral\Migrations\FileRepository;
-use Spiral\Migrations\Migration;
-use Spiral\Migrations\Migrator;
+use Cycle\Migrations\Atomizer\Atomizer;
+use Cycle\Migrations\Atomizer\Renderer;
+use Cycle\Migrations\Config\MigrationConfig;
+use Cycle\Migrations\FileRepository;
+use Cycle\Migrations\Migration;
+use Cycle\Migrations\Migrator;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
 

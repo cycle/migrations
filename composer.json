@@ -1,5 +1,5 @@
 {
-  "name": "spiral/migrations",
+  "name": "cycle/migrations",
   "type": "library",
   "description": "Database migrations, migration scaffolding",
   "license": "MIT",
@@ -12,7 +12,7 @@
   "require": {
     "php": ">=7.2",
     "spiral/core": "^2.7",
-    "spiral/database": "^2.7",
+    "cycle/database": "^2.9",
     "spiral/files": "^2.7",
     "spiral/tokenizer": "^2.7",
     "spiral/reactor": "^2.7"
@@ -24,13 +24,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Spiral\\Migrations\\": "src/"
+      "Cycle\\Migrations\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Spiral\\Migrations\\Tests\\": "tests/Migrations/",
-      "Spiral\\Migrations\\Fixtures\\": "tests/Fixtures/"
+      "Cycle\\Migrations\\Tests\\": "tests/Migrations/",
+      "Cycle\\Migrations\\Fixtures\\": "tests/Fixtures/"
     }
   }
 }

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Operation\Traits;
+namespace Cycle\Migrations\Operation\Traits;
 
 /**
  * Consumer must define property "aliases".

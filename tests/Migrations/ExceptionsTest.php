@@ -9,21 +9,21 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
-use Spiral\Migrations\Fixtures\AddForeignKeyMigration;
-use Spiral\Migrations\Fixtures\AlterForeignKeyMigration;
-use Spiral\Migrations\Fixtures\AlterNonExistedColumnMigration;
-use Spiral\Migrations\Fixtures\AlterNonExistedIndexMigration;
-use Spiral\Migrations\Fixtures\CreateEmptyMigration;
-use Spiral\Migrations\Fixtures\CreateSampleMigration;
-use Spiral\Migrations\Fixtures\DropForeignKeyMigration;
-use Spiral\Migrations\Fixtures\DropNonExistedIndexMigration;
-use Spiral\Migrations\Fixtures\DropNonExistedMigration;
-use Spiral\Migrations\Fixtures\DuplicateColumnMigration;
-use Spiral\Migrations\Fixtures\RenameColumnMigration;
-use Spiral\Migrations\Fixtures\RenameTableMigration;
-use Spiral\Migrations\Exception\MigrationException;
+use Cycle\Migrations\Fixtures\AddForeignKeyMigration;
+use Cycle\Migrations\Fixtures\AlterForeignKeyMigration;
+use Cycle\Migrations\Fixtures\AlterNonExistedColumnMigration;
+use Cycle\Migrations\Fixtures\AlterNonExistedIndexMigration;
+use Cycle\Migrations\Fixtures\CreateEmptyMigration;
+use Cycle\Migrations\Fixtures\CreateSampleMigration;
+use Cycle\Migrations\Fixtures\DropForeignKeyMigration;
+use Cycle\Migrations\Fixtures\DropNonExistedIndexMigration;
+use Cycle\Migrations\Fixtures\DropNonExistedMigration;
+use Cycle\Migrations\Fixtures\DuplicateColumnMigration;
+use Cycle\Migrations\Fixtures\RenameColumnMigration;
+use Cycle\Migrations\Fixtures\RenameTableMigration;
+use Cycle\Migrations\Exception\MigrationException;
 
 abstract class ExceptionsTest extends BaseTest
 {
@@ -421,7 +421,7 @@ abstract class ExceptionsTest extends BaseTest
     {
         file_put_contents(__DIR__ . '/../files/mmm.php', 'test');
 
-        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
+        $this->expectException(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->expectExceptionMessageMatches("/Invalid migration filename '.+'/");
         $this->repository->getMigrations();
     }
@@ -431,28 +431,28 @@ abstract class ExceptionsTest extends BaseTest
         $fileName = (new \DateTime())->format('dmY-his') . '_0_test.php';
         file_put_contents(__DIR__ . "/../files/{$fileName}", 'test');
 
-        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
+        $this->expectException(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->expectExceptionMessageMatches("/Invalid migration filename '.+' - corrupted date format/");
         $this->repository->getMigrations();
     }
 
     public function testDuplicateClassMigration(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
+        $this->expectException(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('unique_name_1', DuplicateColumnMigration::class);
         $this->repository->registerMigration('unique_name_2', DuplicateColumnMigration::class);
     }
 
     public function testDuplicateFileNameMigration(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
+        $this->expectException(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('camel_case_duplicate', DuplicateColumnMigration::class);
         $this->repository->registerMigration('camelCaseDuplicate', CreateEmptyMigration::class);
     }
 
     public function testInvalidMigration(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\RepositoryException::class);
+        $this->expectException(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('m', 'invalid');
     }
 }

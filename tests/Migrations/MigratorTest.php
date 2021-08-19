@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
-use Spiral\Migrations\Capsule;
-use Spiral\Migrations\Exception\MigrationException;
-use Spiral\Migrations\State;
+use Cycle\Migrations\Capsule;
+use Cycle\Migrations\Exception\MigrationException;
+use Cycle\Migrations\State;
 
 abstract class MigratorTest extends BaseTest
 {
@@ -131,7 +131,7 @@ abstract class MigratorTest extends BaseTest
 
     public function testCapsuleException(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\CapsuleException::class);
+        $this->expectException(\Cycle\Migrations\Exception\CapsuleException::class);
         $capsule = new Capsule($this->db);
 
         $capsule->execute([

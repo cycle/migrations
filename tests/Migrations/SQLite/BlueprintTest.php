@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\SQLite;
+namespace Cycle\Migrations\Tests\SQLite;
 
-class BlueprintTest extends \Spiral\Migrations\Tests\BlueprintTest
+class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'sqlite';
 }

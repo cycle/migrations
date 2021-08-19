@@ -9,12 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Database\DatabaseInterface;
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Database\TableInterface;
-use Spiral\Migrations\Exception\ContextException;
+use Cycle\Database\DatabaseInterface;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Database\TableInterface;
+use Cycle\Migrations\Exception\ContextException;
 
 /**
  * Migration capsule (isolation).

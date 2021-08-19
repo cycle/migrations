@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use Spiral\Database;
+use Cycle\Database;
 
 error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', '1');
@@ -18,7 +18,7 @@ mb_internal_encoding('UTF-8');
 //Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-\Spiral\Migrations\Tests\BaseTest::$config = [
+\Cycle\Migrations\Tests\BaseTest::$config = [
     'debug'     => false,
     'sqlite'    => [
         'driver'     => Database\Driver\SQLite\SQLiteDriver::class,
@@ -65,7 +65,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 if (!empty(getenv('DB'))) {
     switch (getenv('DB')) {
         case 'postgres':
-            \Spiral\Migrations\Tests\BaseTest::$config = [
+            \Cycle\Migrations\Tests\BaseTest::$config = [
                 'debug'    => false,
                 'postgres' => [
                     'driver' => Database\Driver\Postgres\PostgresDriver::class,
@@ -80,7 +80,7 @@ if (!empty(getenv('DB'))) {
             break;
 
         case 'mariadb':
-            \Spiral\Migrations\Tests\BaseTest::$config = [
+            \Cycle\Migrations\Tests\BaseTest::$config = [
                 'debug' => false,
                 'mysql' => [
                     'driver' => Database\Driver\MySQL\MySQLDriver::class,

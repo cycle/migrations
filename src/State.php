@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
 /**
  * Migration meta information specific to current environment

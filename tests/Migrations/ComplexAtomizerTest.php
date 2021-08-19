@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
-use Spiral\Database\ForeignKeyInterface;
+use Cycle\Database\ForeignKeyInterface;
 
 abstract class ComplexAtomizerTest extends BaseTest
 {

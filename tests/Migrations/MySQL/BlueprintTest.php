@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\MySQL;
+namespace Cycle\Migrations\Tests\MySQL;
 
-class BlueprintTest extends \Spiral\Migrations\Tests\BlueprintTest
+class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'mysql';
 }

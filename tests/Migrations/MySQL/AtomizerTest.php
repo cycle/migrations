@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\MySQL;
+namespace Cycle\Migrations\Tests\MySQL;
 
-class AtomizerTest extends \Spiral\Migrations\Tests\AtomizerTest
+class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
 {
     public const DRIVER = 'mysql';
 }

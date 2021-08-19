@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
-use Spiral\Migrations\Migration;
-use Spiral\Migrations\State;
+use Cycle\Migrations\Migration;
+use Cycle\Migrations\State;
 
 abstract class AtomizerTest extends BaseTest
 {
@@ -325,7 +325,7 @@ abstract class AtomizerTest extends BaseTest
 
         $this->atomize('migration2', [$schema]);
 
-        $this->expectException(\Spiral\Migrations\Exception\MigrationException::class);
+        $this->expectException(\Cycle\Migrations\Exception\MigrationException::class);
         $this->expectExceptionMessageMatches(
             "/Error in the migration \([0-9a-z_\-]+ \(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)\) occurred: "
             . "Unable to set primary keys for table \'.+\'\.\'.+\', table already exists/"

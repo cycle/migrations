@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Config;
+namespace Cycle\Migrations\Config;
 
 use Spiral\Core\InjectableConfig;
 

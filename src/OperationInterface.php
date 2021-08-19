@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Migrations\Exception\OperationException;
+use Cycle\Migrations\Exception\OperationException;
 
 /**
  * Represents simple table operation. Operation is a bridge between command and declarative

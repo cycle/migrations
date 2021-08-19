@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests\Postgres;
+namespace Cycle\Migrations\Tests\Postgres;
 
-class ComplexAtomizerTest extends \Spiral\Migrations\Tests\ComplexAtomizerTest
+class ComplexAtomizerTest extends \Cycle\Migrations\Tests\ComplexAtomizerTest
 {
     public const DRIVER = 'postgres';
 }

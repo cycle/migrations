@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations;
+namespace Cycle\Migrations;
 
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Migrations\Exception\BlueprintException;
-use Spiral\Migrations\Operation;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Migrations\Exception\BlueprintException;
+use Cycle\Migrations\Operation;
 
 /**
  * TableBlueprint is abstraction wrapper at top of AbstractTable which converts command based

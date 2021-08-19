@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Migrations\Tests;
+namespace Cycle\Migrations\Tests;
 
-use Spiral\Database\ForeignKeyInterface;
-use Spiral\Migrations\Capsule;
-use Spiral\Migrations\TableBlueprint;
+use Cycle\Database\ForeignKeyInterface;
+use Cycle\Migrations\Capsule;
+use Cycle\Migrations\TableBlueprint;
 
 abstract class BlueprintTest extends BaseTest
 {
@@ -133,7 +133,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testUpdateTableError(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\Operation\TableException::class);
+        $this->expectException(\Cycle\Migrations\Exception\Operation\TableException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -173,7 +173,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testUpdateTableError2(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\Operation\ColumnException::class);
+        $this->expectException(\Cycle\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -191,7 +191,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testUpdateTableError5(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\Operation\ColumnException::class);
+        $this->expectException(\Cycle\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -209,7 +209,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testUpdateTableError3(): void
     {
-        $this->expectException(\Spiral\Migrations\Exception\Operation\IndexException::class);
+        $this->expectException(\Cycle\Migrations\Exception\Operation\IndexException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
