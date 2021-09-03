@@ -18,8 +18,8 @@ final class State
 {
     // Migration status
     public const STATUS_UNDEFINED = -1;
-    public const STATUS_PENDING   = 0;
-    public const STATUS_EXECUTED  = 1;
+    public const STATUS_PENDING = 0;
+    public const STATUS_EXECUTED = 1;
 
     /** @var string */
     private $name;
@@ -95,7 +95,7 @@ final class State
      *
      * @return State
      */
-    public function withStatus(int $status, \DateTimeInterface $timeExecuted = null): State
+    public function withStatus(int $status, \DateTimeInterface $timeExecuted = null): self
     {
         $state = clone $this;
         $state->status = $status;

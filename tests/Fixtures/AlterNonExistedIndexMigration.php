@@ -19,7 +19,7 @@ class AlterNonExistedIndexMigration extends Migration
     {
         $this->table('sample')
             ->alterIndex(['column'], [
-                'unique' => true
+                'unique' => true,
             ])
             ->create();
     }

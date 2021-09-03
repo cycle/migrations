@@ -13,7 +13,6 @@ namespace Cycle\Migrations;
 
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Migrations\Exception\BlueprintException;
-use Cycle\Migrations\Operation;
 
 /**
  * TableBlueprint is abstraction wrapper at top of AbstractTable which converts command based
@@ -63,6 +62,7 @@ final class TableBlueprint
      * @param string $name
      * @param string $type
      * @param array  $options
+     *
      * @return TableBlueprint
      */
     public function addColumn(string $name, string $type, array $options = []): self
@@ -79,6 +79,7 @@ final class TableBlueprint
      * @param string $name
      * @param string $type
      * @param array  $options
+     *
      * @return TableBlueprint
      */
     public function alterColumn(string $name, string $type, array $options = []): self
@@ -94,6 +95,7 @@ final class TableBlueprint
      *
      * @param string $name
      * @param string $newName
+     *
      * @return TableBlueprint
      */
     public function renameColumn(string $name, string $newName): self
@@ -108,6 +110,7 @@ final class TableBlueprint
      * $table->dropColumn('email');
      *
      * @param string $name
+     *
      * @return TableBlueprint
      */
     public function dropColumn(string $name): self
@@ -123,6 +126,7 @@ final class TableBlueprint
      *
      * @param array $columns
      * @param array $options
+     *
      * @return TableBlueprint
      */
     public function addIndex(array $columns, array $options = []): self
@@ -138,6 +142,7 @@ final class TableBlueprint
      *
      * @param array $columns
      * @param array $options
+     *
      * @return TableBlueprint
      */
     public function alterIndex(array $columns, array $options): self
@@ -152,6 +157,7 @@ final class TableBlueprint
      * $table->dropIndex(['email']);
      *
      * @param array $columns
+     *
      * @return TableBlueprint
      */
     public function dropIndex(array $columns): self
@@ -169,6 +175,7 @@ final class TableBlueprint
      * @param string $foreignTable Database isolation prefix will be automatically added.
      * @param array  $foreignKeys
      * @param array  $options
+     *
      * @return TableBlueprint
      */
     public function addForeignKey(
@@ -196,6 +203,7 @@ final class TableBlueprint
      * @param string $foreignTable
      * @param array  $foreignKeys
      * @param array  $options
+     *
      * @return TableBlueprint
      */
     public function alterForeignKey(
@@ -220,6 +228,7 @@ final class TableBlueprint
      * $table->dropForeignKey('user_id');
      *
      * @param array $columns
+     *
      * @return TableBlueprint
      */
     public function dropForeignKey(array $columns): self
@@ -233,6 +242,7 @@ final class TableBlueprint
      * Set table primary keys index. Attention, you can only call it when table being created.
      *
      * @param array $keys
+     *
      * @return TableBlueprint
      */
     public function setPrimaryKeys(array $keys): self
@@ -296,6 +306,7 @@ final class TableBlueprint
      * Register new operation.
      *
      * @param OperationInterface $operation
+     *
      * @return TableBlueprint
      */
     public function addOperation(OperationInterface $operation): self

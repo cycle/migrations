@@ -334,7 +334,6 @@ abstract class AtomizerTest extends BaseTest
         $this->migrator->run();
     }
 
-
     public function testCreateAndThenUpdateEnumDefault(): void
     {
         //Create thought migration

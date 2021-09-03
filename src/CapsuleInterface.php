@@ -28,6 +28,7 @@ interface CapsuleInterface
 
     /**
      * @param string $table
+     *
      * @return TableInterface
      */
     public function getTable(string $table): TableInterface;
@@ -36,9 +37,10 @@ interface CapsuleInterface
      * Get schema associated with given database and table.
      *
      * @param string $table
-     * @return AbstractTable
      *
      * @throws ContextException
+     *
+     * @return AbstractTable
      */
     public function getSchema(string $table): AbstractTable;
 

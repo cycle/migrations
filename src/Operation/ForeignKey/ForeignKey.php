@@ -22,7 +22,7 @@ abstract class ForeignKey extends AbstractOperation
      */
     protected $aliases = [
         'onDelete' => ['delete'],
-        'onUpdate' => ['update']
+        'onUpdate' => ['update'],
     ];
 
     /**
@@ -47,6 +47,6 @@ abstract class ForeignKey extends AbstractOperation
      */
     public function columnNames(): string
     {
-        return join(', ', $this->columns);
+        return implode(', ', $this->columns);
     }
 }

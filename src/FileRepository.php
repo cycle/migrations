@@ -149,14 +149,14 @@ final class FileRepository implements RepositoryInterface
 
             yield [
                 'filename' => $filename,
-                'class'    => $reflection->getClasses()[0],
-                'created'  => $created,
-                'chunk'    => $definition[1],
-                'name'     => str_replace(
+                'class' => $reflection->getClasses()[0],
+                'created' => $created,
+                'chunk' => $definition[1],
+                'name' => str_replace(
                     '.php',
                     '',
-                    join('_', array_slice($definition, 2))
-                )
+                    implode('_', array_slice($definition, 2))
+                ),
             ];
         }
     }
@@ -165,6 +165,7 @@ final class FileRepository implements RepositoryInterface
      * Request new migration filename based on user input and current timestamp.
      *
      * @param string $name
+     *
      * @return string
      */
     private function createFilename(string $name): string

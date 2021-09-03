@@ -19,7 +19,7 @@ class AlterForeignKeyMigration extends Migration
     {
         $this->table('sample')
             ->alterForeignKey(['column'], 'target2', ['id2'], [
-                'delete' => 'CASCADE'
+                'delete' => 'CASCADE',
             ])
             ->update();
     }

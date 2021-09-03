@@ -18,7 +18,7 @@ interface MigrationInterface
     /**
      * Target migration database. Each migration must be specific to one database only.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getDatabase(): ?string;
 
@@ -26,24 +26,26 @@ interface MigrationInterface
      * Lock migration into specific migration capsule.
      *
      * @param CapsuleInterface $capsule
+     *
      * @return self
      */
-    public function withCapsule(CapsuleInterface $capsule): MigrationInterface;
+    public function withCapsule(CapsuleInterface $capsule): self;
 
     /**
      * Alter associated migration state (new migration instance to be created).
      *
      * @param State $state
+     *
      * @return self
      */
-    public function withState(State $state): MigrationInterface;
+    public function withState(State $state): self;
 
     /**
      * Get migration state.
      *
-     * @return State
-     *
      * @throws MigrationException When no state is presented.
+     *
+     * @return State
      */
     public function getState(): State;
 

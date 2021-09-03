@@ -25,7 +25,7 @@ final class Migrator
         'id',
         'migration',
         'time_executed',
-        'created_at'
+        'created_at',
     ];
 
     /** @var MigrationConfig */
@@ -137,9 +137,9 @@ final class Migrator
      *
      * @param CapsuleInterface $capsule
      *
-     * @return null|MigrationInterface
-     *
      * @throws MigrationException
+     *
+     * @return MigrationInterface|null
      */
     public function run(CapsuleInterface $capsule = null): ?MigrationInterface
     {
@@ -193,9 +193,10 @@ final class Migrator
      * Rollback last migration and return it's instance.
      *
      * @param CapsuleInterface $capsule
-     * @return null|MigrationInterface
      *
      * @throws \Throwable
+     *
+     * @return MigrationInterface|null
      */
     public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
     {
@@ -234,6 +235,7 @@ final class Migrator
      * Clarify migration state with valid status and execution time
      *
      * @param MigrationInterface $migration
+     *
      * @return State
      */
     protected function resolveState(MigrationInterface $migration): State
@@ -256,6 +258,7 @@ final class Migrator
      * Migration table, all migration information will be stored in it.
      *
      * @param string|null $database
+     *
      * @return Table
      */
     protected function migrationTable(string $database = null): Table
@@ -273,11 +276,11 @@ final class Migrator
             }
         }
 
-        if (!$table->hasIndex(['migration', 'created_at'])) {
-            return false;
-        }
+        return ! (!$table->hasIndex(['migration', 'created_at']))
 
-        return true;
+
+
+         ;
     }
 
     /**

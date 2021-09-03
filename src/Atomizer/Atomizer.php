@@ -21,7 +21,6 @@ use Spiral\Reactor\Partial\Source;
  */
 final class Atomizer
 {
-
     /** @var AbstractTable[] */
     protected $tables = [];
     /** @var RendererInterface */
@@ -39,6 +38,7 @@ final class Atomizer
      * Add new table into atomizer.
      *
      * @param AbstractTable $table
+     *
      * @return Atomizer
      */
     public function addTable(AbstractTable $table): self
@@ -108,6 +108,7 @@ final class Atomizer
      * Tables sorted in order of their dependencies.
      *
      * @param bool $reverse
+     *
      * @return AbstractTable[]
      */
     protected function sortedTables($reverse = false): array

@@ -27,9 +27,9 @@ abstract class Column extends AbstractOperation
      * @var array
      */
     protected $aliases = [
-        'size'    => ['length', 'limit'],
+        'size' => ['length', 'limit'],
         'default' => ['defaultValue'],
-        'null'    => ['nullable']
+        'null' => ['nullable'],
     ];
 
     /** @var string */
@@ -59,8 +59,9 @@ abstract class Column extends AbstractOperation
     /**
      * @param AbstractTable $schema
      *
-     * @return AbstractColumn
      * @throws ColumnException
+     *
+     * @return AbstractColumn
      */
     protected function declareColumn(AbstractTable $schema): AbstractColumn
     {

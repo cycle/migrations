@@ -38,8 +38,8 @@ abstract class BaseTest extends TestCase
 
     public const CONFIG = [
         'directory' => __DIR__ . '/../files/',
-        'table'     => 'migrations',
-        'safe'      => true
+        'table' => 'migrations',
+        'safe' => true,
     ];
     public static $config;
 
@@ -121,9 +121,9 @@ abstract class BaseTest extends TestCase
 
             $this->driver = new $class([
                 'connection' => $config['conn'],
-                'username'   => $config['user'],
-                'password'   => $config['pass'],
-                'options'    => []
+                'username' => $config['user'],
+                'password' => $config['pass'],
+                'options' => [],
             ]);
         }
 
@@ -182,6 +182,7 @@ abstract class BaseTest extends TestCase
 
     /**
      * @param string $table
+     *
      * @return AbstractTable
      */
     protected function schema(string $table): AbstractTable
@@ -198,10 +199,10 @@ abstract class BaseTest extends TestCase
     {
         $dbal = new DatabaseManager(
             new DatabaseConfig([
-                'default'     => 'default',
-                'aliases'     => [],
-                'databases'   => [],
-                'connections' => []
+                'default' => 'default',
+                'aliases' => [],
+                'databases' => [],
+                'connections' => [],
             ]),
             $container
         );
@@ -370,6 +371,7 @@ abstract class BaseTest extends TestCase
 
     /**
      * @param AbstractTable $table
+     *
      * @return AbstractTable
      */
     protected function fetchSchema(AbstractTable $table): AbstractTable
@@ -380,6 +382,7 @@ abstract class BaseTest extends TestCase
     /**
      * @param string     $table
      * @param Comparator $comparator
+     *
      * @return string
      */
     protected function makeMessage(string $table, Comparator $comparator)
@@ -402,7 +405,7 @@ abstract class BaseTest extends TestCase
                 $names[] = $pair[0]->getName();
             }
 
-            return "Table '{$table}' not synced, column(s) '" . join(
+            return "Table '{$table}' not synced, column(s) '" . implode(
                 "', '",
                 $names
             ) . "' have been changed.";

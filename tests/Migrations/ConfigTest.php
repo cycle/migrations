@@ -19,7 +19,7 @@ class ConfigTest extends TestCase
     public function testNotSafe(): void
     {
         $c = new MigrationConfig([
-            'safe' => false
+            'safe' => false,
         ]);
 
         $this->assertFalse($c->isSafe());
@@ -28,7 +28,7 @@ class ConfigTest extends TestCase
     public function testSafe(): void
     {
         $c = new MigrationConfig([
-            'safe' => true
+            'safe' => true,
         ]);
 
         $this->assertTrue($c->isSafe());

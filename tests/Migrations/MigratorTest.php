@@ -20,14 +20,14 @@ abstract class MigratorTest extends BaseTest
     public function testSortingOrder(): void
     {
         $files = [
-            '20200909.024119_333_333_migration_1.php'   => 'A3',
-            '20200909.030203_22_22_migration_1.php'     => 'B2',
-            '20200909.030203_23_23_migration_1.php'     => 'B3',
-            '20200909.024119_1_1_migration_1.php'       => 'A1',
-            '20200909.024119_22_22_migration_2.php'     => 'A2',
+            '20200909.024119_333_333_migration_1.php' => 'A3',
+            '20200909.030203_22_22_migration_1.php' => 'B2',
+            '20200909.030203_23_23_migration_1.php' => 'B3',
+            '20200909.024119_1_1_migration_1.php' => 'A1',
+            '20200909.024119_22_22_migration_2.php' => 'A2',
             '20200909.024119_4444_4444_migration_2.php' => 'A4',
-            '20200923.040608_0_0_migration_3.php'       => 'C',
-            '20200909.030203_1_1_migration_1.php'       => 'B1',
+            '20200923.040608_0_0_migration_3.php' => 'C',
+            '20200909.030203_1_1_migration_1.php' => 'B1',
         ];
         $stub = file_get_contents(__DIR__ . '/../files/migration.stub');
         foreach ($files as $name => $class) {
@@ -105,7 +105,7 @@ abstract class MigratorTest extends BaseTest
     public function testRunUnconfigured(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to run migration, Migrator not configured");
+        $this->expectExceptionMessage('Unable to run migration, Migrator not configured');
 
         $this->migrator->run();
     }
@@ -113,7 +113,7 @@ abstract class MigratorTest extends BaseTest
     public function testRollbackUnconfigured(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to run migration, Migrator not configured");
+        $this->expectExceptionMessage('Unable to run migration, Migrator not configured');
 
         $this->migrator->rollback();
     }
@@ -135,14 +135,14 @@ abstract class MigratorTest extends BaseTest
         $capsule = new Capsule($this->db);
 
         $capsule->execute([
-            $this
+            $this,
         ]);
     }
 
     public function testNoState(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to get migration state, no state are set");
+        $this->expectExceptionMessage('Unable to get migration state, no state are set');
 
         $x = new TestMigration();
         $x->up();
@@ -151,7 +151,7 @@ abstract class MigratorTest extends BaseTest
     public function testNoCapsule(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to get table blueprint, no capsule are set");
+        $this->expectExceptionMessage('Unable to get table blueprint, no capsule are set');
 
         $x = new TestMigration();
         $x->getTable();
@@ -160,7 +160,7 @@ abstract class MigratorTest extends BaseTest
     public function testNoCapsule2(): void
     {
         $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage("Unable to get database, no capsule are set");
+        $this->expectExceptionMessage('Unable to get database, no capsule are set');
 
         $x = new TestMigration();
         $x->down();

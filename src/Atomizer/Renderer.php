@@ -27,7 +27,7 @@ final class Renderer implements RendererInterface
     /**
      * Comparator alteration states.
      */
-    public const NEW_STATE      = 0;
+    public const NEW_STATE = 0;
     public const ORIGINAL_STATE = 1;
 
     /**
@@ -418,13 +418,14 @@ final class Renderer implements RendererInterface
     /**
      * @param Serializer     $serializer
      * @param AbstractColumn $column
+     *
      * @return string
      */
     private function columnOptions(Serializer $serializer, AbstractColumn $column): string
     {
         $options = [
             'nullable' => $column->isNullable(),
-            'default'  => $column->getDefaultValue()
+            'default' => $column->getDefaultValue(),
         ];
 
         if ($column->getAbstractType() === 'enum') {
@@ -446,6 +447,7 @@ final class Renderer implements RendererInterface
     /**
      * @param Serializer    $serializer
      * @param AbstractIndex $index
+     *
      * @return string
      */
     private function indexOptions(Serializer $serializer, AbstractIndex $index): string
@@ -453,8 +455,8 @@ final class Renderer implements RendererInterface
         return $this->mountIndents(
             $serializer->serialize(
                 [
-                    'name'   => $index->getName(),
-                    'unique' => $index->isUnique()
+                    'name' => $index->getName(),
+                    'unique' => $index->isUnique(),
                 ]
             )
         );
@@ -463,6 +465,7 @@ final class Renderer implements RendererInterface
     /**
      * @param Serializer         $serializer
      * @param AbstractForeignKey $reference
+     *
      * @return string
      */
     private function foreignKeyOptions(
@@ -472,9 +475,9 @@ final class Renderer implements RendererInterface
         return $this->mountIndents(
             $serializer->serialize(
                 [
-                    'name'   => $reference->getName(),
+                    'name' => $reference->getName(),
                     'delete' => $reference->getDeleteRule(),
-                    'update' => $reference->getUpdateRule()
+                    'update' => $reference->getUpdateRule(),
                 ]
             )
         );
@@ -484,6 +487,7 @@ final class Renderer implements RendererInterface
      * Mount indents for column and index options.
      *
      * @param $serialized
+     *
      * @return string
      */
     private function mountIndents(string $serialized): string
