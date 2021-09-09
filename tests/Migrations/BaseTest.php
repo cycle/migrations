@@ -72,7 +72,7 @@ abstract class BaseTest extends TestCase
             echo "\n\n-------- BEGIN: " . $this->getName() . " --------------\n\n";
         }
 
-        $this->container = $container = new Container();
+        $this->container = new Container();
         $this->dbal = $this->getDBAL($this->container);
 
         $this->migrationConfig = new MigrationConfig(static::CONFIG);

@@ -11,96 +11,32 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use Cycle\Migrations\Migration\State as BaseState;
+use Cycle\Migrations\Migration\Status;
+
 /**
- * Migration meta information specific to current environment
+ * @psalm-import-type StatusEnum from Status
+ *
+ * @deprecated This class has been deprecated and moved into "Migration"
+ *             namespace. Please use {@see BaseState} instead.
  */
-final class State
+final class State extends BaseState
 {
-    // Migration status
-    public const STATUS_UNDEFINED = -1;
-    public const STATUS_PENDING = 0;
-    public const STATUS_EXECUTED = 1;
-
-    /** @var string */
-    private $name;
-
-    /** @var int */
-    private $status;
-
-    /** @var \DateTimeInterface */
-    private $timeCreated;
-
-    /** @var \DateTimeInterface|null */
-    private $timeExecuted;
+    /**
+     * @deprecated Please use {@see Status::STATUS_UNDEFINED} instead.
+     * @var StatusEnum
+     */
+    public const STATUS_UNDEFINED = Status::STATUS_UNDEFINED;
 
     /**
-     * @param string             $name
-     * @param \DateTimeInterface $timeCreated
-     * @param int                $status
-     * @param \DateTimeInterface $timeExecuted
+     * @deprecated Please use {@see Status::STATUS_PENDING} instead.
+     * @var StatusEnum
      */
-    public function __construct(
-        string $name,
-        \DateTimeInterface $timeCreated,
-        int $status = self::STATUS_UNDEFINED,
-        \DateTimeInterface $timeExecuted = null
-    ) {
-        $this->name = $name;
-        $this->status = $status;
-        $this->timeCreated = $timeCreated;
-        $this->timeExecuted = $timeExecuted;
-    }
+    public const STATUS_PENDING = Status::STATUS_PENDING;
 
     /**
-     * @return string
+     * @deprecated Please use {@see Status::STATUS_EXECUTED} instead.
+     * @var StatusEnum
      */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Migration status.
-     *
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * Get migration creation time.
-     *
-     * @return \DateTimeInterface
-     */
-    public function getTimeCreated(): \DateTimeInterface
-    {
-        return $this->timeCreated;
-    }
-
-    /**
-     * Get migration execution time if any.
-     *
-     * @return \DateTimeInterface|null
-     */
-    public function getTimeExecuted(): ?\DateTimeInterface
-    {
-        return $this->timeExecuted;
-    }
-
-    /**
-     * @param int                     $status
-     * @param \DateTimeInterface|null $timeExecuted
-     *
-     * @return State
-     */
-    public function withStatus(int $status, \DateTimeInterface $timeExecuted = null): self
-    {
-        $state = clone $this;
-        $state->status = $status;
-        $state->timeExecuted = $timeExecuted;
-
-        return $state;
-    }
+    public const STATUS_EXECUTED  = Status::STATUS_EXECUTED;
 }

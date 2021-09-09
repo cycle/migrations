@@ -13,7 +13,7 @@ namespace Cycle\Migrations\Tests;
 
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\Exception\MigrationException;
-use Cycle\Migrations\State;
+use Cycle\Migrations\Migration\State;
 
 abstract class MigratorTest extends BaseTest
 {
@@ -45,25 +45,42 @@ abstract class MigratorTest extends BaseTest
         $this->assertSame(['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'C'], $classes);
     }
 
-    public function testIsConfigured(): void
+    private function generateMigration(string $file, string $class): string
     {
+        $out = __DIR__ . '/../files/' . $file;
+
+        file_put_contents($out, sprintf(file_get_contents(__DIR__ . '/../files/migration.stub'), $class));
+
+        return $out;
+    }
+
+    public function testDoNotCreateTableWithoutMigrations(): void
+    {
+        $this->migrator->configure();
+
+        $this->assertFalse($this->db->hasTable('migrations'));
+    }
+
+    public function testIsConfiguredWithoutMigrations(): void
+    {
+        $this->assertTrue($this->migrator->isConfigured());
+    }
+
+    public function testIsConfiguredWithMigrations(): void
+    {
+        $this->generateMigration('20200909.024119_333_333_migration_1.php', 'A3');
+
         $this->assertFalse($this->migrator->isConfigured());
 
         $this->migrator->configure();
         $this->assertTrue($this->migrator->isConfigured());
     }
 
-    public function testConfigure(): void
-    {
-        $this->assertFalse($this->migrator->isConfigured());
-
-        $this->migrator->configure();
-        $this->assertTrue($this->db->hasTable('migrations'));
-    }
-
     //no errors expected
     public function testConfigureTwice(): void
     {
+        $this->generateMigration('20200909.024119_333_333_migration_1.php', 'A3');
+
         $this->assertFalse($this->migrator->isConfigured());
 
         $this->migrator->configure();
@@ -74,6 +91,8 @@ abstract class MigratorTest extends BaseTest
 
     public function testConfiguredTableStructure(): void
     {
+        $this->generateMigration('20200909.024119_333_333_migration_1.php', 'A3');
+
         $this->migrator->configure();
         $table = $this->db->table('migrations');
 
@@ -102,22 +121,6 @@ abstract class MigratorTest extends BaseTest
         $this->assertSame($this->migrationConfig, $this->migrator->getConfig());
     }
 
-    public function testRunUnconfigured(): void
-    {
-        $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage('Unable to run migration, Migrator not configured');
-
-        $this->migrator->run();
-    }
-
-    public function testRollbackUnconfigured(): void
-    {
-        $this->expectException(MigrationException::class);
-        $this->expectExceptionMessage('Unable to run migration, Migrator not configured');
-
-        $this->migrator->rollback();
-    }
-
     public function testCapsule(): void
     {
         $capsule = new Capsule($this->db);
@@ -134,9 +137,7 @@ abstract class MigratorTest extends BaseTest
         $this->expectException(\Cycle\Migrations\Exception\CapsuleException::class);
         $capsule = new Capsule($this->db);
 
-        $capsule->execute([
-            $this,
-        ]);
+        $capsule->execute([$this]);
     }
 
     public function testNoState(): void

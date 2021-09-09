@@ -16,17 +16,13 @@ use Cycle\Database\DatabaseManager;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Exception\MigrationException;
+use Cycle\Migrations\Migration\State;
+use Cycle\Migrations\Migration\Status;
+use Cycle\Migrations\Migrator\MigrationsTable;
 
-final class Migrator
+final class Migrator implements MigratorInterface
 {
     private const DB_DATE_FORMAT = 'Y-m-d H:i:s';
-
-    private const MIGRATION_TABLE_FIELDS_LIST = [
-        'id',
-        'migration',
-        'time_executed',
-        'created_at',
-    ];
 
     /** @var MigrationConfig */
     private $config;
@@ -69,23 +65,23 @@ final class Migrator
     }
 
     /**
-     * Check if all related databases are configures with migrations.
-     *
      * @return bool
      */
     public function isConfigured(): bool
     {
-        foreach ($this->dbal->getDatabases() as $db) {
+        $databases = $this->getDatabases();
+
+        foreach ($databases as $db) {
             if (!$this->checkMigrationTableStructure($db)) {
                 return false;
             }
         }
 
-        return !$this->isRestoreMigrationDataRequired();
+        return !$this->isRestoreMigrationDataRequired($databases);
     }
 
     /**
-     * Configure all related databases with migration table.
+     * {@inheritDoc}
      */
     public function configure(): void
     {
@@ -93,39 +89,60 @@ final class Migrator
             return;
         }
 
-        foreach ($this->dbal->getDatabases() as $db) {
-            $schema = $db->table($this->config->getTable())->getSchema();
+        $databases = $this->getDatabases();
 
-            // Schema update will automatically sync all needed data
-            $schema->primary('id');
-            $schema->string('migration', 191)->nullable(false);
-            $schema->datetime('time_executed')->datetime();
-            $schema->datetime('created_at')->datetime();
-            $schema->index(['migration', 'created_at'])
-                ->unique(true);
-
-            if ($schema->hasIndex(['migration'])) {
-                $schema->dropIndex(['migration']);
-            }
-
-            $schema->save();
+        foreach ($databases as $database) {
+            $this->createMigrationTable($database);
         }
 
-        if ($this->isRestoreMigrationDataRequired()) {
+        if ($this->isRestoreMigrationDataRequired($databases)) {
             $this->restoreMigrationData();
         }
+    }
+
+    /**
+     * Get all databases for which there are migrations.
+     *
+     * @return array<Database>
+     */
+    private function getDatabases(): array
+    {
+        $result = [];
+
+        foreach ($this->repository->getMigrations() as $migration) {
+            $database = $this->dbal->database($migration->getDatabase());
+
+            if (! isset($result[$database->getName()])) {
+                $result[$database->getName()] = $database;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Create migration table inside given database
+     *
+     * @param Database $database
+     */
+    private function createMigrationTable(Database $database): void
+    {
+        $table = new MigrationsTable($database, $this->config->getTable());
+        $table->actualize();
     }
 
     /**
      * Get every available migration with valid meta information.
      *
      * @return MigrationInterface[]
+     * @throws \Exception
      */
     public function getMigrations(): array
     {
         $result = [];
+
         foreach ($this->repository->getMigrations() as $migration) {
-            //Populating migration state and execution time (if any)
+            // Populating migration state and execution time (if any)
             $result[] = $migration->withState($this->resolveState($migration));
         }
 
@@ -133,22 +150,18 @@ final class Migrator
     }
 
     /**
-     * Execute one migration and return it's instance.
-     *
-     * @param CapsuleInterface $capsule
-     *
-     * @throws MigrationException
-     *
-     * @return MigrationInterface|null
+     * {@inheritDoc}
      */
     public function run(CapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
-            throw new MigrationException('Unable to run migration, Migrator not configured');
+            $this->configure();
         }
 
         foreach ($this->getMigrations() as $migration) {
-            if ($migration->getState()->getStatus() !== State::STATUS_PENDING) {
+            $state = $migration->getState();
+
+            if ($state->getStatus() !== Status::STATUS_PENDING) {
                 continue;
             }
 
@@ -162,7 +175,7 @@ final class Migrator
 
                 $this->migrationTable($migration->getDatabase())->insertOne(
                     [
-                        'migration' => $migration->getState()->getName(),
+                        'migration' => $state->getName(),
                         'time_executed' => new \DateTime('now'),
                         'created_at' => $this->getMigrationCreatedAtForDb($migration),
                     ]
@@ -170,17 +183,18 @@ final class Migrator
 
                 return $migration->withState($this->resolveState($migration));
             } catch (\Throwable $exception) {
+                $state = $migration->getState();
                 throw new MigrationException(
                     \sprintf(
                         'Error in the migration (%s) occurred: %s',
                         \sprintf(
                             '%s (%s)',
-                            $migration->getState()->getName(),
-                            $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT)
+                            $state->getName(),
+                            $state->getTimeCreated()->format(self::DB_DATE_FORMAT)
                         ),
                         $exception->getMessage()
                     ),
-                    $exception->getCode(),
+                    (int)$exception->getCode(),
                     $exception
                 );
             }
@@ -190,23 +204,19 @@ final class Migrator
     }
 
     /**
-     * Rollback last migration and return it's instance.
-     *
-     * @param CapsuleInterface $capsule
-     *
-     * @throws \Throwable
-     *
+     * @param CapsuleInterface|null $capsule
      * @return MigrationInterface|null
+     * @throws \Throwable
      */
     public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
-            throw new MigrationException('Unable to run migration, Migrator not configured');
+            $this->configure();
         }
 
         /** @var MigrationInterface $migration */
-        foreach (array_reverse($this->getMigrations()) as $migration) {
-            if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
+        foreach (\array_reverse($this->getMigrations()) as $migration) {
+            if ($migration->getState()->getStatus() !== Status::STATUS_EXECUTED) {
                 continue;
             }
 
@@ -235,21 +245,21 @@ final class Migrator
      * Clarify migration state with valid status and execution time
      *
      * @param MigrationInterface $migration
-     *
      * @return State
+     * @throws \Exception
      */
-    protected function resolveState(MigrationInterface $migration): State
+    private function resolveState(MigrationInterface $migration): State
     {
         $db = $this->dbal->database($migration->getDatabase());
 
         $data = $this->fetchMigrationData($migration);
 
         if (empty($data['time_executed'])) {
-            return $migration->getState()->withStatus(State::STATUS_PENDING);
+            return $migration->getState()->withStatus(Status::STATUS_PENDING);
         }
 
         return $migration->getState()->withStatus(
-            State::STATUS_EXECUTED,
+            Status::STATUS_EXECUTED,
             new \DateTimeImmutable($data['time_executed'], $db->getDriver()->getTimezone())
         );
     }
@@ -258,33 +268,22 @@ final class Migrator
      * Migration table, all migration information will be stored in it.
      *
      * @param string|null $database
-     *
      * @return Table
      */
-    protected function migrationTable(string $database = null): Table
+    private function migrationTable(string $database = null): Table
     {
         return $this->dbal->database($database)->table($this->config->getTable());
     }
 
-    protected function checkMigrationTableStructure(Database $db): bool
+    /**
+     * @param Database $db
+     * @return bool
+     */
+    private function checkMigrationTableStructure(Database $db): bool
     {
-        if (!$db->hasTable($this->config->getTable())) {
-            return false;
-        }
+        $table = new MigrationsTable($db, $this->config->getTable());
 
-        $table = $db->table($this->config->getTable())->getSchema();
-
-        foreach (self::MIGRATION_TABLE_FIELDS_LIST as $field) {
-            if (!$table->hasColumn($field)) {
-                return false;
-            }
-        }
-
-        return ! (!$table->hasIndex(['migration', 'created_at']))
-
-
-
-         ;
+        return $table->isPresent();
     }
 
     /**
@@ -294,7 +293,7 @@ final class Migrator
      *
      * @return array|null
      */
-    protected function fetchMigrationData(MigrationInterface $migration): ?array
+    private function fetchMigrationData(MigrationInterface $migration): ?array
     {
         $migrationData = $this->migrationTable($migration->getDatabase())
             ->select('id', 'time_executed', 'created_at')
@@ -310,7 +309,17 @@ final class Migrator
         return is_array($migrationData) ? $migrationData : [];
     }
 
-    protected function restoreMigrationData(): void
+    /**
+     * This method updates the state of the empty (null) "created_at" fields for
+     * each entry in the migration table within the
+     * issue {@link https://github.com/spiral/migrations/issues/13}.
+     *
+     * TODO It is worth noting that this method works in an extremely suboptimal
+     *      way and requires optimizations.
+     *
+     * @return void
+     */
+    private function restoreMigrationData(): void
     {
         foreach ($this->repository->getMigrations() as $migration) {
             $migrationData = $this->migrationTable($migration->getDatabase())
@@ -336,13 +345,17 @@ final class Migrator
     }
 
     /**
-     * Check if some data modification required
+     * Check if some data modification required.
      *
+     * This method checks for empty (null) "created_at" fields created within
+     * the issue {@link https://github.com/spiral/migrations/issues/13}.
+     *
+     * @param iterable<Database> $databases
      * @return bool
      */
-    protected function isRestoreMigrationDataRequired(): bool
+    private function isRestoreMigrationDataRequired(iterable $databases): bool
     {
-        foreach ($this->dbal->getDatabases() as $db) {
+        foreach ($databases as $db) {
             $table = $db->table($this->config->getTable());
 
             if (
@@ -357,14 +370,26 @@ final class Migrator
         return false;
     }
 
-    protected function getMigrationCreatedAtForDb(MigrationInterface $migration): \DateTimeInterface
+    /**
+     * Creates a new date object based on the database timezone and the
+     * migration creation date.
+     *
+     * @param MigrationInterface $migration
+     * @return \DateTimeInterface
+     */
+    private function getMigrationCreatedAtForDb(MigrationInterface $migration): \DateTimeInterface
     {
         $db = $this->dbal->database($migration->getDatabase());
 
-        return \DateTimeImmutable::createFromFormat(
-            self::DB_DATE_FORMAT,
-            $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT),
-            $db->getDriver()->getTimezone()
-        );
+        $createdAt = $migration->getState()
+            ->getTimeCreated()
+            ->format(self::DB_DATE_FORMAT)
+        ;
+
+        $timezone = $db->getDriver()
+            ->getTimezone()
+        ;
+
+        return \DateTimeImmutable::createFromFormat(self::DB_DATE_FORMAT, $createdAt, $timezone);
     }
 }

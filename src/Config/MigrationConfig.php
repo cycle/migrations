@@ -15,7 +15,19 @@ use Spiral\Core\InjectableConfig;
 
 final class MigrationConfig extends InjectableConfig
 {
+    /**
+     * @internal This is an internal config section name. Please, do not use
+     *           this constant.
+     */
     public const CONFIG = 'migration';
+
+    /**
+     * @param array{directory?: string|null, table?: string|null, safe?: bool|null} $config
+     */
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+    }
 
     /**
      * Migrations directory.

@@ -21,7 +21,7 @@ use Cycle\Migrations\Exception\BlueprintException;
 final class TableBlueprint
 {
     /** @var CapsuleInterface */
-    private $capsule = null;
+    private $capsule;
 
     /** @var bool */
     private $executed = false;

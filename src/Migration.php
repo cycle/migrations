@@ -14,6 +14,9 @@ namespace Cycle\Migrations;
 use Cycle\Database\Database;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Migrations\Exception\MigrationException;
+use Cycle\Migrations\Migration\DefinitionInterface;
+use Cycle\Migrations\Migration\ProvidesSyncStateInterface;
+use Cycle\Migrations\Migration\State;
 
 /**
  * Simple migration class with shortcut for database and blueprint instances.
@@ -30,7 +33,7 @@ abstract class Migration implements MigrationInterface
     private $capsule;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getDatabase(): ?string
     {
@@ -40,7 +43,7 @@ abstract class Migration implements MigrationInterface
     /**
      * {@inheritdoc}
      */
-    public function withCapsule(CapsuleInterface $capsule): MigrationInterface
+    public function withCapsule(CapsuleInterface $capsule): DefinitionInterface
     {
         $migration = clone $this;
         $migration->capsule = $capsule;
@@ -51,7 +54,7 @@ abstract class Migration implements MigrationInterface
     /**
      * {@inheritdoc}
      */
-    public function withState(State $state): MigrationInterface
+    public function withState(State $state): ProvidesSyncStateInterface
     {
         $migration = clone $this;
         $migration->state = $state;
