@@ -76,7 +76,7 @@ final class Migrator
     public function isConfigured(): bool
     {
         foreach ($this->dbal->getDatabases() as $db) {
-            if (!$db->hasTable($this->config->getTable()) || !$this->checkMigrationTableStructure($db)) {
+            if (!$this->checkMigrationTableStructure($db)) {
                 return false;
             }
         }
@@ -154,7 +154,7 @@ final class Migrator
 
             try {
                 $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-                $capsule->getDatabase($migration->getDatabase())->transaction(
+                $capsule->getDatabase()->transaction(
                     static function () use ($migration, $capsule): void {
                         $migration->withCapsule($capsule)->up();
                     }
@@ -268,7 +268,11 @@ final class Migrator
 
     protected function checkMigrationTableStructure(Database $db): bool
     {
-        $table = $db->table($this->config->getTable());
+        if (!$db->hasTable($this->config->getTable())) {
+            return false;
+        }
+
+        $table = $db->table($this->config->getTable())->getSchema();
 
         foreach (self::MIGRATION_TABLE_FIELDS_LIST as $field) {
             if (!$table->hasColumn($field)) {
