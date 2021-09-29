@@ -17,8 +17,6 @@ interface MigratorInterface
 {
     /**
      * Configure all related databases with migration table.
-     *
-     * @return void
      */
     public function configure(): void;
 
@@ -26,8 +24,10 @@ interface MigratorInterface
      * Execute one migration and return it's instance.
      *
      * @param CapsuleInterface|null $capsule
-     * @return MigrationInterface|null
+     *
      * @throws MigrationException
+     *
+     * @return MigrationInterface|null
      */
     public function run(CapsuleInterface $capsule = null): ?MigrationInterface;
 
@@ -35,8 +35,10 @@ interface MigratorInterface
      * Rollback last migration and return it's instance.
      *
      * @param CapsuleInterface|null $capsule
-     * @return MigrationInterface|null
+     *
      * @throws MigrationException
+     *
+     * @return MigrationInterface|null
      */
     public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface;
 }
