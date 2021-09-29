@@ -9,6 +9,9 @@
             "email": "wolfy.jd@gmail.com"
         }
     ],
+    "replace": {
+        "spiral/migrations": "*"
+    },
     "require": {
         "php": ">=7.2",
         "cycle/database": "^1.0",
