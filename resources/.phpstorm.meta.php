@@ -248,12 +248,12 @@ namespace Spiral\Migrations\Operation\Traits {
     }
 }
 
-namespace Spiral\Migrations\Operation\Migrator {
+namespace Spiral\Migrations\Migrator {
 
     /**
-     * @deprecated Since Cycle ORM 1.0, use Cycle\Migrations\Operation\Migrator\MigrationsTable instead.
+     * @deprecated Since Cycle ORM 1.0, use Cycle\Migrations\Migrator\MigrationsTable instead.
      */
-    class MigrationsTable extends \Cycle\Migrations\Operation\Migrator\MigrationsTable
+    class MigrationsTable extends \Cycle\Migrations\Migrator\MigrationsTable
     {
     }
 }
