@@ -20,6 +20,7 @@ interface DefinitionInterface
      * Lock migration into specific migration capsule.
      *
      * @param CapsuleInterface $capsule
+     *
      * @return self
      */
     public function withCapsule(CapsuleInterface $capsule): self;
@@ -28,7 +29,7 @@ interface DefinitionInterface
      * Target migration database. Each migration must be specific to one
      * database only.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getDatabase(): ?string;
 
@@ -36,6 +37,7 @@ interface DefinitionInterface
      * Up migration.
      *
      * @throws MigrationException
+     *
      * @return mixed
      */
     public function up();
@@ -44,6 +46,7 @@ interface DefinitionInterface
      * Rollback migration.
      *
      * @throws MigrationException
+     *
      * @return mixed
      */
     public function down();

@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Tests;
 
 use Cycle\Migrations\Migration;
-use Cycle\Migrations\Migration\State;
 
 abstract class AtomizerTest extends BaseTest
 {

@@ -33,7 +33,7 @@ class MigrationsTable
         'id',
         'migration',
         'time_executed',
-        'created_at'
+        'created_at',
     ];
 
     /**
@@ -44,7 +44,7 @@ class MigrationsTable
      */
     private const MIGRATION_TABLE_INDICES = [
         'migration',
-        'created_at'
+        'created_at',
     ];
 
     /**
@@ -82,8 +82,6 @@ class MigrationsTable
      * change the list of fields in this migration specified in
      * the {@see MigrationsTable::MIGRATION_TABLE_FIELDS}
      * and {@see MigrationsTable::MIGRATION_TABLE_INDICES} constants.
-     *
-     * @return void
      */
     public function actualize(): void
     {
@@ -118,11 +116,11 @@ class MigrationsTable
             return false;
         }
 
-        if (!$this->isNecessaryIndicesExists()) {
-            return false;
-        }
+        return ! (!$this->isNecessaryIndicesExists())
 
-        return true;
+
+
+         ;
     }
 
     /**

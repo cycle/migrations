@@ -100,9 +100,10 @@ class State
     /**
      * @param StatusEnum $status
      * @param \DateTimeInterface|null $executedAt
+     *
      * @return State
      */
-    public function withStatus(int $status, \DateTimeInterface $executedAt = null): State
+    public function withStatus(int $status, \DateTimeInterface $executedAt = null): self
     {
         $state = clone $this;
         $state->status = $status;
