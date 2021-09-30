@@ -14,7 +14,7 @@ spl_autoload_register(static function (string $class) {
         $original = 'Cycle\\Migrations\\' . substr($class, 18);
 
         @trigger_error(
-            "$class has been deprecated since cycle/migrations 2.0.0 " .
+            "$class has been deprecated since cycle/migrations 1.0 " .
             "and will be removed in further release. Please use class $original instead.",
             E_USER_DEPRECATED
         );
