@@ -116,7 +116,7 @@ class MigrationsTable
             return false;
         }
 
-        return ! (!$this->isNecessaryIndicesExists());
+        return $this->isNecessaryIndicesExists();
     }
 
     /**
