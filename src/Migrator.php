@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Spiral Framework.
+ * This file is part of Cycle ORM package.
  *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -134,8 +134,9 @@ final class Migrator implements MigratorInterface
     /**
      * Get every available migration with valid meta information.
      *
-     * @return MigrationInterface[]
      * @throws \Exception
+     *
+     * @return MigrationInterface[]
      */
     public function getMigrations(): array
     {
@@ -205,8 +206,10 @@ final class Migrator implements MigratorInterface
 
     /**
      * @param CapsuleInterface|null $capsule
-     * @return MigrationInterface|null
+     *
      * @throws \Throwable
+     *
+     * @return MigrationInterface|null
      */
     public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
     {
@@ -245,8 +248,10 @@ final class Migrator implements MigratorInterface
      * Clarify migration state with valid status and execution time
      *
      * @param MigrationInterface $migration
-     * @return State
+     *
      * @throws \Exception
+     *
+     * @return State
      */
     private function resolveState(MigrationInterface $migration): State
     {
@@ -268,6 +273,7 @@ final class Migrator implements MigratorInterface
      * Migration table, all migration information will be stored in it.
      *
      * @param string|null $database
+     *
      * @return Table
      */
     private function migrationTable(string $database = null): Table
@@ -277,6 +283,7 @@ final class Migrator implements MigratorInterface
 
     /**
      * @param Database $db
+     *
      * @return bool
      */
     private function checkMigrationTableStructure(Database $db): bool
@@ -316,8 +323,6 @@ final class Migrator implements MigratorInterface
      *
      * TODO It is worth noting that this method works in an extremely suboptimal
      *      way and requires optimizations.
-     *
-     * @return void
      */
     private function restoreMigrationData(): void
     {
@@ -351,6 +356,7 @@ final class Migrator implements MigratorInterface
      * the issue {@link https://github.com/spiral/migrations/issues/13}.
      *
      * @param iterable<Database> $databases
+     *
      * @return bool
      */
     private function isRestoreMigrationDataRequired(iterable $databases): bool
@@ -375,6 +381,7 @@ final class Migrator implements MigratorInterface
      * migration creation date.
      *
      * @param MigrationInterface $migration
+     *
      * @return \DateTimeInterface
      */
     private function getMigrationCreatedAtForDb(MigrationInterface $migration): \DateTimeInterface

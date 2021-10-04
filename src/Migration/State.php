@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Spiral Framework.
+ * This file is part of Cycle ORM package.
  *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -100,9 +100,10 @@ class State
     /**
      * @param StatusEnum $status
      * @param \DateTimeInterface|null $executedAt
+     *
      * @return State
      */
-    public function withStatus(int $status, \DateTimeInterface $executedAt = null): State
+    public function withStatus(int $status, \DateTimeInterface $executedAt = null): self
     {
         $state = clone $this;
         $state->status = $status;

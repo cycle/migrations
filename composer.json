@@ -9,15 +9,21 @@
             "email": "wolfy.jd@gmail.com"
         }
     ],
+    "replace": {
+        "spiral/migrations": "*"
+    },
     "require": {
         "php": ">=7.2",
         "cycle/database": "^1.0",
-        "spiral/core": "^2.7",
-        "spiral/files": "^2.7",
-        "spiral/tokenizer": "^2.7",
-        "spiral/reactor": "^2.7"
+        "spiral/core": "^2.8",
+        "spiral/files": "^2.8",
+        "spiral/tokenizer": "^2.8",
+        "spiral/reactor": "^2.8"
     },
     "autoload": {
+        "files": [
+            "src/polyfill.php"
+        ],
         "psr-4": {
             "Cycle\\Migrations\\": "src"
         }
@@ -32,6 +38,18 @@
         "psr-4": {
             "Cycle\\Migrations\\Tests\\": "tests/Migrations",
             "Cycle\\Migrations\\Fixtures\\": "tests/Fixtures"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpcs --standard=phpcs.xml",
+            "psalm --no-cache",
+            "phpunit"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
         }
     },
     "config": {

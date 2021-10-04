@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Spiral Framework.
+ * This file is part of Cycle ORM package.
  *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Migrations\Exception\RepositoryException;
-use Cycle\Migrations\MigrationInterface;
 
 interface RepositoryInterface
 {
@@ -22,9 +21,9 @@ interface RepositoryInterface
      *
      * Attention, Capsule must be set for migration before executing it.
      *
-     * @return MigrationInterface[]
-     *
      * @throws RepositoryException
+     *
+     * @return MigrationInterface[]
      */
     public function getMigrations(): array;
 
@@ -36,9 +35,10 @@ interface RepositoryInterface
      * @param string $class
      * @param string $body When body is null repository will try to copy content from a specific
      *                     class filename. Must include all PHP headers.
-     * @return string      Migration filename.
      *
      * @throws RepositoryException
+     *
+     * @return string      Migration filename.
      */
     public function registerMigration(string $name, string $class, string $body = null): string;
 }

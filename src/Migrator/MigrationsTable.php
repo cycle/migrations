@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Spiral Framework.
+ * This file is part of Cycle ORM package.
  *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -33,7 +33,7 @@ class MigrationsTable
         'id',
         'migration',
         'time_executed',
-        'created_at'
+        'created_at',
     ];
 
     /**
@@ -44,7 +44,7 @@ class MigrationsTable
      */
     private const MIGRATION_TABLE_INDICES = [
         'migration',
-        'created_at'
+        'created_at',
     ];
 
     /**
@@ -82,8 +82,6 @@ class MigrationsTable
      * change the list of fields in this migration specified in
      * the {@see MigrationsTable::MIGRATION_TABLE_FIELDS}
      * and {@see MigrationsTable::MIGRATION_TABLE_INDICES} constants.
-     *
-     * @return void
      */
     public function actualize(): void
     {
@@ -118,11 +116,7 @@ class MigrationsTable
             return false;
         }
 
-        if (!$this->isNecessaryIndicesExists()) {
-            return false;
-        }
-
-        return true;
+        return $this->isNecessaryIndicesExists();
     }
 
     /**
