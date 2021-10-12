@@ -21,8 +21,9 @@ interface RepositoryInterface
      *
      * Attention, Capsule must be set for migration before executing it.
      *
-     * @return MigrationInterface[]
      * @throws RepositoryException
+     *
+     * @return MigrationInterface[]
      */
     public function getMigrations(): array;
 

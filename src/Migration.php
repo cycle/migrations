@@ -92,6 +92,7 @@ abstract class Migration implements MigrationInterface
      * Get table schema builder (blueprint).
      *
      * @param string $table
+     *
      * @return TableBlueprint
      */
     protected function table(string $table): TableBlueprint
