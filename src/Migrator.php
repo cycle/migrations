@@ -38,11 +38,11 @@ final class Migrator implements MigratorInterface
     private $repository;
 
     /**
-     * @param SpiralMigrationConfig|MigrationConfig $config The signature of this
+     * @param MigrationConfig|SpiralMigrationConfig $config The signature of this
      *        argument will be changed to {@see MigrationConfig} in future release.
-     * @param SpiralDatabaseManager|DatabaseManager $dbal The signature of this
+     * @param DatabaseManager|SpiralDatabaseManager $dbal The signature of this
      *        argument will be changed to {@see DatabaseManager} in future release.
-     * @param SpiralRepositoryInterface|RepositoryInterface $repository The signature
+     * @param RepositoryInterface|SpiralRepositoryInterface $repository The signature
      *        of this argument will be changed to {@see RepositoryInterface} in future release.
      */
     public function __construct(
@@ -141,8 +141,9 @@ final class Migrator implements MigratorInterface
     /**
      * Get every available migration with valid meta information.
      *
-     * @return MigrationInterface[]
      * @throws \Exception
+     *
+     * @return MigrationInterface[]
      */
     public function getMigrations(): array
     {
@@ -250,8 +251,10 @@ final class Migrator implements MigratorInterface
      * Clarify migration state with valid status and execution time
      *
      * @param MigrationInterface $migration
-     * @return State
+     *
      * @throws \Exception
+     *
+     * @return State
      */
     private function resolveState(MigrationInterface $migration): State
     {
@@ -356,6 +359,7 @@ final class Migrator implements MigratorInterface
      * the issue {@link https://github.com/spiral/migrations/issues/13}.
      *
      * @param iterable<Database> $databases
+     *
      * @return bool
      */
     private function isRestoreMigrationDataRequired(iterable $databases): bool
@@ -380,6 +384,7 @@ final class Migrator implements MigratorInterface
      * migration creation date.
      *
      * @param MigrationInterface $migration
+     *
      * @return \DateTimeInterface
      */
     private function getMigrationCreatedAtForDb(MigrationInterface $migration): \DateTimeInterface

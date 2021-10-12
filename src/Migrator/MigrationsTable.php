@@ -64,7 +64,7 @@ class MigrationsTable
     private $schema;
 
     /**
-     * @param SpiralDatabase|Database $db The signature of this argument will be
+     * @param Database|SpiralDatabase $db The signature of this argument will be
      *        changed to {@see Database} in future release.
      * @param string $name
      */

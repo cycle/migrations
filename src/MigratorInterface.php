@@ -24,20 +24,24 @@ interface MigratorInterface
     /**
      * Execute one migration and return it's instance.
      *
-     * @param SpiralCapsuleInterface|CapsuleInterface|null $capsule The signature
+     * @param CapsuleInterface|SpiralCapsuleInterface|null $capsule The signature
      *        of this argument will be changed to {@see CapsuleInterface} in future release.
-     * @return MigrationInterface|null
+     *
      * @throws MigrationException
+     *
+     * @return MigrationInterface|null
      */
     public function run(SpiralCapsuleInterface $capsule = null): ?MigrationInterface;
 
     /**
      * Rollback last migration and return it's instance.
      *
-     * @param SpiralCapsuleInterface|CapsuleInterface|null $capsule The signature
+     * @param CapsuleInterface|SpiralCapsuleInterface|null $capsule The signature
      *        of this argument will be changed to {@see CapsuleInterface} in future release.
-     * @return MigrationInterface|null
+     *
      * @throws MigrationException
+     *
+     * @return MigrationInterface|null
      */
     public function rollback(SpiralCapsuleInterface $capsule = null): ?MigrationInterface;
 }

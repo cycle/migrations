@@ -24,7 +24,7 @@ interface RendererInterface
      * Migration engine specific table creation syntax.
      *
      * @param Source $source
-     * @param SpiralAbstractTable|AbstractTable $table The signature of this
+     * @param AbstractTable|SpiralAbstractTable $table The signature of this
      *        argument will be changed to {@see AbstractTable} in future release.
      */
     public function createTable(Source $source, SpiralAbstractTable $table);
@@ -33,7 +33,7 @@ interface RendererInterface
      * Migration engine specific table update syntax.
      *
      * @param Source $source
-     * @param SpiralAbstractTable|AbstractTable $table The signature of this
+     * @param AbstractTable|SpiralAbstractTable $table The signature of this
      *        argument will be changed to {@see AbstractTable} in future release.
      */
     public function updateTable(Source $source, SpiralAbstractTable $table);
@@ -42,7 +42,7 @@ interface RendererInterface
      * Migration engine specific table revert syntax.
      *
      * @param Source $source
-     * @param SpiralAbstractTable|AbstractTable $table The signature of this
+     * @param AbstractTable|SpiralAbstractTable $table The signature of this
      *        argument will be changed to {@see AbstractTable} in future release.
      */
     public function revertTable(Source $source, SpiralAbstractTable $table);
@@ -51,7 +51,7 @@ interface RendererInterface
      * Migration engine specific table drop syntax.
      *
      * @param Source $source
-     * @param SpiralAbstractTable|AbstractTable $table The signature of this
+     * @param AbstractTable|SpiralAbstractTable $table The signature of this
      *        argument will be changed to {@see AbstractTable} in future release.
      */
     public function dropTable(Source $source, SpiralAbstractTable $table);

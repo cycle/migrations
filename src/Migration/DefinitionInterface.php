@@ -20,7 +20,7 @@ interface DefinitionInterface
     /**
      * Lock migration into specific migration capsule.
      *
-     * @param SpiralCapsuleInterface|CapsuleInterface $capsule The signature of this
+     * @param CapsuleInterface|SpiralCapsuleInterface $capsule The signature of this
      *        argument will be changed to {@see CapsuleInterface} in future release.
      *
      * @return self

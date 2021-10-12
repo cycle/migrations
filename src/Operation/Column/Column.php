@@ -58,10 +58,12 @@ abstract class Column extends AbstractOperation
     }
 
     /**
-     * @param SpiralAbstractTable|AbstractTable $schema The signature of this
+     * @param AbstractTable|SpiralAbstractTable $schema The signature of this
      *        argument will be changed to {@see AbstractTable} in future release.
-     * @return AbstractColumn
+     *
      * @throws \ReflectionException
+     *
+     * @return AbstractColumn
      */
     protected function declareColumn(SpiralAbstractTable $schema): AbstractColumn
     {
