@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Migrations\Exception\OperationException;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 
 /**
  * Represents simple table operation. Operation is a bridge between command and declarative
@@ -29,9 +30,10 @@ interface OperationInterface
     /**
      * Execute operation in a given capsule.
      *
-     * @param CapsuleInterface $capsule
+     * @param CapsuleInterface|SpiralCapsuleInterface $capsule The signature of this
+     *        argument will be changed to {@see CapsuleInterface} in future release.
      *
      * @throws OperationException
      */
-    public function execute(CapsuleInterface $capsule);
+    public function execute(SpiralCapsuleInterface $capsule);
 }

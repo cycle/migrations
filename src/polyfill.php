@@ -22,3 +22,16 @@ spl_autoload_register(static function (string $class) {
         class_alias($original, $class);
     }
 });
+
+// Preload some aliases
+class_exists(\Spiral\Database\Database::class);
+class_exists(\Spiral\Database\DatabaseManager::class);
+class_exists(\Spiral\Database\Schema\AbstractTable::class);
+
+class_exists(\Spiral\Migrations\State::class);
+class_exists(\Spiral\Migrations\Config\MigrationConfig::class);
+
+interface_exists(\Spiral\Migrations\CapsuleInterface::class);
+interface_exists(\Spiral\Migrations\OperationInterface::class);
+interface_exists(\Spiral\Migrations\RepositoryInterface::class);
+interface_exists(\Spiral\Migrations\Atomizer\RendererInterface::class);

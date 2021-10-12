@@ -11,11 +11,14 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Cycle\Migrations\Config\MigrationConfig;
+use Spiral\Migrations\Config\MigrationConfig as SpiralMigrationConfig;
 use Cycle\Migrations\Exception\RepositoryException;
 use Cycle\Migrations\Migration\State;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
@@ -43,23 +46,24 @@ final class FileRepository implements RepositoryInterface
     /** @var FilesInterface */
     private $files;
 
-    /** @var \Doctrine\Inflector\Inflector */
+    /** @var Inflector */
     private $inflector;
 
     /**
-     * @param MigrationConfig       $config
+     * @param MigrationConfig|SpiralMigrationConfig $config The signature of this
+     *        argument will be changed to {@see MigrationConfig} in future release.
      * @param FactoryInterface|null $factory
      */
-    public function __construct(MigrationConfig $config, FactoryInterface $factory = null)
+    public function __construct(SpiralMigrationConfig $config, FactoryInterface $factory = null)
     {
         $this->config = $config;
         $this->files = new Files();
         $this->factory = $factory ?? new Container();
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getMigrations(): array
     {
@@ -87,7 +91,7 @@ final class FileRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function registerMigration(string $name, string $class, string $body = null): string
     {

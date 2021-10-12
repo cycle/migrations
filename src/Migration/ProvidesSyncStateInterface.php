@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Migration;
 
 use Cycle\Migrations\Exception\MigrationException;
+use Spiral\Migrations\Migration\State as SpiralState;
 
 /**
  * An interface for migrations providing information about the migration status.
@@ -21,11 +22,12 @@ interface ProvidesSyncStateInterface
     /**
      * Alter associated migration state (new migration instance to be created).
      *
-     * @param State $state
+     * @param SpiralState|State $state The signature of this argument will be
+     *        changed to {@see State} in future release.
      *
      * @return static
      */
-    public function withState(State $state): self;
+    public function withState(SpiralState $state): self;
 
     /**
      * Get migration state.

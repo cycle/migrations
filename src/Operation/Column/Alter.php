@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Operation\Column;
 
-use Cycle\Migrations\CapsuleInterface;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 use Cycle\Migrations\Exception\Operation\ColumnException;
 
 final class Alter extends Column
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function execute(CapsuleInterface $capsule): void
+    public function execute(SpiralCapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 

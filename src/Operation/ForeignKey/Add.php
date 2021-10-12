@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Operation\ForeignKey;
 
 use Cycle\Database\ForeignKeyInterface;
-use Cycle\Migrations\CapsuleInterface;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 use Cycle\Migrations\Exception\Operation\ForeignKeyException;
 use Cycle\Migrations\Operation\Traits\OptionsTrait;
 
@@ -49,9 +49,9 @@ final class Add extends ForeignKey
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function execute(CapsuleInterface $capsule): void
+    public function execute(SpiralCapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 

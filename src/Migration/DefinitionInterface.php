@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Migration;
 
 use Cycle\Migrations\CapsuleInterface;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 use Cycle\Migrations\Exception\MigrationException;
 
 interface DefinitionInterface
@@ -19,11 +20,12 @@ interface DefinitionInterface
     /**
      * Lock migration into specific migration capsule.
      *
-     * @param CapsuleInterface $capsule
+     * @param CapsuleInterface|SpiralCapsuleInterface $capsule The signature of this
+     *        argument will be changed to {@see CapsuleInterface} in future release.
      *
      * @return self
      */
-    public function withCapsule(CapsuleInterface $capsule): self;
+    public function withCapsule(SpiralCapsuleInterface $capsule): self;
 
     /**
      * Target migration database. Each migration must be specific to one

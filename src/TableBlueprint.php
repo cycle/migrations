@@ -13,6 +13,8 @@ namespace Cycle\Migrations;
 
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Migrations\Exception\BlueprintException;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\OperationInterface as SpiralOperationInterface;
 
 /**
  * TableBlueprint is abstraction wrapper at top of AbstractTable which converts command based
@@ -33,10 +35,11 @@ final class TableBlueprint
     private $table = '';
 
     /**
-     * @param CapsuleInterface $capsule
-     * @param string           $table
+     * @param CapsuleInterface|SpiralCapsuleInterface $capsule The signature of this
+     *        argument will be changed to {@see CapsuleInterface} in future release.
+     * @param string $table
      */
-    public function __construct(CapsuleInterface $capsule, string $table)
+    public function __construct(SpiralCapsuleInterface $capsule, string $table)
     {
         $this->capsule = $capsule;
         $this->table = $table;
@@ -305,11 +308,12 @@ final class TableBlueprint
     /**
      * Register new operation.
      *
-     * @param OperationInterface $operation
+     * @param OperationInterface|SpiralOperationInterface $operation The signature
+     *        of this argument will be changed to {@see OperationInterface} in future release.
      *
      * @return TableBlueprint
      */
-    public function addOperation(OperationInterface $operation): self
+    public function addOperation(SpiralOperationInterface $operation): self
     {
         $this->operations[] = $operation;
 

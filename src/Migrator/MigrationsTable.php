@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Migrator;
 
 use Cycle\Database\Database;
+use Spiral\Database\Database as SpiralDatabase;
 use Cycle\Database\Schema\AbstractTable;
 
 /**
@@ -63,10 +64,11 @@ class MigrationsTable
     private $schema;
 
     /**
-     * @param Database $db
+     * @param Database|SpiralDatabase $db The signature of this argument will be
+     *        changed to {@see Database} in future release.
      * @param string $name
      */
-    public function __construct(Database $db, string $name)
+    public function __construct(SpiralDatabase $db, string $name)
     {
         $this->db = $db;
         $this->name = $name;

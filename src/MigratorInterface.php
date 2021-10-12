@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 use Cycle\Migrations\Exception\MigrationException;
 
 interface MigratorInterface
@@ -23,22 +24,24 @@ interface MigratorInterface
     /**
      * Execute one migration and return it's instance.
      *
-     * @param CapsuleInterface|null $capsule
+     * @param CapsuleInterface|SpiralCapsuleInterface|null $capsule The signature
+     *        of this argument will be changed to {@see CapsuleInterface} in future release.
      *
      * @throws MigrationException
      *
      * @return MigrationInterface|null
      */
-    public function run(CapsuleInterface $capsule = null): ?MigrationInterface;
+    public function run(SpiralCapsuleInterface $capsule = null): ?MigrationInterface;
 
     /**
      * Rollback last migration and return it's instance.
      *
-     * @param CapsuleInterface|null $capsule
+     * @param CapsuleInterface|SpiralCapsuleInterface|null $capsule The signature
+     *        of this argument will be changed to {@see CapsuleInterface} in future release.
      *
      * @throws MigrationException
      *
      * @return MigrationInterface|null
      */
-    public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface;
+    public function rollback(SpiralCapsuleInterface $capsule = null): ?MigrationInterface;
 }

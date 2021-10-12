@@ -13,12 +13,16 @@ namespace Cycle\Migrations;
 
 use Cycle\Database\Database;
 use Cycle\Database\DatabaseManager;
+use Spiral\Database\DatabaseManager as SpiralDatabaseManager;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
+use Spiral\Migrations\Config\MigrationConfig as SpiralMigrationConfig;
 use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\Migration\State;
 use Cycle\Migrations\Migration\Status;
 use Cycle\Migrations\Migrator\MigrationsTable;
+use Spiral\Migrations\RepositoryInterface as SpiralRepositoryInterface;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 
 final class Migrator implements MigratorInterface
 {
@@ -34,14 +38,17 @@ final class Migrator implements MigratorInterface
     private $repository;
 
     /**
-     * @param MigrationConfig     $config
-     * @param DatabaseManager     $dbal
-     * @param RepositoryInterface $repository
+     * @param MigrationConfig|SpiralMigrationConfig $config The signature of this
+     *        argument will be changed to {@see MigrationConfig} in future release.
+     * @param DatabaseManager|SpiralDatabaseManager $dbal The signature of this
+     *        argument will be changed to {@see DatabaseManager} in future release.
+     * @param RepositoryInterface|SpiralRepositoryInterface $repository The signature
+     *        of this argument will be changed to {@see RepositoryInterface} in future release.
      */
     public function __construct(
-        MigrationConfig $config,
-        DatabaseManager $dbal,
-        RepositoryInterface $repository
+        SpiralMigrationConfig $config,
+        SpiralDatabaseManager $dbal,
+        SpiralRepositoryInterface $repository
     ) {
         $this->config = $config;
         $this->repository = $repository;
@@ -153,7 +160,7 @@ final class Migrator implements MigratorInterface
     /**
      * {@inheritDoc}
      */
-    public function run(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function run(SpiralCapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             $this->configure();
@@ -205,13 +212,9 @@ final class Migrator implements MigratorInterface
     }
 
     /**
-     * @param CapsuleInterface|null $capsule
-     *
-     * @throws \Throwable
-     *
-     * @return MigrationInterface|null
+     * {@inheritDoc}
      */
-    public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function rollback(SpiralCapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             $this->configure();

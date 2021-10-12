@@ -13,6 +13,7 @@ namespace Cycle\Migrations\Operation\Column;
 
 use Cycle\Database\Schema\AbstractColumn;
 use Cycle\Database\Schema\AbstractTable;
+use Spiral\Database\Schema\AbstractTable as SpiralAbstractTable;
 use Cycle\Migrations\Exception\Operation\ColumnException;
 use Cycle\Migrations\Operation\AbstractOperation;
 use Cycle\Migrations\Operation\Traits\OptionsTrait;
@@ -57,13 +58,14 @@ abstract class Column extends AbstractOperation
     }
 
     /**
-     * @param AbstractTable $schema
+     * @param AbstractTable|SpiralAbstractTable $schema The signature of this
+     *        argument will be changed to {@see AbstractTable} in future release.
      *
-     * @throws ColumnException
+     * @throws \ReflectionException
      *
      * @return AbstractColumn
      */
-    protected function declareColumn(AbstractTable $schema): AbstractColumn
+    protected function declareColumn(SpiralAbstractTable $schema): AbstractColumn
     {
         $column = $schema->column($this->name);
 
