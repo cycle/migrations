@@ -15,6 +15,7 @@ use Cycle\Database\Schema\AbstractColumn;
 use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
 use Cycle\Database\Schema\AbstractTable;
+use Spiral\Database\Schema\AbstractTable as SpiralAbstractTable;
 use Cycle\Database\Schema\Comparator;
 use Spiral\Reactor\Partial\Source;
 use Spiral\Reactor\Serializer;
@@ -31,15 +32,11 @@ final class Renderer implements RendererInterface
     public const ORIGINAL_STATE = 1;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function createTable(Source $source, AbstractTable $table): void
+    public function createTable(Source $source, SpiralAbstractTable $table): void
     {
-        $this->render(
-            $source,
-            '$this->table(%s)',
-            $table
-        );
+        $this->render($source, '$this->table(%s)', $table);
         $comparator = $table->getComparator();
 
         $this->declareColumns($source, $comparator);
@@ -59,9 +56,9 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function updateTable(Source $source, AbstractTable $table): void
+    public function updateTable(Source $source, SpiralAbstractTable $table): void
     {
         $this->render(
             $source,
@@ -87,9 +84,9 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function revertTable(Source $source, AbstractTable $table): void
+    public function revertTable(Source $source, SpiralAbstractTable $table): void
     {
         //Get table blueprint
         $this->render(
@@ -108,9 +105,9 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function dropTable(Source $source, AbstractTable $table): void
+    public function dropTable(Source $source, SpiralAbstractTable $table): void
     {
         $this->render(
             $source,
@@ -370,7 +367,8 @@ final class Renderer implements RendererInterface
      *
      * @param Source $source
      * @param string $format
-     * @param array  ...$values
+     * @param array ...$values
+     * @throws \ReflectionException
      */
     protected function render(Source $source, string $format, ...$values): void
     {
@@ -416,10 +414,10 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * @param Serializer     $serializer
+     * @param Serializer $serializer
      * @param AbstractColumn $column
-     *
      * @return string
+     * @throws \ReflectionException
      */
     private function columnOptions(Serializer $serializer, AbstractColumn $column): string
     {
@@ -445,10 +443,10 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * @param Serializer    $serializer
+     * @param Serializer $serializer
      * @param AbstractIndex $index
-     *
      * @return string
+     * @throws \ReflectionException
      */
     private function indexOptions(Serializer $serializer, AbstractIndex $index): string
     {
@@ -463,15 +461,13 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * @param Serializer         $serializer
+     * @param Serializer $serializer
      * @param AbstractForeignKey $reference
-     *
      * @return string
+     * @throws \ReflectionException
      */
-    private function foreignKeyOptions(
-        Serializer $serializer,
-        AbstractForeignKey $reference
-    ): string {
+    private function foreignKeyOptions(Serializer $serializer, AbstractForeignKey $reference): string
+    {
         return $this->mountIndents(
             $serializer->serialize(
                 [
@@ -486,8 +482,7 @@ final class Renderer implements RendererInterface
     /**
      * Mount indents for column and index options.
      *
-     * @param $serialized
-     *
+     * @param string $serialized
      * @return string
      */
     private function mountIndents(string $serialized): string

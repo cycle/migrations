@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Database\Database;
+use Spiral\Database\Database as SpiralDatabase;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Database\DatabaseManager;
 use Cycle\Database\Schema\AbstractTable;
@@ -30,15 +31,16 @@ final class Capsule implements CapsuleInterface
     private $schemas = [];
 
     /**
-     * @param Database $database
+     * @param SpiralDatabase|Database $database This argument signature will be
+     *        changed to {@see Database} in further release.
      */
-    public function __construct(Database $database)
+    public function __construct(SpiralDatabase $database)
     {
         $this->database = $database;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getDatabase(): DatabaseInterface
     {
@@ -46,7 +48,7 @@ final class Capsule implements CapsuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTable(string $table): TableInterface
     {
@@ -54,7 +56,7 @@ final class Capsule implements CapsuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSchema(string $table): AbstractTable
     {
@@ -67,7 +69,7 @@ final class Capsule implements CapsuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @throws \Throwable
      */

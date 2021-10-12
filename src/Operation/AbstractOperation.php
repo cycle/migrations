@@ -27,7 +27,7 @@ abstract class AbstractOperation implements OperationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTable(): string
     {

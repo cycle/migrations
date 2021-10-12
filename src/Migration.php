@@ -17,6 +17,8 @@ use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\Migration\DefinitionInterface;
 use Cycle\Migrations\Migration\ProvidesSyncStateInterface;
 use Cycle\Migrations\Migration\State;
+use Spiral\Migrations\Migration\State as SpiralState;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 
 /**
  * Simple migration class with shortcut for database and blueprint instances.
@@ -41,9 +43,9 @@ abstract class Migration implements MigrationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function withCapsule(CapsuleInterface $capsule): DefinitionInterface
+    public function withCapsule(SpiralCapsuleInterface $capsule): DefinitionInterface
     {
         $migration = clone $this;
         $migration->capsule = $capsule;
@@ -52,9 +54,9 @@ abstract class Migration implements MigrationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function withState(State $state): ProvidesSyncStateInterface
+    public function withState(SpiralState $state): ProvidesSyncStateInterface
     {
         $migration = clone $this;
         $migration->state = $state;
@@ -63,7 +65,7 @@ abstract class Migration implements MigrationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getState(): State
     {
@@ -90,7 +92,6 @@ abstract class Migration implements MigrationInterface
      * Get table schema builder (blueprint).
      *
      * @param string $table
-     *
      * @return TableBlueprint
      */
     protected function table(string $table): TableBlueprint

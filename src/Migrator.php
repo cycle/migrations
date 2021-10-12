@@ -13,12 +13,16 @@ namespace Cycle\Migrations;
 
 use Cycle\Database\Database;
 use Cycle\Database\DatabaseManager;
+use Spiral\Database\DatabaseManager as SpiralDatabaseManager;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
+use Spiral\Migrations\Config\MigrationConfig as SpiralMigrationConfig;
 use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\Migration\State;
 use Cycle\Migrations\Migration\Status;
 use Cycle\Migrations\Migrator\MigrationsTable;
+use Spiral\Migrations\RepositoryInterface as SpiralRepositoryInterface;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 
 final class Migrator implements MigratorInterface
 {
@@ -34,14 +38,17 @@ final class Migrator implements MigratorInterface
     private $repository;
 
     /**
-     * @param MigrationConfig     $config
-     * @param DatabaseManager     $dbal
-     * @param RepositoryInterface $repository
+     * @param SpiralMigrationConfig|MigrationConfig $config This argument signature
+     *        will be changed to {@see MigrationConfig} in further release.
+     * @param SpiralDatabaseManager|DatabaseManager $dbal This argument signature
+     *        will be changed to {@see DatabaseManager} in further release.
+     * @param SpiralRepositoryInterface|RepositoryInterface $repository This argument
+     *        signature will be changed to {@see RepositoryInterface} in further release.
      */
     public function __construct(
-        MigrationConfig $config,
-        DatabaseManager $dbal,
-        RepositoryInterface $repository
+        SpiralMigrationConfig $config,
+        SpiralDatabaseManager $dbal,
+        SpiralRepositoryInterface $repository
     ) {
         $this->config = $config;
         $this->repository = $repository;
@@ -134,9 +141,8 @@ final class Migrator implements MigratorInterface
     /**
      * Get every available migration with valid meta information.
      *
-     * @throws \Exception
-     *
      * @return MigrationInterface[]
+     * @throws \Exception
      */
     public function getMigrations(): array
     {
@@ -153,7 +159,7 @@ final class Migrator implements MigratorInterface
     /**
      * {@inheritDoc}
      */
-    public function run(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function run(SpiralCapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             $this->configure();
@@ -205,13 +211,9 @@ final class Migrator implements MigratorInterface
     }
 
     /**
-     * @param CapsuleInterface|null $capsule
-     *
-     * @throws \Throwable
-     *
-     * @return MigrationInterface|null
+     * {@inheritDoc}
      */
-    public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function rollback(SpiralCapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             $this->configure();
@@ -248,10 +250,8 @@ final class Migrator implements MigratorInterface
      * Clarify migration state with valid status and execution time
      *
      * @param MigrationInterface $migration
-     *
-     * @throws \Exception
-     *
      * @return State
+     * @throws \Exception
      */
     private function resolveState(MigrationInterface $migration): State
     {
@@ -356,7 +356,6 @@ final class Migrator implements MigratorInterface
      * the issue {@link https://github.com/spiral/migrations/issues/13}.
      *
      * @param iterable<Database> $databases
-     *
      * @return bool
      */
     private function isRestoreMigrationDataRequired(iterable $databases): bool
@@ -381,7 +380,6 @@ final class Migrator implements MigratorInterface
      * migration creation date.
      *
      * @param MigrationInterface $migration
-     *
      * @return \DateTimeInterface
      */
     private function getMigrationCreatedAtForDb(MigrationInterface $migration): \DateTimeInterface

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Atomizer;
 
 use Cycle\Database\Schema\AbstractTable;
+use Spiral\Database\Schema\AbstractTable as SpiralAbstractTable;
 use Spiral\Reactor\Partial\Source;
 
 /**
@@ -22,32 +23,36 @@ interface RendererInterface
     /**
      * Migration engine specific table creation syntax.
      *
-     * @param Source        $source
-     * @param AbstractTable $table
+     * @param Source $source
+     * @param SpiralAbstractTable|AbstractTable $table This argument signature
+     *        will be changed to {@see AbstractTable} in further release.
      */
-    public function createTable(Source $source, AbstractTable $table);
+    public function createTable(Source $source, SpiralAbstractTable $table);
 
     /**
      * Migration engine specific table update syntax.
      *
-     * @param Source        $source
-     * @param AbstractTable $table
+     * @param Source $source
+     * @param SpiralAbstractTable|AbstractTable $table This argument signature
+     *        will be changed to {@see AbstractTable} in further release.
      */
-    public function updateTable(Source $source, AbstractTable $table);
+    public function updateTable(Source $source, SpiralAbstractTable $table);
 
     /**
      * Migration engine specific table revert syntax.
      *
-     * @param Source        $source
-     * @param AbstractTable $table
+     * @param Source $source
+     * @param SpiralAbstractTable|AbstractTable $table This argument signature
+     *        will be changed to {@see AbstractTable} in further release.
      */
-    public function revertTable(Source $source, AbstractTable $table);
+    public function revertTable(Source $source, SpiralAbstractTable $table);
 
     /**
      * Migration engine specific table drop syntax.
      *
-     * @param Source        $source
-     * @param AbstractTable $table
+     * @param Source $source
+     * @param SpiralAbstractTable $table This argument signature will be changed
+     *        to {@see AbstractTable} in further release.
      */
-    public function dropTable(Source $source, AbstractTable $table);
+    public function dropTable(Source $source, SpiralAbstractTable $table);
 }

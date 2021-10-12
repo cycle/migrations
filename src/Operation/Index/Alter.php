@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Operation\Index;
 
-use Cycle\Migrations\CapsuleInterface;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 use Cycle\Migrations\Exception\Operation\IndexException;
 use Cycle\Migrations\Operation\Traits\OptionsTrait;
 
@@ -31,9 +31,9 @@ final class Alter extends Index
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function execute(CapsuleInterface $capsule): void
+    public function execute(SpiralCapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
