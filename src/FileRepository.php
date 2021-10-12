@@ -50,8 +50,8 @@ final class FileRepository implements RepositoryInterface
     private $inflector;
 
     /**
-     * @param SpiralMigrationConfig|MigrationConfig $config This argument
-     *        signature will be changed to {@see MigrationConfig} in further release.
+     * @param SpiralMigrationConfig|MigrationConfig $config The signature of this
+     *        argument will be changed to {@see MigrationConfig} in future release.
      * @param FactoryInterface|null $factory
      */
     public function __construct(SpiralMigrationConfig $config, FactoryInterface $factory = null)

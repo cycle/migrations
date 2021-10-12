@@ -24,8 +24,8 @@ interface MigratorInterface
     /**
      * Execute one migration and return it's instance.
      *
-     * @param SpiralCapsuleInterface|CapsuleInterface|null $capsule This argument
-     *        signature will be changed to {@see CapsuleInterface} in further release.
+     * @param SpiralCapsuleInterface|CapsuleInterface|null $capsule The signature
+     *        of this argument will be changed to {@see CapsuleInterface} in future release.
      * @return MigrationInterface|null
      * @throws MigrationException
      */
@@ -34,8 +34,8 @@ interface MigratorInterface
     /**
      * Rollback last migration and return it's instance.
      *
-     * @param SpiralCapsuleInterface|CapsuleInterface|null $capsule This argument
-     *        signature will be changed to {@see CapsuleInterface} in further release.
+     * @param SpiralCapsuleInterface|CapsuleInterface|null $capsule The signature
+     *        of this argument will be changed to {@see CapsuleInterface} in future release.
      * @return MigrationInterface|null
      * @throws MigrationException
      */

@@ -35,8 +35,8 @@ final class TableBlueprint
     private $table = '';
 
     /**
-     * @param SpiralCapsuleInterface|CapsuleInterface $capsule This argument
-     *        signature will be changed to {@see CapsuleInterface} in further release.
+     * @param SpiralCapsuleInterface|CapsuleInterface $capsule The signature of this
+     *        argument will be changed to {@see CapsuleInterface} in future release.
      * @param string $table
      */
     public function __construct(SpiralCapsuleInterface $capsule, string $table)
@@ -308,8 +308,8 @@ final class TableBlueprint
     /**
      * Register new operation.
      *
-     * @param SpiralOperationInterface|OperationInterface $operation This argument
-     *        signature will be changed to {@see OperationInterface} in further release.
+     * @param SpiralOperationInterface|OperationInterface $operation The signature
+     *        of this argument will be changed to {@see OperationInterface} in future release.
      * @return TableBlueprint
      */
     public function addOperation(SpiralOperationInterface $operation): self

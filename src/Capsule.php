@@ -31,8 +31,8 @@ final class Capsule implements CapsuleInterface
     private $schemas = [];
 
     /**
-     * @param SpiralDatabase|Database $database This argument signature will be
-     *        changed to {@see Database} in further release.
+     * @param SpiralDatabase|Database $database The signature of this argument
+     *        will be changed to {@see Database} in future release.
      */
     public function __construct(SpiralDatabase $database)
     {

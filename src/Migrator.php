@@ -38,12 +38,12 @@ final class Migrator implements MigratorInterface
     private $repository;
 
     /**
-     * @param SpiralMigrationConfig|MigrationConfig $config This argument signature
-     *        will be changed to {@see MigrationConfig} in further release.
-     * @param SpiralDatabaseManager|DatabaseManager $dbal This argument signature
-     *        will be changed to {@see DatabaseManager} in further release.
-     * @param SpiralRepositoryInterface|RepositoryInterface $repository This argument
-     *        signature will be changed to {@see RepositoryInterface} in further release.
+     * @param SpiralMigrationConfig|MigrationConfig $config The signature of this
+     *        argument will be changed to {@see MigrationConfig} in future release.
+     * @param SpiralDatabaseManager|DatabaseManager $dbal The signature of this
+     *        argument will be changed to {@see DatabaseManager} in future release.
+     * @param SpiralRepositoryInterface|RepositoryInterface $repository The signature
+     *        of this argument will be changed to {@see RepositoryInterface} in future release.
      */
     public function __construct(
         SpiralMigrationConfig $config,

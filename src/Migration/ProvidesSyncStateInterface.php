@@ -22,8 +22,8 @@ interface ProvidesSyncStateInterface
     /**
      * Alter associated migration state (new migration instance to be created).
      *
-     * @param SpiralState|State $state This argument signature will be changed
-     *        to {@see State} in further release.
+     * @param SpiralState|State $state The signature of this argument will be
+     *        changed to {@see State} in future release.
      *
      * @return static
      */
