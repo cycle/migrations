@@ -30,7 +30,7 @@ final class Atomizer
     private $renderer;
 
     /**
-     * @param SpiralRendererInterface|RendererInterface $renderer This argument
+     * @param RendererInterface|SpiralRendererInterface $renderer This argument
      *        signature will be changed to {@see RendererInterface} in further release.
      */
     public function __construct(SpiralRendererInterface $renderer)
@@ -41,8 +41,9 @@ final class Atomizer
     /**
      * Add new table into atomizer.
      *
-     * @param SpiralAbstractTable|AbstractTable $table This argument signature
+     * @param AbstractTable|SpiralAbstractTable $table This argument signature
      *        will be changed to {@see AbstractTable} in further release.
+     *
      * @return Atomizer
      */
     public function addTable(SpiralAbstractTable $table): self

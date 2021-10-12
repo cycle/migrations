@@ -30,8 +30,9 @@ interface OperationInterface
     /**
      * Execute operation in a given capsule.
      *
-     * @param SpiralCapsuleInterface|CapsuleInterface $capsule This argument
+     * @param CapsuleInterface|SpiralCapsuleInterface $capsule This argument
      *        signature will be changed to {@see CapsuleInterface} in further release.
+     *
      * @throws OperationException
      */
     public function execute(SpiralCapsuleInterface $capsule);

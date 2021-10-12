@@ -368,6 +368,7 @@ final class Renderer implements RendererInterface
      * @param Source $source
      * @param string $format
      * @param array ...$values
+     *
      * @throws \ReflectionException
      */
     protected function render(Source $source, string $format, ...$values): void
@@ -416,8 +417,10 @@ final class Renderer implements RendererInterface
     /**
      * @param Serializer $serializer
      * @param AbstractColumn $column
-     * @return string
+     *
      * @throws \ReflectionException
+     *
+     * @return string
      */
     private function columnOptions(Serializer $serializer, AbstractColumn $column): string
     {
@@ -445,8 +448,10 @@ final class Renderer implements RendererInterface
     /**
      * @param Serializer $serializer
      * @param AbstractIndex $index
-     * @return string
+     *
      * @throws \ReflectionException
+     *
+     * @return string
      */
     private function indexOptions(Serializer $serializer, AbstractIndex $index): string
     {
@@ -463,8 +468,10 @@ final class Renderer implements RendererInterface
     /**
      * @param Serializer $serializer
      * @param AbstractForeignKey $reference
-     * @return string
+     *
      * @throws \ReflectionException
+     *
+     * @return string
      */
     private function foreignKeyOptions(Serializer $serializer, AbstractForeignKey $reference): string
     {
@@ -483,6 +490,7 @@ final class Renderer implements RendererInterface
      * Mount indents for column and index options.
      *
      * @param string $serialized
+     *
      * @return string
      */
     private function mountIndents(string $serialized): string
