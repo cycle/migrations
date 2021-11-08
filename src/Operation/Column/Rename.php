@@ -17,22 +17,9 @@ use Cycle\Migrations\Operation\AbstractOperation;
 
 final class Rename extends AbstractOperation
 {
-    /** @var string */
-    private $name = '';
-
-    /** @var string */
-    private $newName = '';
-
-    /**
-     * @param string $table
-     * @param string $name
-     * @param string $newName
-     */
-    public function __construct(string $table, string $name, string $newName)
+    public function __construct(string $table, private string $name, private string $newName)
     {
         parent::__construct($table);
-        $this->name = $name;
-        $this->newName = $newName;
     }
 
     /**

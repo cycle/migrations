@@ -13,7 +13,6 @@ namespace Cycle\Migrations;
 
 use Cycle\Database\Database;
 use Cycle\Database\DatabaseInterface;
-use Cycle\Database\DatabaseManager;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\TableInterface;
 use Cycle\Migrations\Exception\CapsuleException;
@@ -23,18 +22,10 @@ use Cycle\Migrations\Exception\CapsuleException;
  */
 final class Capsule implements CapsuleInterface
 {
-    /** @var DatabaseManager */
-    private $database = null;
+    private array $schemas = [];
 
-    /** @var array */
-    private $schemas = [];
-
-    /**
-     * @param Database $database
-     */
-    public function __construct(Database $database)
+    public function __construct(private Database $database)
     {
-        $this->database = $database;
     }
 
     /**
@@ -78,7 +69,7 @@ final class Capsule implements CapsuleInterface
                 throw new CapsuleException(
                     sprintf(
                         'Migration operation expected to be an instance of `OperationInterface`, `%s` given',
-                        get_class($operation)
+                        $operation::class
                     )
                 );
             }

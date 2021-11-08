@@ -21,17 +21,13 @@ interface OperationInterface
 {
     /**
      * Table operation related to.
-     *
-     * @return string
      */
     public function getTable(): string;
 
     /**
      * Execute operation in a given capsule.
      *
-     * @param CapsuleInterface $capsule
-     *
      * @throws OperationException
      */
-    public function execute(CapsuleInterface $capsule);
+    public function execute(CapsuleInterface $capsule): void;
 }

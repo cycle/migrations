@@ -37,7 +37,7 @@ abstract class MigratorTest extends BaseTest
         $migrations = $this->repository->getMigrations();
         $classes = array_map(
             static function ($migration) {
-                return get_class($migration);
+                return $migration::class;
             },
             array_values($migrations)
         );

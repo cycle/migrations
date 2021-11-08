@@ -119,10 +119,6 @@ final class Renderer implements RendererInterface
         );
     }
 
-    /**
-     * @param Source     $source
-     * @param Comparator $comparator
-     */
     private function declareColumns(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->addedColumns() as $column) {
@@ -152,10 +148,6 @@ final class Renderer implements RendererInterface
         }
     }
 
-    /**
-     * @param Source     $source
-     * @param Comparator $comparator
-     */
     private function declareIndexes(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->addedIndexes() as $index) {
@@ -188,9 +180,7 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * @param Source     $source
-     * @param Comparator $comparator
-     * @param string     $prefix Database isolation prefix
+     * @param string $prefix Database isolation prefix
      */
     private function declareForeignKeys(Source $source, Comparator $comparator, string $prefix = ''): void
     {
@@ -227,10 +217,6 @@ final class Renderer implements RendererInterface
         }
     }
 
-    /**
-     * @param Source     $source
-     * @param Comparator $comparator
-     */
     private function revertColumns(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->droppedColumns() as $column) {
@@ -260,10 +246,6 @@ final class Renderer implements RendererInterface
         }
     }
 
-    /**
-     * @param Source     $source
-     * @param Comparator $comparator
-     */
     private function revertIndexes(Source $source, Comparator $comparator): void
     {
         foreach ($comparator->droppedIndexes() as $index) {
@@ -296,9 +278,7 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * @param Source     $source
-     * @param Comparator $comparator
-     * @param string     $prefix Database isolation prefix.
+     * @param string $prefix Database isolation prefix.
      */
     private function revertForeignKeys(Source $source, Comparator $comparator, string $prefix = ''): void
     {
@@ -331,11 +311,6 @@ final class Renderer implements RendererInterface
         }
     }
 
-    /**
-     * @param Source         $source
-     * @param AbstractColumn $column
-     * @param AbstractColumn $original
-     */
     protected function alterColumn(
         Source $source,
         AbstractColumn $column,
@@ -368,8 +343,6 @@ final class Renderer implements RendererInterface
     /**
      * Render values and options into source.
      *
-     * @param Source $source
-     * @param string $format
      * @param array  ...$values
      */
     protected function render(Source $source, string $format, ...$values): void
@@ -415,12 +388,6 @@ final class Renderer implements RendererInterface
         }
     }
 
-    /**
-     * @param Serializer     $serializer
-     * @param AbstractColumn $column
-     *
-     * @return string
-     */
     private function columnOptions(Serializer $serializer, AbstractColumn $column): string
     {
         $options = [
@@ -444,12 +411,6 @@ final class Renderer implements RendererInterface
         return $this->mountIndents($serializer->serialize($options));
     }
 
-    /**
-     * @param Serializer    $serializer
-     * @param AbstractIndex $index
-     *
-     * @return string
-     */
     private function indexOptions(Serializer $serializer, AbstractIndex $index): string
     {
         return $this->mountIndents(
@@ -462,12 +423,6 @@ final class Renderer implements RendererInterface
         );
     }
 
-    /**
-     * @param Serializer         $serializer
-     * @param AbstractForeignKey $reference
-     *
-     * @return string
-     */
     private function foreignKeyOptions(
         Serializer $serializer,
         AbstractForeignKey $reference
@@ -487,8 +442,6 @@ final class Renderer implements RendererInterface
      * Mount indents for column and index options.
      *
      * @param $serialized
-     *
-     * @return string
      */
     private function mountIndents(string $serialized): string
     {

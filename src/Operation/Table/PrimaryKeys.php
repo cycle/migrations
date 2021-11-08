@@ -17,17 +17,9 @@ use Cycle\Migrations\Operation\AbstractOperation;
 
 final class PrimaryKeys extends AbstractOperation
 {
-    /** @var array */
-    private $columns = [];
-
-    /**
-     * @param string $table
-     * @param array  $columns
-     */
-    public function __construct(string $table, array $columns)
+    public function __construct(string $table, private array $columns)
     {
         parent::__construct($table);
-        $this->columns = $columns;
     }
 
     /**

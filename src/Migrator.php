@@ -28,41 +28,18 @@ final class Migrator
         'created_at',
     ];
 
-    /** @var MigrationConfig */
-    private $config;
-
-    /** @var DatabaseManager */
-    private $dbal;
-
-    /** @var RepositoryInterface */
-    private $repository;
-
-    /**
-     * @param MigrationConfig     $config
-     * @param DatabaseManager     $dbal
-     * @param RepositoryInterface $repository
-     */
     public function __construct(
-        MigrationConfig $config,
-        DatabaseManager $dbal,
-        RepositoryInterface $repository
+        private MigrationConfig $config,
+        private DatabaseManager $dbal,
+        private RepositoryInterface $repository
     ) {
-        $this->config = $config;
-        $this->repository = $repository;
-        $this->dbal = $dbal;
     }
 
-    /**
-     * @return MigrationConfig
-     */
     public function getConfig(): MigrationConfig
     {
         return $this->config;
     }
 
-    /**
-     * @return RepositoryInterface
-     */
     public function getRepository(): RepositoryInterface
     {
         return $this->repository;
@@ -70,8 +47,6 @@ final class Migrator
 
     /**
      * Check if all related databases are configures with migrations.
-     *
-     * @return bool
      */
     public function isConfigured(): bool
     {
@@ -135,11 +110,7 @@ final class Migrator
     /**
      * Execute one migration and return it's instance.
      *
-     * @param CapsuleInterface $capsule
-     *
      * @throws MigrationException
-     *
-     * @return MigrationInterface|null
      */
     public function run(CapsuleInterface $capsule = null): ?MigrationInterface
     {
@@ -192,11 +163,7 @@ final class Migrator
     /**
      * Rollback last migration and return it's instance.
      *
-     * @param CapsuleInterface $capsule
-     *
      * @throws \Throwable
-     *
-     * @return MigrationInterface|null
      */
     public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
     {
@@ -233,10 +200,6 @@ final class Migrator
 
     /**
      * Clarify migration state with valid status and execution time
-     *
-     * @param MigrationInterface $migration
-     *
-     * @return State
      */
     protected function resolveState(MigrationInterface $migration): State
     {
@@ -258,8 +221,6 @@ final class Migrator
      * Migration table, all migration information will be stored in it.
      *
      * @param string|null $database
-     *
-     * @return Table
      */
     protected function migrationTable(string $database = null): Table
     {
@@ -276,19 +237,13 @@ final class Migrator
             }
         }
 
-        return ! (!$table->hasIndex(['migration', 'created_at']))
-
-
-
-         ;
+        return !(!$table->hasIndex(['migration', 'created_at']));
     }
 
     /**
      * Fetch migration information from database
      *
-     * @param MigrationInterface $migration
      *
-     * @return array|null
      */
     protected function fetchMigrationData(MigrationInterface $migration): ?array
     {
@@ -333,8 +288,6 @@ final class Migrator
 
     /**
      * Check if some data modification required
-     *
-     * @return bool
      */
     protected function isRestoreMigrationDataRequired(): bool
     {

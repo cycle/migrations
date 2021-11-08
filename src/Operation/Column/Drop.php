@@ -17,21 +17,9 @@ use Cycle\Migrations\Operation\AbstractOperation;
 
 final class Drop extends AbstractOperation
 {
-    /**
-     * Column name.
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @param string $table
-     * @param string $name
-     */
-    public function __construct(string $table, string $name)
+    public function __construct(string $table, private string $name)
     {
         parent::__construct($table);
-        $this->name = $name;
     }
 
     /**

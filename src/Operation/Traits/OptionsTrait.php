@@ -16,14 +16,8 @@ namespace Cycle\Migrations\Operation\Traits;
  */
 trait OptionsTrait
 {
-    /** @var array */
-    protected $options = [];
+    protected array $options = [];
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     protected function hasOption(string $name): bool
     {
         if (array_key_exists($name, $this->options)) {
@@ -43,13 +37,7 @@ trait OptionsTrait
         return false;
     }
 
-    /**
-     * @param string $name
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    protected function getOption(string $name, $default = null)
+    protected function getOption(string $name, mixed $default = null): mixed
     {
         if (!$this->hasOption($name)) {
             return $default;

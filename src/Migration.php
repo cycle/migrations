@@ -23,11 +23,8 @@ abstract class Migration implements MigrationInterface
     // Target migration database
     protected const DATABASE = null;
 
-    /** @var State|null */
-    private $state;
-
-    /** @var CapsuleInterface */
-    private $capsule;
+    private ?State $state = null;
+    private CapsuleInterface $capsule;
 
     /**
      * {@inheritdoc}
@@ -85,10 +82,6 @@ abstract class Migration implements MigrationInterface
 
     /**
      * Get table schema builder (blueprint).
-     *
-     * @param string $table
-     *
-     * @return TableBlueprint
      */
     protected function table(string $table): TableBlueprint
     {

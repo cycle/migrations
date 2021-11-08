@@ -17,29 +17,15 @@ abstract class ForeignKey extends AbstractOperation
 {
     /**
      * Some options has set of aliases.
-     *
-     * @var array
      */
-    protected $aliases = [
+    protected array $aliases = [
         'onDelete' => ['delete'],
         'onUpdate' => ['update'],
     ];
 
-    /**
-     * Column foreign key associated to.
-     *
-     * @var array
-     */
-    protected $columns = [];
-
-    /**
-     * @param string $table
-     * @param array  $columns
-     */
-    public function __construct(string $table, array $columns)
+    public function __construct(string $table, protected array $columns)
     {
         parent::__construct($table);
-        $this->columns = $columns;
     }
 
     /**
