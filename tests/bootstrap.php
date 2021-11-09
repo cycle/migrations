@@ -58,23 +58,6 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 if (!empty(getenv('DB'))) {
     switch (getenv('DB')) {
-        case 'postgres':
-            \Cycle\Migrations\Tests\BaseTest::$config = [
-                'debug' => false,
-                'postgres' => new Config\PostgresDriverConfig(
-                    connection: new Config\Postgres\TcpConnectionConfig(
-                        database: 'spiral',
-                        host: '127.0.0.1',
-                        port: 5432,
-                        user: 'postgres',
-                        password: 'postgres',
-                    ),
-                    schema: 'public',
-                    queryCache: true,
-                ),
-            ];
-            break;
-
         case 'mariadb':
             \Cycle\Migrations\Tests\BaseTest::$config = [
                 'debug' => false,
