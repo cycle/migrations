@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use Doctrine\Inflector\Inflector;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\Files;
@@ -30,28 +31,13 @@ final class FileRepository implements RepositoryInterface
     // Timestamp format for files.
     private const TIMESTAMP_FORMAT = 'Ymd.His';
 
-    /** @var MigrationConfig */
-    private $config;
+    private int $chunkID = 0;
+    private FactoryInterface $factory;
+    private FilesInterface $files;
+    private Inflector $inflector;
 
-    /** @var int */
-    private $chunkID = 0;
-
-    /** @var FactoryInterface */
-    private $factory;
-
-    /** @var FilesInterface */
-    private $files;
-
-    /** @var \Doctrine\Inflector\Inflector */
-    private $inflector;
-
-    /**
-     * @param MigrationConfig       $config
-     * @param FactoryInterface|null $factory
-     */
-    public function __construct(MigrationConfig $config, FactoryInterface $factory = null)
+    public function __construct(private MigrationConfig $config, FactoryInterface $factory = null)
     {
-        $this->config = $config;
         $this->files = new Files();
         $this->factory = $factory ?? new Container();
         $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
@@ -100,7 +86,7 @@ final class FileRepository implements RepositoryInterface
         $inflectedName = $this->inflector->tableize($name);
 
         foreach ($this->getMigrations() as $migration) {
-            if (get_class($migration) === $class) {
+            if ($migration::class === $class) {
                 throw new RepositoryException(
                     "Unable to register migration '{$class}', migration already exists"
                 );
@@ -163,10 +149,6 @@ final class FileRepository implements RepositoryInterface
 
     /**
      * Request new migration filename based on user input and current timestamp.
-     *
-     * @param string $name
-     *
-     * @return string
      */
     private function createFilename(string $name): string
     {

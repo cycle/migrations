@@ -22,24 +22,14 @@ use Spiral\Reactor\Partial\Source;
 final class Atomizer
 {
     /** @var AbstractTable[] */
-    protected $tables = [];
-    /** @var RendererInterface */
-    private $renderer;
+    protected array $tables = [];
 
-    /**
-     * @param RendererInterface $renderer
-     */
-    public function __construct(RendererInterface $renderer)
+    public function __construct(private RendererInterface $renderer)
     {
-        $this->renderer = $renderer;
     }
 
     /**
      * Add new table into atomizer.
-     *
-     * @param AbstractTable $table
-     *
-     * @return Atomizer
      */
     public function addTable(AbstractTable $table): self
     {
@@ -60,8 +50,6 @@ final class Atomizer
 
     /**
      * Generate set of commands needed to describe migration (up command).
-     *
-     * @param Source $source
      */
     public function declareChanges(Source $source): void
     {
@@ -83,8 +71,6 @@ final class Atomizer
 
     /**
      * Generate set of lines needed to rollback migration (down command).
-     *
-     * @param Source $source
      */
     public function revertChanges(Source $source): void
     {
@@ -128,8 +114,6 @@ final class Atomizer
 
     /**
      * Add spacing between commands, only if required.
-     *
-     * @param Source $source
      */
     private function declareBlock(Source $source): void
     {

@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests;
 
+use Cycle\Database\Driver\DriverInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerAwareInterface;
 use Spiral\Core\Container;
 use Cycle\Database\Config\DatabaseConfig;
 use Cycle\Database\Database;
 use Cycle\Database\DatabaseManager;
-use Cycle\Database\Driver\Driver;
 use Cycle\Database\Driver\HandlerInterface;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\Schema\Comparator;
@@ -41,30 +42,16 @@ abstract class BaseTest extends TestCase
         'table' => 'migrations',
         'safe' => true,
     ];
-    public static $config;
 
-    protected static $driverCache = [];
-
-    /** @var Driver */
-    protected $driver;
-
-    /** @var ContainerInterface */
-    protected $container;
-
-    /**  @var Migrator */
-    protected $migrator;
-
-    /**  @var MigrationConfig */
-    protected $migrationConfig;
-
-    /** @var DatabaseManager */
-    protected $dbal;
-
-    /** @var Database */
-    protected $db;
-
-    /** @var FileRepository */
-    protected $repository;
+    public static array $config;
+    protected static array $driverCache = [];
+    protected DriverInterface $driver;
+    protected ContainerInterface $container;
+    protected Migrator $migrator;
+    protected MigrationConfig $migrationConfig;
+    protected DatabaseManager $dbal;
+    protected Database $db;
+    protected FileRepository $repository;
 
     public function setUp(): void
     {
@@ -72,7 +59,7 @@ abstract class BaseTest extends TestCase
             echo "\n\n-------- BEGIN: " . $this->getName() . " --------------\n\n";
         }
 
-        $this->container = $container = new Container();
+        $this->container = new Container();
         $this->dbal = $this->getDBAL($this->container);
 
         $this->migrationConfig = new MigrationConfig(static::CONFIG);
@@ -110,26 +97,17 @@ abstract class BaseTest extends TestCase
         }
     }
 
-    /**
-     * @return Driver
-     */
-    public function getDriver(): Driver
+    public function getDriver(): DriverInterface
     {
         $config = self::$config[static::DRIVER];
         if (!isset($this->driver)) {
-            $class = $config['driver'];
-
-            $this->driver = new $class([
-                'connection' => $config['conn'],
-                'username' => $config['user'],
-                'password' => $config['pass'],
-                'options' => [],
-            ]);
+            $this->driver = $config->driver::create($config);
         }
 
         if (self::$config['debug']) {
-            $this->driver->setProfiling(true);
-            $this->driver->setLogger(new TestLogger());
+            if ($this->driver instanceof LoggerAwareInterface) {
+                $this->driver->setLogger(new TestLogger());
+            }
         }
 
         return $this->driver;
@@ -163,13 +141,7 @@ abstract class BaseTest extends TestCase
         $this->repository->registerMigration($name, $name, $file->render());
     }
 
-    /**
-     * @param string $name
-     * @param string $prefix
-     *
-     * @return Database|null When non empty null will be given, for safety, for science.
-     */
-    protected function db(string $name = 'default', string $prefix = '')
+    protected function db(string $name = 'default', string $prefix = ''): Database
     {
         if (isset(static::$driverCache[static::DRIVER])) {
             $driver = static::$driverCache[static::DRIVER];
@@ -180,21 +152,11 @@ abstract class BaseTest extends TestCase
         return new Database($name, $prefix, $driver);
     }
 
-    /**
-     * @param string $table
-     *
-     * @return AbstractTable
-     */
     protected function schema(string $table): AbstractTable
     {
         return $this->db->table($table)->getSchema();
     }
 
-    /**
-     * @param ContainerInterface $container
-     *
-     * @return DatabaseManager
-     */
     protected function getDBAL(ContainerInterface $container): DatabaseManager
     {
         $dbal = new DatabaseManager(
@@ -224,9 +186,6 @@ abstract class BaseTest extends TestCase
         return $dbal;
     }
 
-    /**
-     * @param Database|null $database
-     */
     protected function dropDatabase(Database $database = null): void
     {
         if (empty($database)) {
@@ -237,7 +196,7 @@ abstract class BaseTest extends TestCase
             $schema = $table->getSchema();
 
             foreach ($schema->getForeignKeys() as $foreign) {
-                $schema->dropForeignKey($foreign->getColumn());
+                $schema->dropForeignKey($foreign->getColumns());
             }
 
             $schema->save(HandlerInterface::DROP_FOREIGN_KEYS);
@@ -336,24 +295,24 @@ abstract class BaseTest extends TestCase
         // FK
         foreach ($source->getForeignKeys() as $key) {
             $this->assertTrue(
-                $target->hasForeignKey($key->getColumn()),
+                $target->hasForeignKey($key->getColumns()),
                 "FK {$key->getName()} has been removed"
             );
 
             $this->assertTrue(
-                $key->compare($target->findForeignKey($key->getColumn())),
+                $key->compare($target->findForeignKey($key->getColumns())),
                 "FK {$key->getName()} has been changed"
             );
         }
 
         foreach ($target->getForeignKeys() as $key) {
             $this->assertTrue(
-                $source->hasForeignKey($key->getColumn()),
+                $source->hasForeignKey($key->getColumns()),
                 "FK {$key->getName()} has been removed"
             );
 
             $this->assertTrue(
-                $key->compare($source->findForeignKey($key->getColumn())),
+                $key->compare($source->findForeignKey($key->getColumns())),
                 "FK {$key->getName()} has been changed"
             );
         }
@@ -369,23 +328,12 @@ abstract class BaseTest extends TestCase
         }
     }
 
-    /**
-     * @param AbstractTable $table
-     *
-     * @return AbstractTable
-     */
     protected function fetchSchema(AbstractTable $table): AbstractTable
     {
         return $this->schema($table->getName());
     }
 
-    /**
-     * @param string     $table
-     * @param Comparator $comparator
-     *
-     * @return string
-     */
-    protected function makeMessage(string $table, Comparator $comparator)
+    protected function makeMessage(string $table, Comparator $comparator): string
     {
         if ($comparator->isPrimaryChanged()) {
             return "Table '{$table}' not synced, primary indexes are different.";

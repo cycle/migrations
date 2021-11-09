@@ -29,7 +29,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreate(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')->create();
 
@@ -39,7 +39,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithColumns(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -51,7 +51,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithIndexesAndDropIndex(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -61,7 +61,7 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->dropIndex(['value'])->update();
 
@@ -71,7 +71,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithNamedIndex(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -83,14 +83,14 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithForeign(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample1');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
 
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -108,7 +108,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testCreateWithForeignAliased(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample1');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
 
         $blueprint->addColumn('id', 'primary')->create();
 
@@ -155,7 +155,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testUpdateTable(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -165,7 +165,7 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->dropColumn('value')
             ->update();
@@ -174,7 +174,7 @@ abstract class BlueprintTest extends BaseTest
     public function testUpdateTableError2(): void
     {
         $this->expectException(\Cycle\Migrations\Exception\Operation\ColumnException::class);
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -192,7 +192,7 @@ abstract class BlueprintTest extends BaseTest
     public function testUpdateTableError5(): void
     {
         $this->expectException(\Cycle\Migrations\Exception\Operation\ColumnException::class);
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'enum', ['default' => 1])
@@ -210,7 +210,7 @@ abstract class BlueprintTest extends BaseTest
     public function testUpdateTableError3(): void
     {
         $this->expectException(\Cycle\Migrations\Exception\Operation\IndexException::class);
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -227,7 +227,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testDropTable(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -244,7 +244,7 @@ abstract class BlueprintTest extends BaseTest
 
     public function testRenameTable(): void
     {
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
             ->addColumn('value', 'float', ['default' => 1])
@@ -254,7 +254,7 @@ abstract class BlueprintTest extends BaseTest
         //Not created
         $this->assertTrue($blueprint->getSchema()->exists());
 
-        $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->rename('new_name');
     }

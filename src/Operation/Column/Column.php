@@ -23,45 +23,25 @@ abstract class Column extends AbstractOperation
 
     /**
      * Some options has set of aliases.
-     *
-     * @var array
      */
-    protected $aliases = [
+    protected array $aliases = [
         'size' => ['length', 'limit'],
         'default' => ['defaultValue'],
         'null' => ['nullable'],
     ];
 
-    /** @var string */
-    protected $name;
-
-    /** @var string */
-    protected $type;
-
-    /**
-     * @param string $table
-     * @param string $columns
-     * @param string $type
-     * @param array  $options
-     */
     public function __construct(
         string $table,
-        string $columns,
-        string $type = 'string',
+        protected string $name,
+        protected string $type = 'string',
         array $options = []
     ) {
-        parent::__construct($table);
-        $this->name = $columns;
-        $this->type = $type;
         $this->options = $options;
+        parent::__construct($table);
     }
 
     /**
-     * @param AbstractTable $schema
-     *
      * @throws ColumnException
-     *
-     * @return AbstractColumn
      */
     protected function declareColumn(AbstractTable $schema): AbstractColumn
     {

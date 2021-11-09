@@ -20,32 +20,15 @@ final class Add extends ForeignKey
 {
     use OptionsTrait;
 
-    /** @var string */
-    protected $foreignTable = '';
-
-    /** @var array */
-    protected $foreignKeys = [];
-
-    /**
-     * AddReference constructor.
-     *
-     * @param string $table
-     * @param array  $columns
-     * @param string $foreignTable
-     * @param array  $foreignKeys
-     * @param array  $options
-     */
     public function __construct(
         string $table,
         array $columns,
-        string $foreignTable,
-        array $foreignKeys,
+        private string $foreignTable,
+        private array $foreignKeys,
         array $options
     ) {
-        parent::__construct($table, $columns);
-        $this->foreignTable = $foreignTable;
-        $this->foreignKeys = $foreignKeys;
         $this->options = $options;
+        parent::__construct($table, $columns);
     }
 
     /**

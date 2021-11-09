@@ -20,32 +20,15 @@ use Cycle\Migrations\Exception\BlueprintException;
  */
 final class TableBlueprint
 {
-    /** @var CapsuleInterface */
-    private $capsule = null;
+    private bool $executed = false;
+    private array $operations = [];
 
-    /** @var bool */
-    private $executed = false;
-
-    /** @var array */
-    private $operations = [];
-
-    /** @var string */
-    private $table = '';
-
-    /**
-     * @param CapsuleInterface $capsule
-     * @param string           $table
-     */
-    public function __construct(CapsuleInterface $capsule, string $table)
+    public function __construct(private CapsuleInterface $capsule, private string $table)
     {
-        $this->capsule = $capsule;
-        $this->table = $table;
     }
 
     /**
      * Get associated table schema.
-     *
-     * @return AbstractTable
      */
     public function getSchema(): AbstractTable
     {
@@ -58,12 +41,6 @@ final class TableBlueprint
      * $table->addColumn('status', 'enum', [
      *      'values' => ['active', 'disabled']
      * ]);
-     *
-     * @param string $name
-     * @param string $type
-     * @param array  $options
-     *
-     * @return TableBlueprint
      */
     public function addColumn(string $name, string $type, array $options = []): self
     {
@@ -75,12 +52,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->alterColumn('name', 'string', ['length' => 128]);
-     *
-     * @param string $name
-     * @param string $type
-     * @param array  $options
-     *
-     * @return TableBlueprint
      */
     public function alterColumn(string $name, string $type, array $options = []): self
     {
@@ -92,11 +63,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->renameColumn('column', 'new_name');
-     *
-     * @param string $name
-     * @param string $newName
-     *
-     * @return TableBlueprint
      */
     public function renameColumn(string $name, string $newName): self
     {
@@ -108,10 +74,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->dropColumn('email');
-     *
-     * @param string $name
-     *
-     * @return TableBlueprint
      */
     public function dropColumn(string $name): self
     {
@@ -123,11 +85,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->addIndex(['email'], ['unique' => true]);
-     *
-     * @param array $columns
-     * @param array $options
-     *
-     * @return TableBlueprint
      */
     public function addIndex(array $columns, array $options = []): self
     {
@@ -139,11 +96,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->alterIndex(['email'], ['unique' => false]);
-     *
-     * @param array $columns
-     * @param array $options
-     *
-     * @return TableBlueprint
      */
     public function alterIndex(array $columns, array $options): self
     {
@@ -155,10 +107,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->dropIndex(['email']);
-     *
-     * @param array $columns
-     *
-     * @return TableBlueprint
      */
     public function dropIndex(array $columns): self
     {
@@ -171,12 +119,7 @@ final class TableBlueprint
      * Example:
      * $table->addForeignKey('user_id', 'users', 'id', ['delete' => 'CASCADE']);
      *
-     * @param array  $columns
      * @param string $foreignTable Database isolation prefix will be automatically added.
-     * @param array  $foreignKeys
-     * @param array  $options
-     *
-     * @return TableBlueprint
      */
     public function addForeignKey(
         array $columns,
@@ -198,13 +141,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->alterForeignKey('user_id', 'users', 'id', ['delete' => 'NO ACTION']);
-     *
-     * @param array  $columns
-     * @param string $foreignTable
-     * @param array  $foreignKeys
-     * @param array  $options
-     *
-     * @return TableBlueprint
      */
     public function alterForeignKey(
         array $columns,
@@ -226,10 +162,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->dropForeignKey('user_id');
-     *
-     * @param array $columns
-     *
-     * @return TableBlueprint
      */
     public function dropForeignKey(array $columns): self
     {
@@ -240,10 +172,6 @@ final class TableBlueprint
 
     /**
      * Set table primary keys index. Attention, you can only call it when table being created.
-     *
-     * @param array $keys
-     *
-     * @return TableBlueprint
      */
     public function setPrimaryKeys(array $keys): self
     {
@@ -290,8 +218,6 @@ final class TableBlueprint
 
     /**
      * Rename table. Must be last operation in the sequence.
-     *
-     * @param string $newName
      */
     public function rename(string $newName): void
     {
@@ -304,10 +230,6 @@ final class TableBlueprint
 
     /**
      * Register new operation.
-     *
-     * @param OperationInterface $operation
-     *
-     * @return TableBlueprint
      */
     public function addOperation(OperationInterface $operation): self
     {

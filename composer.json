@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
+    "php": ">=8.0",
     "cycle/database": "dev-master",
     "spiral/core": "^2.7",
     "spiral/files": "^2.7",

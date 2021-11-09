@@ -19,8 +19,6 @@ final class MigrationConfig extends InjectableConfig
 
     /**
      * Migrations directory.
-     *
-     * @return string
      */
     public function getDirectory(): string
     {
@@ -29,8 +27,6 @@ final class MigrationConfig extends InjectableConfig
 
     /**
      * Table to store list of executed migrations.
-     *
-     * @return string
      */
     public function getTable(): string
     {
@@ -40,8 +36,6 @@ final class MigrationConfig extends InjectableConfig
     /**
      * Is it safe to run migration without user confirmation? Attention, this option does not
      * used in component directly and left for component consumers.
-     *
-     * @return bool
      */
     public function isSafe(): bool
     {
@@ -50,8 +44,6 @@ final class MigrationConfig extends InjectableConfig
 
     /**
      * Namespace for generated migration class
-     *
-     * @return string
      */
     public function getNamespace(): string
     {

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use Cycle\Database;
+use Cycle\Database\Config;
 
 error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', '1');
@@ -20,77 +20,57 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 \Cycle\Migrations\Tests\BaseTest::$config = [
     'debug' => false,
-    'sqlite' => [
-        'driver' => Database\Driver\SQLite\SQLiteDriver::class,
-        'check' => static function () {
-            return !in_array('sqlite', \PDO::getAvailableDrivers(), true);
-        },
-        'conn' => 'sqlite::memory:',
-        'user' => 'sqlite',
-        'pass' => '',
-        'queryCache' => 100,
-    ],
-    'mysql' => [
-        'driver' => Database\Driver\MySQL\MySQLDriver::class,
-        'check' => static function () {
-            return !in_array('mysql', \PDO::getAvailableDrivers(), true);
-        },
-        'conn' => 'mysql:host=127.0.0.1:13306;dbname=spiral',
-        'user' => 'root',
-        'pass' => 'root',
-        'queryCache' => 100,
-    ],
-    'postgres' => [
-        'driver' => Database\Driver\Postgres\PostgresDriver::class,
-        'check' => static function () {
-            return !in_array('pgsql', \PDO::getAvailableDrivers(), true);
-        },
-        'conn' => 'pgsql:host=127.0.0.1;port=15432;dbname=spiral',
-        'user' => 'postgres',
-        'pass' => 'postgres',
-        'queryCache' => 100,
-    ],
-    'sqlserver' => [
-        'driver' => Database\Driver\SQLServer\SQLServerDriver::class,
-        'check' => static function () {
-            return !in_array('sqlsrv', \PDO::getAvailableDrivers(), true);
-        },
-        'conn' => 'sqlsrv:Server=127.0.0.1,11433;Database=tempdb',
-        'user' => 'sa',
-        'pass' => 'SSpaSS__1',
-        'queryCache' => 100,
-    ],
+    'sqlite' => new Config\SQLiteDriverConfig(
+        queryCache: true,
+    ),
+    'mysql' => new Config\MySQLDriverConfig(
+        connection: new Config\MySQL\TcpConnectionConfig(
+            database: 'spiral',
+            host: '127.0.0.1',
+            port: 13306,
+            user: 'root',
+            password: 'root',
+        ),
+        queryCache: true
+    ),
+    'postgres' => new Config\PostgresDriverConfig(
+        connection: new Config\Postgres\TcpConnectionConfig(
+            database: 'spiral',
+            host: '127.0.0.1',
+            port: 15432,
+            user: 'postgres',
+            password: 'postgres',
+        ),
+        schema: 'public',
+        queryCache: true,
+    ),
+    'sqlserver' => new Config\SQLServerDriverConfig(
+        connection: new Config\SQLServer\TcpConnectionConfig(
+            database: 'tempdb',
+            host: '127.0.0.1',
+            port: 11433,
+            user: 'SA',
+            password: 'SSpaSS__1'
+        ),
+        queryCache: true
+    ),
 ];
 
 if (!empty(getenv('DB'))) {
     switch (getenv('DB')) {
-        case 'postgres':
-            \Cycle\Migrations\Tests\BaseTest::$config = [
-                'debug' => false,
-                'postgres' => [
-                    'driver' => Database\Driver\Postgres\PostgresDriver::class,
-                    'check' => static function () {
-                        return true;
-                    },
-                    'conn' => 'pgsql:host=127.0.0.1;port=5432;dbname=spiral',
-                    'user' => 'postgres',
-                    'pass' => 'postgres',
-                ],
-            ];
-            break;
-
         case 'mariadb':
             \Cycle\Migrations\Tests\BaseTest::$config = [
                 'debug' => false,
-                'mysql' => [
-                    'driver' => Database\Driver\MySQL\MySQLDriver::class,
-                    'check' => static function () {
-                        return true;
-                    },
-                    'conn' => 'mysql:host=127.0.0.1:23306;dbname=spiral',
-                    'user' => 'root',
-                    'pass' => 'root',
-                ],
+                'mysql' => new Config\MySQLDriverConfig(
+                    connection: new Config\MySQL\TcpConnectionConfig(
+                        database: 'spiral',
+                        host: '127.0.0.1',
+                        port: 23306,
+                        user: 'root',
+                        password: 'root',
+                    ),
+                    queryCache: true
+                ),
             ];
             break;
     }

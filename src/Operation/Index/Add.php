@@ -19,15 +19,10 @@ final class Add extends Index
 {
     use OptionsTrait;
 
-    /**
-     * @param string $table
-     * @param array  $columns
-     * @param array  $options
-     */
     public function __construct(string $table, array $columns, array $options = [])
     {
-        parent::__construct($table, $columns);
         $this->options = $options;
+        parent::__construct($table, $columns);
     }
 
     /**

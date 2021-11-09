@@ -21,26 +21,14 @@ use Cycle\Migrations\Exception\ContextException;
  */
 interface CapsuleInterface
 {
-    /**
-     * @return DatabaseInterface
-     */
     public function getDatabase(): DatabaseInterface;
 
-    /**
-     * @param string $table
-     *
-     * @return TableInterface
-     */
     public function getTable(string $table): TableInterface;
 
     /**
      * Get schema associated with given database and table.
      *
-     * @param string $table
-     *
      * @throws ContextException
-     *
-     * @return AbstractTable
      */
     public function getSchema(string $table): AbstractTable;
 
@@ -49,5 +37,5 @@ interface CapsuleInterface
      *
      * @param OperationInterface[] $operations
      */
-    public function execute(array $operations);
+    public function execute(array $operations): void;
 }

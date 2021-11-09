@@ -15,15 +15,8 @@ use Cycle\Migrations\OperationInterface;
 
 abstract class AbstractOperation implements OperationInterface
 {
-    /** @var string */
-    protected $table;
-
-    /**
-     * @param string $table
-     */
-    public function __construct(string $table)
+    public function __construct(protected string $table)
     {
-        $this->table = $table;
     }
 
     /**
