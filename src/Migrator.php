@@ -242,8 +242,6 @@ final class Migrator
 
     /**
      * Fetch migration information from database
-     *
-     *
      */
     protected function fetchMigrationData(MigrationInterface $migration): ?array
     {

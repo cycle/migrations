@@ -41,8 +41,6 @@ final class TableBlueprint
      * $table->addColumn('status', 'enum', [
      *      'values' => ['active', 'disabled']
      * ]);
-     *
-     *
      */
     public function addColumn(string $name, string $type, array $options = []): self
     {
@@ -54,8 +52,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->alterColumn('name', 'string', ['length' => 128]);
-     *
-     *
      */
     public function alterColumn(string $name, string $type, array $options = []): self
     {
@@ -67,8 +63,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->renameColumn('column', 'new_name');
-     *
-     *
      */
     public function renameColumn(string $name, string $newName): self
     {
@@ -80,8 +74,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->dropColumn('email');
-     *
-     *
      */
     public function dropColumn(string $name): self
     {
@@ -93,8 +85,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->addIndex(['email'], ['unique' => true]);
-     *
-     *
      */
     public function addIndex(array $columns, array $options = []): self
     {
@@ -106,8 +96,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->alterIndex(['email'], ['unique' => false]);
-     *
-     *
      */
     public function alterIndex(array $columns, array $options): self
     {
@@ -119,8 +107,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->dropIndex(['email']);
-     *
-     *
      */
     public function dropIndex(array $columns): self
     {
@@ -134,7 +120,6 @@ final class TableBlueprint
      * $table->addForeignKey('user_id', 'users', 'id', ['delete' => 'CASCADE']);
      *
      * @param string $foreignTable Database isolation prefix will be automatically added.
-     *
      */
     public function addForeignKey(
         array $columns,
@@ -156,8 +141,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->alterForeignKey('user_id', 'users', 'id', ['delete' => 'NO ACTION']);
-     *
-     *
      */
     public function alterForeignKey(
         array $columns,
@@ -179,8 +162,6 @@ final class TableBlueprint
     /**
      * Example:
      * $table->dropForeignKey('user_id');
-     *
-     *
      */
     public function dropForeignKey(array $columns): self
     {
@@ -191,8 +172,6 @@ final class TableBlueprint
 
     /**
      * Set table primary keys index. Attention, you can only call it when table being created.
-     *
-     *
      */
     public function setPrimaryKeys(array $keys): self
     {
