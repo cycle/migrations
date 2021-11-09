@@ -32,5 +32,10 @@
       "Cycle\\Migrations\\Tests\\": "tests/Migrations/",
       "Cycle\\Migrations\\Fixtures\\": "tests/Fixtures/"
     }
-  }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
