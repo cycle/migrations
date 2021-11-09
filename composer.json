@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": ">=8.0",
-    "cycle/database": "2.0.x-dev#99a857789170baf6b47c5dde85115aef5c381728",
+    "cycle/database": "dev-master",
     "spiral/core": "^2.7",
     "spiral/files": "^2.7",
     "spiral/tokenizer": "^2.7",
