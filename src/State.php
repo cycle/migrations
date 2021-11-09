@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use DateTimeInterface;
+
 /**
  * Migration meta information specific to current environment
  */
@@ -23,9 +25,9 @@ final class State
 
     public function __construct(
         private string $name,
-        private \DateTimeInterface $timeCreated,
+        private DateTimeInterface $timeCreated,
         private int $status = self::STATUS_UNDEFINED,
-        private ?\DateTimeInterface $timeExecuted = null
+        private ?DateTimeInterface $timeExecuted = null
     ) {
     }
 
@@ -39,17 +41,17 @@ final class State
         return $this->status;
     }
 
-    public function getTimeCreated(): \DateTimeInterface
+    public function getTimeCreated(): DateTimeInterface
     {
         return $this->timeCreated;
     }
 
-    public function getTimeExecuted(): ?\DateTimeInterface
+    public function getTimeExecuted(): ?DateTimeInterface
     {
         return $this->timeExecuted;
     }
 
-    public function withStatus(int $status, \DateTimeInterface $timeExecuted = null): self
+    public function withStatus(int $status, DateTimeInterface $timeExecuted = null): self
     {
         $state = clone $this;
         $state->status = $status;
