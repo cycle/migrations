@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Operation\Index;
 
 use Cycle\Migrations\Operation\AbstractOperation;
+use Spiral\Migrations\Operation\Index\Index as SpiralIndex;
 
 abstract class Index extends AbstractOperation
 {
@@ -28,3 +29,4 @@ abstract class Index extends AbstractOperation
         $this->columns = $columns;
     }
 }
+\class_alias(Index::class, SpiralIndex::class, false);

@@ -15,6 +15,7 @@ use Cycle\Database\DatabaseInterface;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\TableInterface;
 use Cycle\Migrations\Exception\ContextException;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
 
 /**
  * Migration capsule (isolation).
@@ -51,3 +52,4 @@ interface CapsuleInterface
      */
     public function execute(array $operations);
 }
+\class_alias(CapsuleInterface::class, SpiralCapsuleInterface::class, false);

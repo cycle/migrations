@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Operation;
 
 use Cycle\Migrations\OperationInterface;
+use Spiral\Migrations\Operation\AbstractOperation as SpiralAbstractOperation;
 
 abstract class AbstractOperation implements OperationInterface
 {
@@ -27,10 +28,11 @@ abstract class AbstractOperation implements OperationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTable(): string
     {
         return $this->table;
     }
 }
+\class_alias(AbstractOperation::class, SpiralAbstractOperation::class, false);

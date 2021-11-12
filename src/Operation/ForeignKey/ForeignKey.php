@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Operation\ForeignKey;
 
 use Cycle\Migrations\Operation\AbstractOperation;
+use Spiral\Migrations\Operation\ForeignKey\ForeignKey as SpiralForeignKey;
 
 abstract class ForeignKey extends AbstractOperation
 {
@@ -50,3 +51,4 @@ abstract class ForeignKey extends AbstractOperation
         return implode(', ', $this->columns);
     }
 }
+\class_alias(ForeignKey::class, SpiralForeignKey::class, false);

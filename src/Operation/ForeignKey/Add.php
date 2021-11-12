@@ -12,9 +12,12 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Operation\ForeignKey;
 
 use Cycle\Database\ForeignKeyInterface;
-use Cycle\Migrations\CapsuleInterface;
 use Cycle\Migrations\Exception\Operation\ForeignKeyException;
 use Cycle\Migrations\Operation\Traits\OptionsTrait;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\Operation\ForeignKey\Add as SpiralAdd;
+
+\interface_exists(SpiralCapsuleInterface::class);
 
 final class Add extends ForeignKey
 {
@@ -49,9 +52,9 @@ final class Add extends ForeignKey
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function execute(CapsuleInterface $capsule): void
+    public function execute(SpiralCapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
@@ -110,3 +113,4 @@ final class Add extends ForeignKey
         );
     }
 }
+\class_alias(Add::class, SpiralAdd::class, false);

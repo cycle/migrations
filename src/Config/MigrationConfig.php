@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Config;
 
 use Spiral\Core\InjectableConfig;
+use Spiral\Migrations\Config\MigrationConfig as SpiralMigrationConfig;
 
 final class MigrationConfig extends InjectableConfig
 {
@@ -70,3 +71,4 @@ final class MigrationConfig extends InjectableConfig
         return $this->config['namespace'] ?? 'Migration';
     }
 }
+\class_alias(MigrationConfig::class, SpiralMigrationConfig::class, false);

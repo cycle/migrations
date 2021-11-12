@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Migration;
 
+use Spiral\Migrations\Migration\Status as SpiralStatus;
+
 /**
  * @psalm-type StatusEnum = Status::STATUS_*
  */
@@ -40,3 +42,4 @@ final class Status
      */
     public const STATUS_EXECUTED = 1;
 }
+\class_alias(Status::class, SpiralStatus::class, false);

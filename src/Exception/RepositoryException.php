@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Exception;
 
+use Spiral\Migrations\Exception\RepositoryException as SpiralRepositoryException;
+
 class RepositoryException extends MigrationException
 {
 }
+\class_alias(RepositoryException::class, SpiralRepositoryException::class, false);

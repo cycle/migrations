@@ -12,6 +12,10 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Migrations\Exception\OperationException;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\OperationInterface as SpiralOperationInterface;
+
+\interface_exists(SpiralCapsuleInterface::class);
 
 /**
  * Represents simple table operation. Operation is a bridge between command and declarative
@@ -33,5 +37,6 @@ interface OperationInterface
      *
      * @throws OperationException
      */
-    public function execute(CapsuleInterface $capsule);
+    public function execute(SpiralCapsuleInterface $capsule);
 }
+\class_alias(OperationInterface::class, SpiralOperationInterface::class, false);

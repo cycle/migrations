@@ -11,9 +11,12 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Operation\Table;
 
-use Cycle\Migrations\CapsuleInterface;
 use Cycle\Migrations\Exception\Operation\TableException;
 use Cycle\Migrations\Operation\AbstractOperation;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\Operation\Table\PrimaryKeys as SpiralPrimaryKeys;
+
+\interface_exists(SpiralCapsuleInterface::class);
 
 final class PrimaryKeys extends AbstractOperation
 {
@@ -31,9 +34,9 @@ final class PrimaryKeys extends AbstractOperation
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function execute(CapsuleInterface $capsule): void
+    public function execute(SpiralCapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
         $database = $this->database ?? '[default]';
@@ -47,3 +50,4 @@ final class PrimaryKeys extends AbstractOperation
         $schema->setPrimaryKeys($this->columns);
     }
 }
+\class_alias(PrimaryKeys::class, SpiralPrimaryKeys::class, false);

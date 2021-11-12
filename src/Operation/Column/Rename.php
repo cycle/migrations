@@ -11,9 +11,12 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Operation\Column;
 
-use Cycle\Migrations\CapsuleInterface;
 use Cycle\Migrations\Exception\Operation\ColumnException;
 use Cycle\Migrations\Operation\AbstractOperation;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\Operation\Column\Rename as SpiralRename;
+
+\interface_exists(SpiralCapsuleInterface::class);
 
 final class Rename extends AbstractOperation
 {
@@ -36,9 +39,9 @@ final class Rename extends AbstractOperation
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function execute(CapsuleInterface $capsule): void
+    public function execute(SpiralCapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
@@ -63,3 +66,4 @@ final class Rename extends AbstractOperation
         $schema->renameColumn($this->name, $this->newName);
     }
 }
+\class_alias(Rename::class, SpiralRename::class, false);

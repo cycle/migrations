@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Operation\Traits;
 
+use Spiral\Migrations\Operation\Traits\OptionsTrait as SpiralOptionsTrait;
+
 /**
  * Consumer must define property "aliases".
  */
@@ -72,3 +74,4 @@ trait OptionsTrait
         return false;
     }
 }
+\class_alias(OptionsTrait::class, SpiralOptionsTrait::class, false);

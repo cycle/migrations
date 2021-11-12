@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\Files;
@@ -19,6 +21,10 @@ use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Exception\RepositoryException;
 use Cycle\Migrations\Migration\State;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
+use Spiral\Migrations\Config\MigrationConfig as SpiralMigrationConfig;
+use Spiral\Migrations\FileRepository as SpiralFileRepository;
+
+\class_exists(SpiralMigrationConfig::class);
 
 /**
  * Stores migrations as files.
@@ -43,23 +49,23 @@ final class FileRepository implements RepositoryInterface
     /** @var FilesInterface */
     private $files;
 
-    /** @var \Doctrine\Inflector\Inflector */
+    /** @var Inflector */
     private $inflector;
 
     /**
      * @param MigrationConfig       $config
      * @param FactoryInterface|null $factory
      */
-    public function __construct(MigrationConfig $config, FactoryInterface $factory = null)
+    public function __construct(SpiralMigrationConfig $config, FactoryInterface $factory = null)
     {
         $this->config = $config;
         $this->files = new Files();
         $this->factory = $factory ?? new Container();
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getMigrations(): array
     {
@@ -87,7 +93,7 @@ final class FileRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function registerMigration(string $name, string $class, string $body = null): string
     {
@@ -185,3 +191,4 @@ final class FileRepository implements RepositoryInterface
         );
     }
 }
+\class_alias(FileRepository::class, SpiralFileRepository::class, false);

@@ -12,6 +12,10 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Migrations\Exception\MigrationException;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\MigratorInterface as SpiralMigratorInterface;
+
+\interface_exists(SpiralCapsuleInterface::class);
 
 interface MigratorInterface
 {
@@ -29,7 +33,7 @@ interface MigratorInterface
      *
      * @return MigrationInterface|null
      */
-    public function run(CapsuleInterface $capsule = null): ?MigrationInterface;
+    public function run(SpiralCapsuleInterface $capsule = null): ?MigrationInterface;
 
     /**
      * Rollback last migration and return it's instance.
@@ -40,5 +44,6 @@ interface MigratorInterface
      *
      * @return MigrationInterface|null
      */
-    public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface;
+    public function rollback(SpiralCapsuleInterface $capsule = null): ?MigrationInterface;
 }
+\class_alias(MigratorInterface::class, SpiralMigratorInterface::class, false);

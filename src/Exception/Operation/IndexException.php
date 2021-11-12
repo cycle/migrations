@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Exception\Operation;
 
 use Cycle\Migrations\Exception\OperationException;
+use Spiral\Migrations\Operation\Exception\Operation\IndexException as SpiralIndexException;
 
 class IndexException extends OperationException
 {
 }
+\class_alias(IndexException::class, SpiralIndexException::class, false);

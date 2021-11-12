@@ -12,6 +12,10 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Migration;
 
 use Cycle\Migrations\Exception\MigrationException;
+use Spiral\Migrations\Migration\State as SpiralState;
+use Spiral\Migrations\Migration\ProvidesSyncStateInterface as SpiralProvidesSyncStateInterface;
+
+class_exists(SpiralState::class);
 
 /**
  * An interface for migrations providing information about the migration status.
@@ -25,7 +29,7 @@ interface ProvidesSyncStateInterface
      *
      * @return static
      */
-    public function withState(State $state): self;
+    public function withState(SpiralState $state): self;
 
     /**
      * Get migration state.
@@ -36,3 +40,4 @@ interface ProvidesSyncStateInterface
      */
     public function getState(): State;
 }
+\class_alias(ProvidesSyncStateInterface::class, SpiralProvidesSyncStateInterface::class, false);

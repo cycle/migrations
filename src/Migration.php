@@ -17,6 +17,12 @@ use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\Migration\DefinitionInterface;
 use Cycle\Migrations\Migration\ProvidesSyncStateInterface;
 use Cycle\Migrations\Migration\State;
+use Spiral\Migrations\Migration\State as SpiralState;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\Migration as SpiralMigration;
+
+\interface_exists(SpiralCapsuleInterface::class);
+\class_exists(SpiralState::class);
 
 /**
  * Simple migration class with shortcut for database and blueprint instances.
@@ -41,9 +47,9 @@ abstract class Migration implements MigrationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function withCapsule(CapsuleInterface $capsule): DefinitionInterface
+    public function withCapsule(SpiralCapsuleInterface $capsule): DefinitionInterface
     {
         $migration = clone $this;
         $migration->capsule = $capsule;
@@ -52,9 +58,9 @@ abstract class Migration implements MigrationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function withState(State $state): ProvidesSyncStateInterface
+    public function withState(SpiralState $state): ProvidesSyncStateInterface
     {
         $migration = clone $this;
         $migration->state = $state;
@@ -63,7 +69,7 @@ abstract class Migration implements MigrationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getState(): State
     {
@@ -102,3 +108,4 @@ abstract class Migration implements MigrationInterface
         return new TableBlueprint($this->capsule, $table);
     }
 }
+\class_alias(Migration::class, SpiralMigration::class, false);

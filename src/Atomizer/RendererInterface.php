@@ -13,6 +13,10 @@ namespace Cycle\Migrations\Atomizer;
 
 use Cycle\Database\Schema\AbstractTable;
 use Spiral\Reactor\Partial\Source;
+use Spiral\Database\Schema\AbstractTable as SpiralAbstractTable;
+use Spiral\Migrations\Atomizer\RendererInterface as SpiralRendererInterface;
+
+\class_exists(SpiralAbstractTable::class);
 
 /**
  * Renders table differences and create syntaxes into given source.
@@ -25,7 +29,7 @@ interface RendererInterface
      * @param Source        $source
      * @param AbstractTable $table
      */
-    public function createTable(Source $source, AbstractTable $table);
+    public function createTable(Source $source, SpiralAbstractTable $table);
 
     /**
      * Migration engine specific table update syntax.
@@ -33,7 +37,7 @@ interface RendererInterface
      * @param Source        $source
      * @param AbstractTable $table
      */
-    public function updateTable(Source $source, AbstractTable $table);
+    public function updateTable(Source $source, SpiralAbstractTable $table);
 
     /**
      * Migration engine specific table revert syntax.
@@ -41,7 +45,7 @@ interface RendererInterface
      * @param Source        $source
      * @param AbstractTable $table
      */
-    public function revertTable(Source $source, AbstractTable $table);
+    public function revertTable(Source $source, SpiralAbstractTable $table);
 
     /**
      * Migration engine specific table drop syntax.
@@ -49,5 +53,6 @@ interface RendererInterface
      * @param Source        $source
      * @param AbstractTable $table
      */
-    public function dropTable(Source $source, AbstractTable $table);
+    public function dropTable(Source $source, SpiralAbstractTable $table);
 }
+\class_alias(RendererInterface::class, SpiralRendererInterface::class, false);

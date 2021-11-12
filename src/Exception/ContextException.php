@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Exception;
 
+use Spiral\Migrations\Exception\ContextException as SpiralContextException;
+
 class ContextException extends MigrationException
 {
 }
+\class_alias(ContextException::class, SpiralContextException::class, false);

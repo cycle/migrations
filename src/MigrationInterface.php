@@ -13,7 +13,9 @@ namespace Cycle\Migrations;
 
 use Cycle\Migrations\Migration\DefinitionInterface;
 use Cycle\Migrations\Migration\ProvidesSyncStateInterface;
+use Spiral\Migrations\MigrationInterface as SpiralMigrationInterface;
 
 interface MigrationInterface extends ProvidesSyncStateInterface, DefinitionInterface
 {
 }
+\class_alias(MigrationInterface::class, SpiralMigrationInterface::class, false);
