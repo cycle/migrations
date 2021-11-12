@@ -13,6 +13,10 @@ namespace Cycle\Migrations\Migration;
 
 use Cycle\Migrations\CapsuleInterface;
 use Cycle\Migrations\Exception\MigrationException;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\Migration\DefinitionInterface as SpiralDefinitionInterface;
+
+interface_exists(SpiralCapsuleInterface::class);
 
 interface DefinitionInterface
 {
@@ -23,7 +27,7 @@ interface DefinitionInterface
      *
      * @return self
      */
-    public function withCapsule(CapsuleInterface $capsule): self;
+    public function withCapsule(SpiralCapsuleInterface $capsule): self;
 
     /**
      * Target migration database. Each migration must be specific to one
@@ -51,3 +55,4 @@ interface DefinitionInterface
      */
     public function down();
 }
+\class_alias(DefinitionInterface::class, SpiralDefinitionInterface::class, false);

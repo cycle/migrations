@@ -13,6 +13,12 @@ namespace Cycle\Migrations;
 
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Migrations\Exception\BlueprintException;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\OperationInterface as SpiralOperationInterface;
+use Spiral\Migrations\TableBlueprint as SpiralTableBlueprint;
+
+\interface_exists(SpiralCapsuleInterface::class);
+\interface_exists(SpiralOperationInterface::class);
 
 /**
  * TableBlueprint is abstraction wrapper at top of AbstractTable which converts command based
@@ -36,7 +42,7 @@ final class TableBlueprint
      * @param CapsuleInterface $capsule
      * @param string           $table
      */
-    public function __construct(CapsuleInterface $capsule, string $table)
+    public function __construct(SpiralCapsuleInterface $capsule, string $table)
     {
         $this->capsule = $capsule;
         $this->table = $table;
@@ -309,7 +315,7 @@ final class TableBlueprint
      *
      * @return TableBlueprint
      */
-    public function addOperation(OperationInterface $operation): self
+    public function addOperation(SpiralOperationInterface $operation): self
     {
         $this->operations[] = $operation;
 
@@ -329,3 +335,4 @@ final class TableBlueprint
         $this->executed = true;
     }
 }
+\class_alias(TableBlueprint::class, SpiralTableBlueprint::class, false);

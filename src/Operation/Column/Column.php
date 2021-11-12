@@ -16,6 +16,10 @@ use Cycle\Database\Schema\AbstractTable;
 use Cycle\Migrations\Exception\Operation\ColumnException;
 use Cycle\Migrations\Operation\AbstractOperation;
 use Cycle\Migrations\Operation\Traits\OptionsTrait;
+use Spiral\Database\Schema\AbstractTable as SpiralAbstractTable;
+use Spiral\Migrations\Operation\Column\Column as SpiralColumn;
+
+\class_exists(SpiralAbstractTable::class);
 
 abstract class Column extends AbstractOperation
 {
@@ -59,11 +63,11 @@ abstract class Column extends AbstractOperation
     /**
      * @param AbstractTable $schema
      *
-     * @throws ColumnException
+     * @throws \ReflectionException
      *
      * @return AbstractColumn
      */
-    protected function declareColumn(AbstractTable $schema): AbstractColumn
+    protected function declareColumn(SpiralAbstractTable $schema): AbstractColumn
     {
         $column = $schema->column($this->name);
 
@@ -98,3 +102,4 @@ abstract class Column extends AbstractOperation
         return $column;
     }
 }
+\class_alias(Column::class, SpiralColumn::class, false);

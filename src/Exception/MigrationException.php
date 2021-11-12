@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Exception;
 
+use Spiral\Migrations\Exception\MigrationException as SpiralMigrationException;
+
 class MigrationException extends \RuntimeException
 {
 }
+\class_alias(MigrationException::class, SpiralMigrationException::class, false);

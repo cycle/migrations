@@ -19,6 +19,16 @@ use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\Migration\State;
 use Cycle\Migrations\Migration\Status;
 use Cycle\Migrations\Migrator\MigrationsTable;
+use Spiral\Database\DatabaseManager as SpiralDatabaseManager;
+use Spiral\Migrations\Config\MigrationConfig as SpiralMigrationConfig;
+use Spiral\Migrations\RepositoryInterface as SpiralRepositoryInterface;
+use Spiral\Migrations\CapsuleInterface as SpiralCapsuleInterface;
+use Spiral\Migrations\Migrator as SpiralMigrator;
+
+\interface_exists(SpiralCapsuleInterface::class);
+\interface_exists(SpiralRepositoryInterface::class);
+\class_exists(SpiralMigrationConfig::class);
+\class_exists(SpiralDatabaseManager::class);
 
 final class Migrator implements MigratorInterface
 {
@@ -39,9 +49,9 @@ final class Migrator implements MigratorInterface
      * @param RepositoryInterface $repository
      */
     public function __construct(
-        MigrationConfig $config,
-        DatabaseManager $dbal,
-        RepositoryInterface $repository
+        SpiralMigrationConfig $config,
+        SpiralDatabaseManager $dbal,
+        SpiralRepositoryInterface $repository
     ) {
         $this->config = $config;
         $this->repository = $repository;
@@ -153,7 +163,7 @@ final class Migrator implements MigratorInterface
     /**
      * {@inheritDoc}
      */
-    public function run(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function run(SpiralCapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             $this->configure();
@@ -205,13 +215,9 @@ final class Migrator implements MigratorInterface
     }
 
     /**
-     * @param CapsuleInterface|null $capsule
-     *
-     * @throws \Throwable
-     *
-     * @return MigrationInterface|null
+     * {@inheritDoc}
      */
-    public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function rollback(SpiralCapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             $this->configure();
@@ -400,3 +406,4 @@ final class Migrator implements MigratorInterface
         return \DateTimeImmutable::createFromFormat(self::DB_DATE_FORMAT, $createdAt, $timezone);
     }
 }
+\class_alias(Migrator::class, SpiralMigrator::class, false);

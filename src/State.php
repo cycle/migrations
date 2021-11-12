@@ -13,6 +13,7 @@ namespace Cycle\Migrations;
 
 use Cycle\Migrations\Migration\State as BaseState;
 use Cycle\Migrations\Migration\Status;
+use Spiral\Migrations\State as SpiralState;
 
 /**
  * @psalm-import-type StatusEnum from Status
@@ -43,3 +44,4 @@ final class State extends BaseState
      */
     public const STATUS_EXECUTED = Status::STATUS_EXECUTED;
 }
+\class_alias(State::class, SpiralState::class, false);

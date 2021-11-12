@@ -10,7 +10,7 @@
         }
     ],
     "replace": {
-        "spiral/migrations": "*"
+        "spiral/migrations": "^2.0"
     },
     "require": {
         "php": ">=7.2",

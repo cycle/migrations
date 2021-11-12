@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Migrations\Exception\RepositoryException;
+use Spiral\Migrations\RepositoryInterface as SpiralRepositoryInterface;
 
 interface RepositoryInterface
 {
@@ -33,7 +34,7 @@ interface RepositoryInterface
      *
      * @param string $name
      * @param string $class
-     * @param string $body When body is null repository will try to copy content from a specific
+     * @param string|null $body When body is null repository will try to copy content from a specific
      *                     class filename. Must include all PHP headers.
      *
      * @throws RepositoryException
@@ -42,3 +43,4 @@ interface RepositoryInterface
      */
     public function registerMigration(string $name, string $class, string $body = null): string;
 }
+\class_alias(RepositoryInterface::class, SpiralRepositoryInterface::class, false);

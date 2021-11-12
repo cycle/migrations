@@ -19,6 +19,12 @@ use Cycle\Database\Schema\Comparator;
 use Spiral\Reactor\Partial\Source;
 use Spiral\Reactor\Serializer;
 use Spiral\Reactor\Traits\SerializerTrait;
+use Spiral\Database\Schema\AbstractTable as SpiralAbstractTable;
+use Spiral\Database\Schema\AbstractColumn as SpiralAbstractColumn;
+use Spiral\Migrations\Atomizer\Renderer as SpiralRenderer;
+
+\class_exists(SpiralAbstractTable::class);
+\class_exists(SpiralAbstractColumn::class);
 
 final class Renderer implements RendererInterface
 {
@@ -31,9 +37,9 @@ final class Renderer implements RendererInterface
     public const ORIGINAL_STATE = 1;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function createTable(Source $source, AbstractTable $table): void
+    public function createTable(Source $source, SpiralAbstractTable $table): void
     {
         $this->render(
             $source,
@@ -59,9 +65,9 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function updateTable(Source $source, AbstractTable $table): void
+    public function updateTable(Source $source, SpiralAbstractTable $table): void
     {
         $this->render(
             $source,
@@ -87,9 +93,9 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function revertTable(Source $source, AbstractTable $table): void
+    public function revertTable(Source $source, SpiralAbstractTable $table): void
     {
         //Get table blueprint
         $this->render(
@@ -108,9 +114,9 @@ final class Renderer implements RendererInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function dropTable(Source $source, AbstractTable $table): void
+    public function dropTable(Source $source, SpiralAbstractTable $table): void
     {
         $this->render(
             $source,
@@ -338,8 +344,8 @@ final class Renderer implements RendererInterface
      */
     protected function alterColumn(
         Source $source,
-        AbstractColumn $column,
-        AbstractColumn $original
+        SpiralAbstractColumn $column,
+        SpiralAbstractColumn $original
     ): void {
         if ($column->getName() !== $original->getName()) {
             $name = $original->getName();
@@ -370,6 +376,7 @@ final class Renderer implements RendererInterface
      *
      * @param Source $source
      * @param string $format
+     *
      * @param array  ...$values
      */
     protected function render(Source $source, string $format, ...$values): void
@@ -419,6 +426,8 @@ final class Renderer implements RendererInterface
      * @param Serializer     $serializer
      * @param AbstractColumn $column
      *
+     * @throws \ReflectionException
+     *
      * @return string
      */
     private function columnOptions(Serializer $serializer, AbstractColumn $column): string
@@ -448,6 +457,8 @@ final class Renderer implements RendererInterface
      * @param Serializer    $serializer
      * @param AbstractIndex $index
      *
+     * @throws \ReflectionException
+     *
      * @return string
      */
     private function indexOptions(Serializer $serializer, AbstractIndex $index): string
@@ -465,6 +476,8 @@ final class Renderer implements RendererInterface
     /**
      * @param Serializer         $serializer
      * @param AbstractForeignKey $reference
+     *
+     * @throws \ReflectionException
      *
      * @return string
      */
@@ -486,7 +499,7 @@ final class Renderer implements RendererInterface
     /**
      * Mount indents for column and index options.
      *
-     * @param $serialized
+     * @param string $serialized
      *
      * @return string
      */
@@ -501,3 +514,4 @@ final class Renderer implements RendererInterface
         return ltrim(implode("\n", $lines));
     }
 }
+\class_alias(Renderer::class, SpiralRenderer::class, false);

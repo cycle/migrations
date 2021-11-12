@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Exception\Operation;
 
 use Cycle\Migrations\Exception\OperationException;
+use Spiral\Migrations\Operation\Exception\Operation\ColumnException as SpiralColumnException;
 
 class ColumnException extends OperationException
 {
 }
+\class_alias(ColumnException::class, SpiralColumnException::class, false);

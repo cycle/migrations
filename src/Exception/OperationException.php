@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Exception;
 
+use Spiral\Migrations\Exception\OperationException as SpiralOperationException;
+
 class OperationException extends MigrationException
 {
 }
+\class_alias(OperationException::class, SpiralOperationException::class, false);

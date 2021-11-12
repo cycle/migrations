@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Migration;
 
+use Spiral\Migrations\Migration\State as SpiralState;
+
 /**
  * Migration meta information specific to current environment.
  *
@@ -112,3 +114,4 @@ class State
         return $state;
     }
 }
+\class_alias(State::class, SpiralState::class, false);

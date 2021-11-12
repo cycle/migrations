@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Exception;
 
+use Spiral\Migrations\Exception\CapsuleException as SpiralCapsuleException;
+
 class CapsuleException extends MigrationException
 {
 }
+\class_alias(CapsuleException::class, SpiralCapsuleException::class, false);

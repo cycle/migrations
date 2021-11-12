@@ -17,6 +17,10 @@ use Cycle\Database\DatabaseManager;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\TableInterface;
 use Cycle\Migrations\Exception\CapsuleException;
+use Spiral\Database\Database as SpiralDatabase;
+use Spiral\Migrations\Capsule as SpiralCapsule;
+
+\class_exists(SpiralDatabase::class);
 
 /**
  * Isolates set of table specific operations and schemas into one place. Kinda repository.
@@ -32,13 +36,13 @@ final class Capsule implements CapsuleInterface
     /**
      * @param Database $database
      */
-    public function __construct(Database $database)
+    public function __construct(SpiralDatabase $database)
     {
         $this->database = $database;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getDatabase(): DatabaseInterface
     {
@@ -46,7 +50,7 @@ final class Capsule implements CapsuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTable(string $table): TableInterface
     {
@@ -54,7 +58,7 @@ final class Capsule implements CapsuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSchema(string $table): AbstractTable
     {
@@ -67,7 +71,7 @@ final class Capsule implements CapsuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @throws \Throwable
      */
@@ -87,3 +91,4 @@ final class Capsule implements CapsuleInterface
         }
     }
 }
+\class_alias(Capsule::class, SpiralCapsule::class, false);

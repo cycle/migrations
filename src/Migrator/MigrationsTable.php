@@ -13,6 +13,10 @@ namespace Cycle\Migrations\Migrator;
 
 use Cycle\Database\Database;
 use Cycle\Database\Schema\AbstractTable;
+use Spiral\Database\Database as SpiralDatabase;
+use Spiral\Migrations\Migrator\MigrationsTable as SpiralMigrationsTable;
+
+\class_exists(SpiralDatabase::class);
 
 /**
  * This class is responsible for managing the migration table within a
@@ -66,7 +70,7 @@ class MigrationsTable
      * @param Database $db
      * @param string $name
      */
-    public function __construct(Database $db, string $name)
+    public function __construct(SpiralDatabase $db, string $name)
     {
         $this->db = $db;
         $this->name = $name;
@@ -158,3 +162,4 @@ class MigrationsTable
         return $this->schema->hasIndex(self::MIGRATION_TABLE_INDICES);
     }
 }
+\class_alias(MigrationsTable::class, SpiralMigrationsTable::class, false);

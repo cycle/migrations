@@ -19,6 +19,8 @@ spl_autoload_register(static function (string $class) {
             E_USER_DEPRECATED
         );
 
-        class_alias($original, $class);
+        if (class_exists($original) && (!class_exists($class) && !interface_exists($class))) {
+            class_alias($original, $class);
+        }
     }
 });

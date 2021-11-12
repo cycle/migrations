@@ -14,6 +14,12 @@ namespace Cycle\Migrations\Atomizer;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\Schema\Reflector;
 use Spiral\Reactor\Partial\Source;
+use Spiral\Database\Schema\AbstractTable as SpiralAbstractTable;
+use Spiral\Migrations\Atomizer\RendererInterface as SpiralRendererInterface;
+use Spiral\Migrations\Atomizer\Atomizer as SpiralAtomizer;
+
+\interface_exists(SpiralRendererInterface::class);
+\class_exists(SpiralAbstractTable::class);
 
 /**
  * Atomizer provides ability to convert given AbstractTables and their changes
@@ -30,7 +36,7 @@ final class Atomizer
     /**
      * @param RendererInterface $renderer
      */
-    public function __construct(RendererInterface $renderer)
+    public function __construct(SpiralRendererInterface $renderer)
     {
         $this->renderer = $renderer;
     }
@@ -42,7 +48,7 @@ final class Atomizer
      *
      * @return Atomizer
      */
-    public function addTable(AbstractTable $table): self
+    public function addTable(SpiralAbstractTable $table): self
     {
         $this->tables[] = $table;
 
@@ -139,3 +145,4 @@ final class Atomizer
         }
     }
 }
+\class_alias(Atomizer::class, SpiralAtomizer::class, false);
