@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests;
 
+use Cycle\Database\DatabaseProviderInterface;
 use Cycle\Database\Driver\DriverInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -49,7 +50,7 @@ abstract class BaseTest extends TestCase
     protected ContainerInterface $container;
     protected Migrator $migrator;
     protected MigrationConfig $migrationConfig;
-    protected DatabaseManager $dbal;
+    protected DatabaseProviderInterface $dbal;
     protected Database $db;
     protected FileRepository $repository;
 
@@ -60,7 +61,7 @@ abstract class BaseTest extends TestCase
         }
 
         $this->container = new Container();
-        $this->dbal = $this->getDBAL($this->container);
+        $this->dbal = $this->getDBAL();
 
         $this->migrationConfig = new MigrationConfig(static::CONFIG);
 
@@ -157,7 +158,7 @@ abstract class BaseTest extends TestCase
         return $this->db->table($table)->getSchema();
     }
 
-    protected function getDBAL(ContainerInterface $container): DatabaseManager
+    protected function getDBAL(): DatabaseProviderInterface
     {
         $dbal = new DatabaseManager(
             new DatabaseConfig([
@@ -165,8 +166,7 @@ abstract class BaseTest extends TestCase
                 'aliases' => [],
                 'databases' => [],
                 'connections' => [],
-            ]),
-            $container
+            ])
         );
 
         $dbal->addDatabase(

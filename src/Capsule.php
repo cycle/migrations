@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
-use Cycle\Database\Database;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\TableInterface;
@@ -24,7 +23,7 @@ final class Capsule implements CapsuleInterface
 {
     private array $schemas = [];
 
-    public function __construct(private Database $database)
+    public function __construct(private DatabaseInterface $database)
     {
     }
 
