@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Database\Database;
-use Cycle\Database\DatabaseManager;
+use Cycle\Database\DatabaseProviderInterface;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Exception\MigrationException;
@@ -30,7 +30,7 @@ final class Migrator
 
     public function __construct(
         private MigrationConfig $config,
-        private DatabaseManager $dbal,
+        private DatabaseProviderInterface $dbal,
         private RepositoryInterface $repository
     ) {
     }
