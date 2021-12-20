@@ -1,5 +1,5 @@
-Spiral Database Migrations
+Cycle Database Migrations
 ========
-[![Latest Stable Version](https://poser.pugx.org/spiral/migrations/v/stable)](https://packagist.org/packages/spiral/migrations) 
-[![Build Status](https://github.com/spiral/migrations/workflows/build/badge.svg)](https://github.com/spiral/migrations/actions)
-[![Codecov](https://codecov.io/gh/spiral/migrations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/migrations/)
+[![Latest Stable Version](https://poser.pugx.org/cycle/migrations/v/stable)](https://packagist.org/packages/cycle/migrations) 
+[![Build Status](https://github.com/cycle/migrations/workflows/build/badge.svg)](https://github.com/cycle/migrations/actions)
+[![Codecov](https://codecov.io/gh/cycle/migrations/branch/3.x/graph/badge.svg)](https://codecov.io/gh/cycle/migrations/)

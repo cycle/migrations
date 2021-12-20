@@ -12,7 +12,7 @@
          stopOnError="false">
 
     <testsuites>
-        <testsuite name="Spiral Database Migrations">
+        <testsuite name="Cycle Database Migrations">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
