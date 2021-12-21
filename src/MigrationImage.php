@@ -11,7 +11,6 @@ use Spiral\Reactor\FileDeclaration;
 
 class MigrationImage
 {
-
     /** @var string */
     public $fileNamePattern = '{database}_{name}';
     /** @var ClassDeclaration */
@@ -92,7 +91,7 @@ class MigrationImage
         $className = sprintf(
             'orm_%s_%s',
             $database,
-            md5(microtime(true) . microtime(false))
+            md5(microtime(true).microtime(false))
         );
         $this->class->setName($className);
 

@@ -18,12 +18,14 @@ class Post
 {
     /**
      * @column(type=primary)
+     *
      * @var int
      */
     protected $id;
 
     /**
      * @refersTo(target=Other,nullable=true)
+     *
      * @var Other
      */
     protected $other;

@@ -18,12 +18,14 @@ class Other
 {
     /**
      * @column(type=primary)
+     *
      * @var int
      */
     protected $id;
 
     /**
      * @column(type="enum(active,disabled,pending)",castDefault=true)
+     *
      * @var string
      */
     protected $status;

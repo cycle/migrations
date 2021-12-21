@@ -12,7 +12,7 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', '1');
 
 //Composer
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
 \Cycle\Migrations\Tests\BaseTest::$config = [
     'debug'     => false,
@@ -25,7 +25,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
         },
         'conn'   => 'sqlite::memory:',
         'user'   => 'sqlite',
-        'pass'   => ''
+        'pass'   => '',
     ],
     'mysql'     => [
         'driver' => \Spiral\Database\Driver\MySQL\MySQLDriver::class,
@@ -34,7 +34,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
         },
         'conn'   => 'mysql:host=127.0.0.1:13306;dbname=spiral',
         'user'   => 'root',
-        'pass'   => 'root'
+        'pass'   => 'root',
     ],
     'postgres'  => [
         'driver' => \Spiral\Database\Driver\Postgres\PostgresDriver::class,
@@ -43,7 +43,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
         },
         'conn'   => 'pgsql:host=127.0.0.1;port=15432;dbname=spiral',
         'user'   => 'postgres',
-        'pass'   => 'postgres'
+        'pass'   => 'postgres',
     ],
     'sqlserver' => [
         'driver' => \Spiral\Database\Driver\SQLServer\SQLServerDriver::class,
@@ -52,7 +52,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
         },
         'conn'   => 'sqlsrv:Server=127.0.0.1,11433;Database=tempdb',
         'user'   => 'sa',
-        'pass'   => 'SSpaSS__1'
+        'pass'   => 'SSpaSS__1',
     ],
 ];
 

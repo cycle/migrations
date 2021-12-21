@@ -47,12 +47,11 @@ use Spiral\Tokenizer\Tokenizer;
 
 abstract class BaseTest extends TestCase
 {
-
     // currently active driver
     public const DRIVER = null;
 
     public const CONFIG = [
-        'directory' => __DIR__ . '/../files/',
+        'directory' => __DIR__.'/../files/',
         'table'     => 'migrations',
         'safe'      => true,
         'namespace' => 'Migration',
@@ -126,7 +125,7 @@ abstract class BaseTest extends TestCase
         ));
 
         $tokenizer = new Tokenizer(new TokenizerConfig([
-            'directories' => [__DIR__ . '/Fixtures'],
+            'directories' => [__DIR__.'/Fixtures'],
             'exclude'     => [],
         ]));
 
@@ -141,7 +140,7 @@ abstract class BaseTest extends TestCase
                 $config,
                 new Container(),
                 new Tokenizer(new TokenizerConfig([
-                    'directories' => [__DIR__ . '/../files'],
+                    'directories' => [__DIR__.'/../files'],
                     'exclude'     => [],
                 ]))
             )
@@ -156,7 +155,7 @@ abstract class BaseTest extends TestCase
     public function tearDown(): void
     {
         $files = new Files();
-        foreach ($files->getFiles(__DIR__ . '/../files/', '*.php') as $file) {
+        foreach ($files->getFiles(__DIR__.'/../files/', '*.php') as $file) {
             $files->delete($file);
             clearstatcache(true, $file);
         }
@@ -171,11 +170,13 @@ abstract class BaseTest extends TestCase
      * Calculates missing parameters for typecasting.
      *
      * @param SchemaInterface $schema
+     *
      * @return ORM|\Cycle\ORM\ORMInterface
      */
     public function withSchema(SchemaInterface $schema)
     {
         $this->orm = $this->orm->withSchema($schema);
+
         return $this->orm;
     }
 
@@ -196,7 +197,7 @@ abstract class BaseTest extends TestCase
                 'connection' => $config['conn'],
                 'username'   => $config['user'],
                 'password'   => $config['pass'],
-                'options'    => []
+                'options'    => [],
             ]);
         }
 
@@ -227,13 +228,14 @@ abstract class BaseTest extends TestCase
             new RenderRelations(),
             new MergeIndexes($p),
             new GenerateTypecast(),
-            new GenerateMigrations($this->migrator->getRepository(), new MigrationConfig(static::CONFIG))
+            new GenerateMigrations($this->migrator->getRepository(), new MigrationConfig(static::CONFIG)),
         ]);
 
         $tables = [];
         foreach ($r as $e) {
             $tables[] = $r->getTableSchema($e);
         }
+
         return $tables;
     }
 
@@ -413,6 +415,7 @@ abstract class BaseTest extends TestCase
     /**
      * @param string     $table
      * @param Comparator $comparator
+     *
      * @return string
      */
     protected function makeMessage(string $table, Comparator $comparator)
@@ -436,10 +439,10 @@ abstract class BaseTest extends TestCase
                 print_r($pair);
             }
 
-            return "Table '{$table}' not synced, column(s) '" . join(
+            return "Table '{$table}' not synced, column(s) '".join(
                 "', '",
                 $names
-            ) . "' have been changed.";
+            )."' have been changed.";
         }
 
         if ($comparator->droppedForeignKeys()) {
@@ -449,7 +452,6 @@ abstract class BaseTest extends TestCase
         if ($comparator->addedForeignKeys()) {
             return "Table '{$table}' not synced, new FKs found.";
         }
-
 
         return "Table '{$table}' not synced, no idea why, add more messages :P";
     }

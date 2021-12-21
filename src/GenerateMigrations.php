@@ -32,7 +32,7 @@ class GenerateMigrations implements GeneratorInterface
     /** @var RepositoryInterface */
     private $repository;
 
-    /** @var MigrationConfig $migrationConfig */
+    /** @var MigrationConfig */
     private $migrationConfig;
 
     /**
@@ -51,6 +51,7 @@ class GenerateMigrations implements GeneratorInterface
 
     /**
      * @param Registry $registry
+     *
      * @return Registry
      */
     public function run(Registry $registry): Registry
@@ -80,6 +81,7 @@ class GenerateMigrations implements GeneratorInterface
     /**
      * @param string          $database
      * @param AbstractTable[] $tables
+     *
      * @return array [string, FileDeclaration]
      */
     protected function generate(string $database, array $tables): ?MigrationImage
@@ -100,7 +102,7 @@ class GenerateMigrations implements GeneratorInterface
 
         $image = new MigrationImage($this->migrationConfig, $database);
         $image->setName($this->generateName($atomizer));
-        $image->fileNamePattern = self::$sec++ . '_{database}_{name}';
+        $image->fileNamePattern = self::$sec++.'_{database}_{name}';
 
         $atomizer->declareChanges($image->getClass()->method('up')->getSource());
         $atomizer->revertChanges($image->getClass()->method('down')->getSource());
@@ -110,6 +112,7 @@ class GenerateMigrations implements GeneratorInterface
 
     /**
      * @param Atomizer $atomizer
+     *
      * @return string
      */
     private function generateName(Atomizer $atomizer): string
@@ -118,58 +121,58 @@ class GenerateMigrations implements GeneratorInterface
 
         foreach ($atomizer->getTables() as $table) {
             if ($table->getStatus() === AbstractTable::STATUS_NEW) {
-                $name[] = 'create_' . $table->getName();
+                $name[] = 'create_'.$table->getName();
                 continue;
             }
 
             if ($table->getStatus() === AbstractTable::STATUS_DECLARED_DROPPED) {
-                $name[] = 'drop_' . $table->getName();
+                $name[] = 'drop_'.$table->getName();
                 continue;
             }
 
             if ($table->getComparator()->isRenamed()) {
-                $name[] = 'rename_' . $table->getInitialName();
+                $name[] = 'rename_'.$table->getInitialName();
                 continue;
             }
 
-            $name[] = 'change_' . $table->getName();
+            $name[] = 'change_'.$table->getName();
 
             $comparator = $table->getComparator();
 
             foreach ($comparator->addedColumns() as $column) {
-                $name[] = 'add_' . $column->getName();
+                $name[] = 'add_'.$column->getName();
             }
 
             foreach ($comparator->droppedColumns() as $column) {
-                $name[] = 'rm_' . $column->getName();
+                $name[] = 'rm_'.$column->getName();
             }
 
             foreach ($comparator->alteredColumns() as $column) {
-                $name[] = 'alter_' . $column[0]->getName();
+                $name[] = 'alter_'.$column[0]->getName();
             }
 
             foreach ($comparator->addedIndexes() as $index) {
-                $name[] = 'add_index_' . $index->getName();
+                $name[] = 'add_index_'.$index->getName();
             }
 
             foreach ($comparator->droppedIndexes() as $index) {
-                $name[] = 'rm_index_' . $index->getName();
+                $name[] = 'rm_index_'.$index->getName();
             }
 
             foreach ($comparator->alteredIndexes() as $index) {
-                $name[] = 'alter_index_' . $index[0]->getName();
+                $name[] = 'alter_index_'.$index[0]->getName();
             }
 
             foreach ($comparator->addedForeignKeys() as $fk) {
-                $name[] = 'add_fk_' . $fk->getName();
+                $name[] = 'add_fk_'.$fk->getName();
             }
 
             foreach ($comparator->droppedForeignKeys() as $fk) {
-                $name[] = 'rm_fk_' . $fk->getName();
+                $name[] = 'rm_fk_'.$fk->getName();
             }
 
             foreach ($comparator->alteredForeignKeys() as $fk) {
-                $name[] = 'alter_fk_' . $fk[0]->getName();
+                $name[] = 'alter_fk_'.$fk[0]->getName();
             }
         }
 

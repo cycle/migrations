@@ -18,6 +18,7 @@ class User
 {
     /**
      * @column(type=primary)
+     *
      * @var int
      */
     protected $id;

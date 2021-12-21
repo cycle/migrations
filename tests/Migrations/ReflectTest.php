@@ -15,7 +15,7 @@ abstract class ReflectTest extends BaseTest
 {
     public function testInit(): void
     {
-        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
+        $tables = $this->migrate(__DIR__.'/Fixtures/Init');
 
         $this->assertCount(2, $this->migrator->getMigrations());
         foreach ($this->migrator->getMigrations() as $m) {
@@ -29,20 +29,20 @@ abstract class ReflectTest extends BaseTest
 
     public function testNoChanges(): void
     {
-        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
+        $tables = $this->migrate(__DIR__.'/Fixtures/Init');
 
         $this->assertCount(2, $this->migrator->getMigrations());
         foreach ($this->migrator->getMigrations() as $m) {
             $this->migrator->run();
         }
 
-        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
+        $tables = $this->migrate(__DIR__.'/Fixtures/Init');
         $this->assertCount(2, $this->migrator->getMigrations());
     }
 
     public function testAlter(): void
     {
-        $tables = $this->migrate(__DIR__ . '/Fixtures/Init');
+        $tables = $this->migrate(__DIR__.'/Fixtures/Init');
 
         $this->assertCount(2, $this->migrator->getMigrations());
         foreach ($this->migrator->getMigrations() as $m) {
@@ -53,7 +53,7 @@ abstract class ReflectTest extends BaseTest
             $this->assertSameAsInDB($t);
         }
 
-        $tables = $this->migrate(__DIR__ . '/Fixtures/Alter');
+        $tables = $this->migrate(__DIR__.'/Fixtures/Alter');
 
         $this->assertCount(4, $this->migrator->getMigrations());
         foreach ($this->migrator->getMigrations() as $m) {

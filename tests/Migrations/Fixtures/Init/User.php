@@ -21,12 +21,14 @@ class User
 {
     /**
      * @column(type=primary)
+     *
      * @var int
      */
     protected $id;
 
     /**
      * @column(type=string)
+     *
      * @var string
      */
     protected $email;

@@ -18,12 +18,14 @@ class Post
 {
     /**
      * @column(type=primary)
+     *
      * @var int
      */
     protected $id;
 
     /**
      * @belongsTo(target=User,nullable=false)
+     *
      * @var User
      */
     protected $user;
