@@ -376,7 +376,6 @@ final class Renderer implements RendererInterface
      *
      * @param Source $source
      * @param string $format
-     *
      * @param array  ...$values
      */
     protected function render(Source $source, string $format, ...$values): void
