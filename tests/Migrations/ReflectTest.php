@@ -40,6 +40,9 @@ abstract class ReflectTest extends BaseTest
         $this->assertCount(2, $this->migrator->getMigrations());
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function testAlter(): void
     {
         $tables = $this->migrate(__DIR__.'/Fixtures/Init');

@@ -206,6 +206,10 @@ abstract class BaseTest extends TestCase
         return static::$driverCache[static::DRIVER] = $this->driver;
     }
 
+    /**
+     * @param string $directory
+     * @return AbstractTable[]
+     */
     protected function migrate(string $directory): array
     {
         $tokenizer = new Tokenizer(new TokenizerConfig([
