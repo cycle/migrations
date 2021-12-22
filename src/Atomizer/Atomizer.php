@@ -60,6 +60,10 @@ final class Atomizer
                 $this->renderer->updateTable($source, $table);
             }
         }
+
+        foreach ($this->sortedTables() as $table) {
+            $this->renderer->declareForeignKeys($source, $table);
+        }
     }
 
     /**
@@ -67,6 +71,10 @@ final class Atomizer
      */
     public function revertChanges(Source $source): void
     {
+        foreach ($this->sortedTables() as $table) {
+            $this->renderer->revertForeignKeys($source, $table);
+        }
+
         foreach ($this->sortedTables(true) as $table) {
             if (!$table->getComparator()->hasChanges()) {
                 continue;

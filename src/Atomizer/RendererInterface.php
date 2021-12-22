@@ -31,4 +31,14 @@ interface RendererInterface
      * Migration engine specific table drop syntax.
      */
     public function dropTable(Source $source, AbstractTable $table);
+
+    /**
+     * Migration engine specific declare foreign keys syntax.
+     */
+    public function declareForeignKeys(Source $source, AbstractTable $table): void;
+
+    /**
+     * Migration engine specific declare foreign keys syntax.
+     */
+    public function revertForeignKeys(Source $source, AbstractTable $table): void;
 }

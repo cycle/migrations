@@ -9,6 +9,7 @@ use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\Schema\Comparator;
+use Cycle\Database\Schema\ComparatorInterface;
 use Spiral\Reactor\Partial\Source;
 use Spiral\Reactor\Serializer;
 use Spiral\Reactor\Traits\SerializerTrait;
@@ -37,7 +38,6 @@ final class Renderer implements RendererInterface
 
         $this->declareColumns($source, $comparator);
         $this->declareIndexes($source, $comparator);
-        $this->declareForeignKeys($source, $comparator, $table->getPrefix());
 
         if (count($table->getPrimaryKeys())) {
             $this->render(
@@ -73,7 +73,6 @@ final class Renderer implements RendererInterface
 
         $this->declareColumns($source, $comparator);
         $this->declareIndexes($source, $comparator);
-        $this->declareForeignKeys($source, $comparator, $table->getPrefix());
 
         //Finalization
         $source->addLine('    ->update();');
@@ -92,7 +91,6 @@ final class Renderer implements RendererInterface
         );
         $comparator = $table->getComparator();
 
-        $this->revertForeignKeys($source, $comparator, $table->getPrefix());
         $this->revertIndexes($source, $comparator);
         $this->revertColumns($source, $comparator);
 
@@ -175,14 +173,30 @@ final class Renderer implements RendererInterface
     /**
      * @param string $prefix Database isolation prefix
      */
-    private function declareForeignKeys(Source $source, Comparator $comparator, string $prefix = ''): void
+    public function declareForeignKeys(Source $source, AbstractTable $table): void
     {
+        $comparator = $table->getComparator();
+
+        if (!$this->isForeignKeyChanged($comparator)) {
+            return;
+        }
+
+        if ($source->getLines() !== []) {
+            $source->addLine('');
+        }
+
+        $this->render(
+            $source,
+            '$this->table(%s)',
+            $table
+        );
+
         foreach ($comparator->addedForeignKeys() as $key) {
             $this->render(
                 $source,
                 '    ->addForeignKey(%s, %s, %s, %s)',
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                substr($key->getForeignTable(), strlen($table->getPrefix())),
                 $key->getForeignKeys(),
                 $key
             );
@@ -195,7 +209,7 @@ final class Renderer implements RendererInterface
                 $source,
                 '    ->alterForeignKey(%s, %s, %s, %s)',
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                substr($key->getForeignTable(), strlen($table->getPrefix())),
                 $key->getForeignKeys(),
                 $key
             );
@@ -208,6 +222,9 @@ final class Renderer implements RendererInterface
                 $key->getColumns()
             );
         }
+
+        //Finalization
+        $source->addLine('    ->update();');
     }
 
     private function revertColumns(Source $source, Comparator $comparator): void
@@ -273,14 +290,26 @@ final class Renderer implements RendererInterface
     /**
      * @param string $prefix Database isolation prefix.
      */
-    private function revertForeignKeys(Source $source, Comparator $comparator, string $prefix = ''): void
+    public function revertForeignKeys(Source $source, AbstractTable $table): void
     {
+        $comparator = $table->getComparator();
+
+        if (!$this->isForeignKeyChanged($comparator)) {
+            return;
+        }
+
+        $this->render(
+            $source,
+            '$this->table(%s)',
+            $table
+        );
+
         foreach ($comparator->droppedForeignKeys() as $key) {
             $this->render(
                 $source,
                 '    ->addForeignKey(%s, %s, %s, %s)',
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                substr($key->getForeignTable(), strlen($table->getPrefix())),
                 $key->getForeignKeys(),
                 $key
             );
@@ -293,7 +322,7 @@ final class Renderer implements RendererInterface
                 $source,
                 '    ->alterForeignKey(%s, %s, %s, %s)',
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                substr($key->getForeignTable(), strlen($table->getPrefix())),
                 $key->getForeignKeys(),
                 $key
             );
@@ -301,6 +330,13 @@ final class Renderer implements RendererInterface
 
         foreach ($comparator->addedForeignKeys() as $key) {
             $this->render($source, '    ->dropForeignKey(%s)', $key->getColumns());
+        }
+
+        //Finalization
+        $source->addLine('    ->update();');
+
+        if ($source->getLines() !== []) {
+            $source->addLine('');
         }
     }
 
@@ -445,5 +481,14 @@ final class Renderer implements RendererInterface
         }
 
         return ltrim(implode("\n", $lines));
+    }
+
+    // TODO Should move to the Comparator
+    private function isForeignKeyChanged(ComparatorInterface $comparator): bool
+    {
+        return
+            $comparator->droppedForeignKeys() !== [] ||
+            $comparator->alteredForeignKeys() !== [] ||
+            $comparator->addedForeignKeys() !== [];
     }
 }

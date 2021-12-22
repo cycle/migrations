@@ -205,4 +205,30 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->migrator->rollback();
         $this->assertTrue($this->db->table('sample1')->hasForeignKey(['sk']));
     }
+
+    public function testAddFkBeforeTable(): void
+    {
+        $this->migrator->configure();
+
+        $schema = $this->schema('sample1');
+        $schema->primary('id');
+        $schema->float('value');
+        $schema->integer('sk');
+        $schema->foreignKey(['sk'])->references('sample', ['id']);
+
+        $schema1 = $this->schema('sample');
+        $schema1->primary('id');
+        $schema1->integer('value');
+        $schema1->index(['value']);
+
+        $this->atomize('migration1', [$schema, $schema1]);
+        $this->migrator->run();
+
+        $this->assertTrue($this->db->hasTable('sample1'));
+        $this->assertTrue($this->db->table('sample1')->hasForeignKey(['sk']));
+
+        $this->migrator->rollback();
+
+        $this->assertFalse($this->db->hasTable('sample1'));
+    }
 }
