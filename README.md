@@ -2,6 +2,7 @@ Cycle Database Migrations
 ========
 [![Latest Stable Version](https://poser.pugx.org/cycle/migrations/v/stable)](https://packagist.org/packages/cycle/migrations)
 [![Build Status](https://github.com/cycle/migrations/workflows/build/badge.svg)](https://github.com/cycle/migrations/actions)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cycle/migrations/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/cycle/migrations/?branch=3.x)
 [![Codecov](https://codecov.io/gh/cycle/migrations/branch/3.x/graph/badge.svg)](https://codecov.io/gh/cycle/migrations/)
 
 Migrations are a convenient way for you to alter your database in a structured and organized manner. This package adds
