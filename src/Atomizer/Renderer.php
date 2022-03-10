@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Atomizer;
 
-use Cycle\Database\Injection\Fragment;
 use Cycle\Database\Schema\AbstractColumn;
 use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
