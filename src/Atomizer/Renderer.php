@@ -402,7 +402,8 @@ final class Renderer implements RendererInterface
             $options['precision'] = $column->getPrecision();
         }
 
-        if ($options['default'] === $column::DATETIME_NOW || ($options['default'] instanceof Fragment && (string)$options['default'] === $column::DATETIME_NOW)) {
+        $default = $options['default'];
+        if ($column::DATETIME_NOW === ($default instanceof \Stringable ? (string)$default : $default)) {
             $options['default'] = AbstractColumn::DATETIME_NOW;
         }
 
