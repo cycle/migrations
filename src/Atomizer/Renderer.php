@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Atomizer;
 
+use Cycle\Database\Injection\Fragment;
 use Cycle\Database\Schema\AbstractColumn;
 use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
@@ -401,7 +402,7 @@ final class Renderer implements RendererInterface
             $options['precision'] = $column->getPrecision();
         }
 
-        if ($options['default'] == $column::DATETIME_NOW) {
+        if ($options['default'] === $column::DATETIME_NOW || ($options['default'] instanceof Fragment && (string)$options['default'] === $column::DATETIME_NOW)) {
             $options['default'] = AbstractColumn::DATETIME_NOW;
         }
 
