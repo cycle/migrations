@@ -401,6 +401,11 @@ final class Renderer implements RendererInterface
             $options['precision'] = $column->getPrecision();
         }
 
+        $default = $options['default'];
+        if ($column::DATETIME_NOW === ($default instanceof \Stringable ? (string)$default : $default)) {
+            $options['default'] = AbstractColumn::DATETIME_NOW;
+        }
+
         return $this->mountIndents($serializer->serialize($options));
     }
 
