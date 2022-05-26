@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests;
 
+use Cycle\Database\Injection\Fragment;
 use Cycle\Migrations\Migration;
 use Cycle\Migrations\State;
 
@@ -298,6 +299,26 @@ abstract class AtomizerTest extends BaseTest
         $this->migrator->run();
         $this->assertTrue($this->db->hasTable('sample'));
         $this->assertSame(['id', 'value'], $this->schema('sample')->getPrimaryKeys());
+
+        $this->migrator->rollback();
+        $this->assertFalse($this->db->hasTable('sample'));
+    }
+
+    public function testCreateDatetimeNowColumn(): void
+    {
+        //Create thought migration
+        $this->migrator->configure();
+
+        $schema = $this->schema('sample');
+        $column = $schema->datetime('value');
+        $column->defaultValue(new Fragment($column::DATETIME_NOW));
+
+        $this->atomize('migration1', [$schema]);
+
+        $this->migrator->run();
+
+        $this->assertTrue($this->db->hasTable('sample'));
+        $this->assertSame((string)$column->getDefaultValue(), (string)$this->schema('sample')->column('value')->getDefaultValue());
 
         $this->migrator->rollback();
         $this->assertFalse($this->db->hasTable('sample'));
