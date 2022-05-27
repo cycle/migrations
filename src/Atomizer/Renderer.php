@@ -79,7 +79,7 @@ final class Renderer implements RendererInterface
             $method->addBody('->addColumn(?, ?, ?)', [
                 $column->getName(),
                 $column->getDeclaredType() ?? $column->getAbstractType(),
-                $this->columnOptions($column)
+                $this->columnOptions($column),
             ]);
         }
 
@@ -123,7 +123,7 @@ final class Renderer implements RendererInterface
                 $key->getColumns(),
                 \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $this->foreignKeyOptions($key)
+                $this->foreignKeyOptions($key),
             ]);
         }
 
@@ -134,7 +134,7 @@ final class Renderer implements RendererInterface
                 $key->getColumns(),
                 \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $this->foreignKeyOptions($key)
+                $this->foreignKeyOptions($key),
             ]);
         }
 
@@ -149,7 +149,7 @@ final class Renderer implements RendererInterface
             $method->addBody('->addColumn(?, ?, ?)', [
                 $column->getName(),
                 $column->getDeclaredType() ?? $column->getAbstractType(),
-                $this->columnOptions($column)
+                $this->columnOptions($column),
             ]);
         }
 
@@ -193,7 +193,7 @@ final class Renderer implements RendererInterface
                 $key->getColumns(),
                 \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $this->foreignKeyOptions($key)
+                $this->foreignKeyOptions($key),
             ]);
         }
 
@@ -204,13 +204,13 @@ final class Renderer implements RendererInterface
                 $key->getColumns(),
                 \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $this->foreignKeyOptions($key)
+                $this->foreignKeyOptions($key),
             ]);
         }
 
         foreach ($comparator->addedForeignKeys() as $key) {
             $method->addBody('->dropForeignKey(?)', [
-                $key->getColumns()
+                $key->getColumns(),
             ]);
         }
     }
@@ -229,13 +229,13 @@ final class Renderer implements RendererInterface
         $method->addBody('->alterColumn(?, ?, ?)', [
             $name,
             $column->getDeclaredType() ?? $column->getAbstractType(),
-            $this->columnOptions($column)
+            $this->columnOptions($column),
         ]);
 
         if ($column->getName() !== $original->getName()) {
             $method->addBody('->renameColumn(?, ?)', [
                 $name,
-                $column->getName()
+                $column->getName(),
             ]);
         }
     }
