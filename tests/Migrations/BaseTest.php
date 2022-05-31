@@ -31,8 +31,8 @@ use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\FileRepository;
 use Cycle\Migrations\Migration;
 use Cycle\Migrations\Migrator;
-use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
+use Spiral\Reactor\Partial\PhpNamespace;
 
 abstract class BaseTest extends TestCase
 {
@@ -128,18 +128,22 @@ abstract class BaseTest extends TestCase
         $this->assertCount(count($tables), $atomizer->getTables());
 
         //Rendering
-        $declaration = new ClassDeclaration($name, Migration::class);
+        $namespace = new PhpNamespace('Migrations');
+        $namespace->addUse(Migration::class);
 
-        $declaration->method('up')->setPublic();
-        $declaration->method('down')->setPublic();
+        $class = $namespace->addClass($name);
+        $class->setExtends(Migration::class);
 
-        $atomizer->declareChanges($declaration->method('up')->getSource());
-        $atomizer->revertChanges($declaration->method('down')->getSource());
+        $class->addMethod('up')->setPublic()->setReturnType('void');
+        $class->addMethod('down')->setPublic()->setReturnType('void');
+
+        $atomizer->declareChanges($class->getMethod('up'));
+        $atomizer->revertChanges($class->getMethod('down'));
 
         $file = new FileDeclaration();
-        $file->addElement($declaration);
+        $file->addNamespace($namespace);
 
-        $this->repository->registerMigration($name, $name, $file->render());
+        $this->repository->registerMigration($name, $name, (string) $file);
     }
 
     protected function db(string $name = 'default', string $prefix = ''): Database

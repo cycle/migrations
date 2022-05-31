@@ -6,7 +6,7 @@ namespace Cycle\Migrations\Atomizer;
 
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\Schema\Reflector;
-use Spiral\Reactor\Partial\Source;
+use Spiral\Reactor\Partial\Method;
 
 /**
  * Atomizer provides ability to convert given AbstractTables and their changes into set of
@@ -17,8 +17,9 @@ final class Atomizer
     /** @var AbstractTable[] */
     protected array $tables = [];
 
-    public function __construct(private RendererInterface $renderer)
-    {
+    public function __construct(
+        private readonly RendererInterface $renderer
+    ) {
     }
 
     /**
@@ -44,20 +45,17 @@ final class Atomizer
     /**
      * Generate set of commands needed to describe migration (up command).
      */
-    public function declareChanges(Source $source): void
+    public function declareChanges(Method $method): void
     {
         foreach ($this->sortedTables() as $table) {
             if (!$table->getComparator()->hasChanges()) {
                 continue;
             }
 
-            //New operations block
-            $this->declareBlock($source);
-
             if (!$table->exists()) {
-                $this->renderer->createTable($source, $table);
+                $this->renderer->createTable($method, $table);
             } else {
-                $this->renderer->updateTable($source, $table);
+                $this->renderer->updateTable($method, $table);
             }
         }
     }
@@ -65,28 +63,23 @@ final class Atomizer
     /**
      * Generate set of lines needed to rollback migration (down command).
      */
-    public function revertChanges(Source $source): void
+    public function revertChanges(Method $method): void
     {
         foreach ($this->sortedTables(true) as $table) {
             if (!$table->getComparator()->hasChanges()) {
                 continue;
             }
 
-            //New operations block
-            $this->declareBlock($source);
-
             if (!$table->exists()) {
-                $this->renderer->dropTable($source, $table);
+                $this->renderer->dropTable($method, $table);
             } else {
-                $this->renderer->revertTable($source, $table);
+                $this->renderer->revertTable($method, $table);
             }
         }
     }
 
     /**
      * Tables sorted in order of their dependencies.
-     *
-     * @param bool $reverse
      *
      * @return AbstractTable[]
      */
@@ -99,19 +92,9 @@ final class Atomizer
 
         $sorted = $reflector->sortedTables();
         if ($reverse) {
-            return array_reverse($sorted);
+            return \array_reverse($sorted);
         }
 
         return $sorted;
-    }
-
-    /**
-     * Add spacing between commands, only if required.
-     */
-    private function declareBlock(Source $source): void
-    {
-        if ($source->getLines() !== []) {
-            $source->addLine('');
-        }
     }
 }

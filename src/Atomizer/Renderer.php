@@ -9,303 +9,214 @@ use Cycle\Database\Schema\AbstractForeignKey;
 use Cycle\Database\Schema\AbstractIndex;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\Schema\Comparator;
-use Spiral\Reactor\Partial\Source;
-use Spiral\Reactor\Serializer;
-use Spiral\Reactor\Traits\SerializerTrait;
+use Spiral\Reactor\Partial\Method;
 
 final class Renderer implements RendererInterface
 {
-    use SerializerTrait;
-
     /**
      * Comparator alteration states.
      */
     public const NEW_STATE = 0;
     public const ORIGINAL_STATE = 1;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createTable(Source $source, AbstractTable $table): void
+    public function createTable(Method $method, AbstractTable $table): void
     {
-        $this->render(
-            $source,
-            '$this->table(%s)',
-            $table
-        );
+        $method->addBody('$this->table(?)', [$this->getTableName($table)]);
+
         $comparator = $table->getComparator();
 
-        $this->declareColumns($source, $comparator);
-        $this->declareIndexes($source, $comparator);
-        $this->declareForeignKeys($source, $comparator, $table->getPrefix());
+        $this->declareColumns($method, $comparator);
+        $this->declareIndexes($method, $comparator);
+        $this->declareForeignKeys($method, $comparator, $table->getPrefix());
 
-        if (count($table->getPrimaryKeys())) {
-            $this->render(
-                $source,
-                '    ->setPrimaryKeys(%s)',
-                $table->getPrimaryKeys()
-            );
+        if (\count($table->getPrimaryKeys())) {
+            $method->addBody('->setPrimaryKeys(?)', [$table->getPrimaryKeys()]);
         }
 
         //Finalization
-        $source->addLine('    ->create();');
+        $method->addBody('->create();');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function updateTable(Source $source, AbstractTable $table): void
+    public function updateTable(Method $method, AbstractTable $table): void
     {
-        $this->render(
-            $source,
-            '$this->table(%s)',
-            $table
-        );
+        $method->addBody('$this->table(?)', [$this->getTableName($table)]);
         $comparator = $table->getComparator();
 
         if ($comparator->isPrimaryChanged()) {
-            $this->render(
-                $source,
-                '    ->setPrimaryKeys(%s)',
-                $table->getPrimaryKeys()
-            );
+            $method->addBody('->setPrimaryKeys(?)', [$table->getPrimaryKeys()]);
         }
 
-        $this->declareColumns($source, $comparator);
-        $this->declareIndexes($source, $comparator);
-        $this->declareForeignKeys($source, $comparator, $table->getPrefix());
+        $this->declareColumns($method, $comparator);
+        $this->declareIndexes($method, $comparator);
+        $this->declareForeignKeys($method, $comparator, $table->getPrefix());
 
         //Finalization
-        $source->addLine('    ->update();');
+        $method->addBody('->update();');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function revertTable(Source $source, AbstractTable $table): void
+    public function revertTable(Method $method, AbstractTable $table): void
     {
         //Get table blueprint
-        $this->render(
-            $source,
-            '$this->table(%s)',
-            $table
-        );
+        $method->addBody('$this->table(?)', [$this->getTableName($table)]);
         $comparator = $table->getComparator();
 
-        $this->revertForeignKeys($source, $comparator, $table->getPrefix());
-        $this->revertIndexes($source, $comparator);
-        $this->revertColumns($source, $comparator);
+        $this->revertForeignKeys($method, $comparator, $table->getPrefix());
+        $this->revertIndexes($method, $comparator);
+        $this->revertColumns($method, $comparator);
 
         //Finalization
-        $source->addLine('    ->update();');
+        $method->addBody('->update();');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function dropTable(Source $source, AbstractTable $table): void
+    public function dropTable(Method $method, AbstractTable $table): void
     {
-        $this->render(
-            $source,
-            '$this->table(%s)->drop();',
-            $table
-        );
+        $method->addBody('$this->table(?)->drop();', [$this->getTableName($table)]);
     }
 
-    private function declareColumns(Source $source, Comparator $comparator): void
+    private function declareColumns(Method $method, Comparator $comparator): void
     {
         foreach ($comparator->addedColumns() as $column) {
-            $this->render(
-                $source,
-                '    ->addColumn(%s, %s, %s)',
+            $method->addBody('->addColumn(?, ?, ?)', [
                 $column->getName(),
                 $column->getDeclaredType() ?? $column->getAbstractType(),
-                $column
-            );
+                $this->columnOptions($column),
+            ]);
         }
 
         foreach ($comparator->alteredColumns() as $pair) {
             $this->alterColumn(
-                $source,
+                $method,
                 $pair[self::NEW_STATE],
                 $pair[self::ORIGINAL_STATE]
             );
         }
 
         foreach ($comparator->droppedColumns() as $column) {
-            $this->render(
-                $source,
-                '    ->dropColumn(%s)',
-                $column->getName()
-            );
+            $method->addBody('->dropColumn(?)', [$column->getName()]);
         }
     }
 
-    private function declareIndexes(Source $source, Comparator $comparator): void
+    private function declareIndexes(Method $method, Comparator $comparator): void
     {
         foreach ($comparator->addedIndexes() as $index) {
-            $this->render(
-                $source,
-                '    ->addIndex(%s, %s)',
-                $index->getColumns(),
-                $index
-            );
+            $method->addBody('->addIndex(?, ?)', [$index->getColumns(), $this->indexOptions($index)]);
         }
 
         foreach ($comparator->alteredIndexes() as $pair) {
             /** @var AbstractIndex $index */
             $index = $pair[self::NEW_STATE];
-            $this->render(
-                $source,
-                '    ->alterIndex(%s, %s)',
-                $index->getColumns(),
-                $index
-            );
+            $method->addBody('->alterIndex(?, ?)', [$index->getColumns(), $this->indexOptions($index)]);
         }
 
         foreach ($comparator->droppedIndexes() as $index) {
-            $this->render(
-                $source,
-                '    ->dropIndex(%s)',
-                $index->getColumns()
-            );
+            $method->addBody('->dropIndex(?)', [$index->getColumns()]);
         }
     }
 
     /**
      * @param string $prefix Database isolation prefix
      */
-    private function declareForeignKeys(Source $source, Comparator $comparator, string $prefix = ''): void
+    private function declareForeignKeys(Method $method, Comparator $comparator, string $prefix = ''): void
     {
         foreach ($comparator->addedForeignKeys() as $key) {
-            $this->render(
-                $source,
-                '    ->addForeignKey(%s, %s, %s, %s)',
+            $method->addBody('->addForeignKey(?, ?, ?, ?)', [
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $key
-            );
+                $this->foreignKeyOptions($key),
+            ]);
         }
 
         foreach ($comparator->alteredForeignKeys() as $pair) {
             /** @var AbstractForeignKey $key */
             $key = $pair[self::NEW_STATE];
-            $this->render(
-                $source,
-                '    ->alterForeignKey(%s, %s, %s, %s)',
+            $method->addBody('->alterForeignKey(?, ?, ?, ?)', [
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $key
-            );
+                $this->foreignKeyOptions($key),
+            ]);
         }
 
         foreach ($comparator->droppedForeignKeys() as $key) {
-            $this->render(
-                $source,
-                '    ->dropForeignKey(%s)',
-                $key->getColumns()
-            );
+            $method->addBody('->dropForeignKey(?)', [$key->getColumns()]);
         }
     }
 
-    private function revertColumns(Source $source, Comparator $comparator): void
+    private function revertColumns(Method $method, Comparator $comparator): void
     {
         foreach ($comparator->droppedColumns() as $column) {
-            $this->render(
-                $source,
-                '    ->addColumn(%s, %s, %s)',
+            $method->addBody('->addColumn(?, ?, ?)', [
                 $column->getName(),
                 $column->getDeclaredType() ?? $column->getAbstractType(),
-                $column
-            );
+                $this->columnOptions($column),
+            ]);
         }
 
         foreach ($comparator->alteredColumns() as $pair) {
             $this->alterColumn(
-                $source,
+                $method,
                 $pair[self::ORIGINAL_STATE],
                 $pair[self::NEW_STATE]
             );
         }
 
         foreach ($comparator->addedColumns() as $column) {
-            $this->render(
-                $source,
-                '    ->dropColumn(%s)',
-                $column->getName()
-            );
+            $method->addBody('->dropColumn(?)', [$column->getName()]);
         }
     }
 
-    private function revertIndexes(Source $source, Comparator $comparator): void
+    private function revertIndexes(Method $method, Comparator $comparator): void
     {
         foreach ($comparator->droppedIndexes() as $index) {
-            $this->render(
-                $source,
-                '    ->addIndex(%s, %s)',
-                $index->getColumns(),
-                $index
-            );
+            $method->addBody('->addIndex(?, ?)', [$index->getColumns(), $this->indexOptions($index)]);
         }
 
         foreach ($comparator->alteredIndexes() as $pair) {
             /** @var AbstractIndex $index */
             $index = $pair[self::ORIGINAL_STATE];
-            $this->render(
-                $source,
-                '    ->alterIndex(%s, %s)',
-                $index->getColumns(),
-                $index
-            );
+            $method->addBody('->alterIndex(?, ?)', [$index->getColumns(), $this->indexOptions($index)]);
         }
 
         foreach ($comparator->addedIndexes() as $index) {
-            $this->render(
-                $source,
-                '    ->dropIndex(%s)',
-                $index->getColumns()
-            );
+            $method->addBody('->dropIndex(?)', [$index->getColumns()]);
         }
     }
 
     /**
      * @param string $prefix Database isolation prefix.
      */
-    private function revertForeignKeys(Source $source, Comparator $comparator, string $prefix = ''): void
+    private function revertForeignKeys(Method $method, Comparator $comparator, string $prefix = ''): void
     {
         foreach ($comparator->droppedForeignKeys() as $key) {
-            $this->render(
-                $source,
-                '    ->addForeignKey(%s, %s, %s, %s)',
+            $method->addBody('->addForeignKey(?, ?, ?, ?)', [
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $key
-            );
+                $this->foreignKeyOptions($key),
+            ]);
         }
 
         foreach ($comparator->alteredForeignKeys() as $pair) {
             /** @var AbstractForeignKey $key */
             $key = $pair[self::ORIGINAL_STATE];
-            $this->render(
-                $source,
-                '    ->alterForeignKey(%s, %s, %s, %s)',
+            $method->addBody('->alterForeignKey(?, ?, ?, ?)', [
                 $key->getColumns(),
-                substr($key->getForeignTable(), strlen($prefix)),
+                \substr($key->getForeignTable(), \strlen($prefix)),
                 $key->getForeignKeys(),
-                $key
-            );
+                $this->foreignKeyOptions($key),
+            ]);
         }
 
         foreach ($comparator->addedForeignKeys() as $key) {
-            $this->render($source, '    ->dropForeignKey(%s)', $key->getColumns());
+            $method->addBody('->dropForeignKey(?)', [
+                $key->getColumns(),
+            ]);
         }
     }
 
     protected function alterColumn(
-        Source $source,
+        Method $method,
         AbstractColumn $column,
         AbstractColumn $original
     ): void {
@@ -315,73 +226,21 @@ final class Renderer implements RendererInterface
             $name = $column->getName();
         }
 
-        $this->render(
-            $source,
-            '    ->alterColumn(%s, %s, %s)',
+        $method->addBody('->alterColumn(?, ?, ?)', [
             $name,
             $column->getDeclaredType() ?? $column->getAbstractType(),
-            $column
-        );
+            $this->columnOptions($column),
+        ]);
 
         if ($column->getName() !== $original->getName()) {
-            $this->render(
-                $source,
-                '    ->renameColumn(%s, %s)',
+            $method->addBody('->renameColumn(?, ?)', [
                 $name,
-                $column->getName()
-            );
+                $column->getName(),
+            ]);
         }
     }
 
-    /**
-     * Render values and options into source.
-     *
-     * @param array  ...$values
-     */
-    protected function render(Source $source, string $format, ...$values): void
-    {
-        $serializer = $this->getSerializer();
-
-        $rendered = [];
-        foreach ($values as $value) {
-            if ($value instanceof AbstractTable) {
-                $rendered[] = $serializer->serialize(
-                    substr($value->getName(), strlen($value->getPrefix()))
-                );
-                continue;
-            }
-
-            if ($value instanceof AbstractColumn) {
-                $rendered[] = $this->columnOptions($serializer, $value);
-                continue;
-            }
-
-            if ($value instanceof AbstractIndex) {
-                $rendered[] = $this->indexOptions($serializer, $value);
-                continue;
-            }
-
-            if ($value instanceof AbstractForeignKey) {
-                $rendered[] = $this->foreignKeyOptions($serializer, $value);
-                continue;
-            }
-
-            // numeric array
-            if (is_array($value) && count($value) > 0 && is_numeric(array_keys($value)[0])) {
-                $rendered[] = '["' . implode('", "', $value) . '"]';
-                continue;
-            }
-
-            $rendered[] = $serializer->serialize($value);
-        }
-
-        $lines = sprintf($format, ...$rendered);
-        foreach (explode("\n", $lines) as $line) {
-            $source->addLine($line);
-        }
-    }
-
-    private function columnOptions(Serializer $serializer, AbstractColumn $column): string
+    private function columnOptions(AbstractColumn $column): array
     {
         $options = [
             'nullable' => $column->isNullable(),
@@ -406,49 +265,28 @@ final class Renderer implements RendererInterface
             $options['default'] = AbstractColumn::DATETIME_NOW;
         }
 
-        return $this->mountIndents($serializer->serialize($options));
+        return $options;
     }
 
-    private function indexOptions(Serializer $serializer, AbstractIndex $index): string
+    private function indexOptions(AbstractIndex $index): array
     {
-        return $this->mountIndents(
-            $serializer->serialize(
-                [
-                    'name' => $index->getName(),
-                    'unique' => $index->isUnique(),
-                ]
-            )
-        );
+        return [
+            'name' => $index->getName(),
+            'unique' => $index->isUnique(),
+        ];
     }
 
-    private function foreignKeyOptions(
-        Serializer $serializer,
-        AbstractForeignKey $reference
-    ): string {
-        return $this->mountIndents(
-            $serializer->serialize(
-                [
-                    'name' => $reference->getName(),
-                    'delete' => $reference->getDeleteRule(),
-                    'update' => $reference->getUpdateRule(),
-                ]
-            )
-        );
-    }
-
-    /**
-     * Mount indents for column and index options.
-     *
-     * @param $serialized
-     */
-    private function mountIndents(string $serialized): string
+    private function foreignKeyOptions(AbstractForeignKey $reference): array
     {
-        $lines = explode("\n", $serialized);
-        foreach ($lines as &$line) {
-            $line = '    ' . $line;
-            unset($line);
-        }
+        return [
+            'name' => $reference->getName(),
+            'delete' => $reference->getDeleteRule(),
+            'update' => $reference->getUpdateRule(),
+        ];
+    }
 
-        return ltrim(implode("\n", $lines));
+    private function getTableName(AbstractTable $table): string
+    {
+        return \substr($table->getName(), \strlen($table->getPrefix()));
     }
 }
