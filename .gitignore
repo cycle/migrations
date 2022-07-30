@@ -2,7 +2,7 @@
 .env
 .coveralls.yml
 composer.lock
-vendor/
+/vendor
 tests/runtime/*
 build/logs/*
 build/
