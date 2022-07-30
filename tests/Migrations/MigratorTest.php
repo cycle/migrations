@@ -61,7 +61,7 @@ abstract class MigratorTest extends BaseTest
         $this->assertSame([
             'A3Vendor', 'A1Vendor', 'A1', 'A2Vendor', 'A2', 'A3', 'A4Vendor', 'A4',
             'B1Vendor', 'B1', 'B2Vendor', 'B2', 'B3', 'B3Vendor',
-            'C', 'CVendor'
+            'C', 'CVendor',
         ], $classes);
     }
 

@@ -157,7 +157,7 @@ final class FileRepository implements RepositoryInterface
         );
 
         return $this->files->normalizePath(
-            $this->config->getDirectory().FilesInterface::SEPARATOR.$filename
+            $this->config->getDirectory() . FilesInterface::SEPARATOR . $filename
         );
     }
 }
