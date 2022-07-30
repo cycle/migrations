@@ -42,9 +42,10 @@ abstract class BaseTest extends TestCase
         'directory' => __DIR__ . '/../files/',
         'table' => 'migrations',
         'safe' => true,
+        'vendorDirectories' => __DIR__ . '/../files/vendor/',
     ];
 
-    public static array $config;
+    public static array $config = [];
     protected static array $driverCache = [];
     protected DriverInterface $driver;
     protected ContainerInterface $container;
@@ -56,7 +57,7 @@ abstract class BaseTest extends TestCase
 
     public function setUp(): void
     {
-        if (static::$config['debug']) {
+        if (static::$config['debug'] ?? false) {
             echo "\n\n-------- BEGIN: " . $this->getName() . " --------------\n\n";
         }
 
@@ -79,6 +80,10 @@ abstract class BaseTest extends TestCase
     {
         $files = new Files();
         foreach ($files->getFiles(__DIR__ . '/../files/', '*.php') as $file) {
+            $files->delete($file);
+            clearstatcache(true, $file);
+        }
+        foreach ($files->getFiles(__DIR__ . '/../files/vendor/', '*.php') as $file) {
             $files->delete($file);
             clearstatcache(true, $file);
         }

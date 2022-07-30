@@ -29,9 +29,25 @@ abstract class MigratorTest extends BaseTest
             '20200923.040608_0_0_migration_3.php' => 'C',
             '20200909.030203_1_1_migration_1.php' => 'B1',
         ];
+
+        $vendorFiles = [
+            '20200908.024119_333_333_migration_1.php' => 'A3',
+            '20200909.030203_22_22_migration_1.php' => 'B2',
+            '20200910.030203_23_23_migration_1.php' => 'B3',
+            '20200909.024119_1_1_migration_1.php' => 'A1',
+            '20200909.024119_22_22_migration_2.php' => 'A2',
+            '20200909.024119_4444_4444_migration_2.php' => 'A4',
+            '20200856.040608_0_0_migration_3.php' => 'C',
+            '20200909.030203_1_1_migration_1.php' => 'B1',
+        ];
+
         $stub = file_get_contents(__DIR__ . '/../files/migration.stub');
         foreach ($files as $name => $class) {
             file_put_contents(__DIR__ . "/../files/$name", sprintf($stub, $class));
+        }
+
+        foreach ($vendorFiles as $name => $class) {
+            file_put_contents(__DIR__ . "/../files/vendor/$name", \sprintf($stub, $class . 'Vendor'));
         }
 
         $migrations = $this->repository->getMigrations();
@@ -42,7 +58,11 @@ abstract class MigratorTest extends BaseTest
             array_values($migrations)
         );
 
-        $this->assertSame(['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'C'], $classes);
+        $this->assertSame([
+            'A3Vendor', 'A1Vendor', 'A1', 'A2Vendor', 'A2', 'A3', 'A4Vendor', 'A4',
+            'B1Vendor', 'B1', 'B2Vendor', 'B2', 'B3', 'B3Vendor',
+            'C', 'CVendor'
+        ], $classes);
     }
 
     public function testIsConfigured(): void

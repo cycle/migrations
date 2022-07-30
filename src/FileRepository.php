@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\Files;
@@ -33,49 +34,50 @@ final class FileRepository implements RepositoryInterface
     {
         $this->files = new Files();
         $this->factory = $factory ?? new Container();
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMigrations(): array
     {
         $timestamps = [];
         $chunks = [];
         $migrations = [];
 
-        foreach ($this->getFiles() as $f) {
-            if (!class_exists($f['class'], false)) {
-                //Attempting to load migration class (we can not relay on autoloading here)
-                require_once($f['filename']);
+        $directories = \array_merge(
+            [$this->config->getDirectory()],
+            $this->config->getVendorDirectories()
+        );
+
+        foreach ($directories as $directory) {
+            foreach ($this->getFiles($directory) as $f) {
+                if (! \class_exists($f['class'], false)) {
+                    //Attempting to load migration class (we can not relay on autoloading here)
+                    require_once($f['filename']);
+                }
+
+                /** @var MigrationInterface $migration */
+                $migration = $this->factory->make($f['class']);
+
+                $timestamps[] = $f['created']->getTimestamp();
+                $chunks[] = $f['chunk'];
+                $migrations[] = $migration->withState(new State($f['name'], $f['created']));
             }
-
-            /** @var MigrationInterface $migration */
-            $migration = $this->factory->make($f['class']);
-
-            $timestamps[] = $f['created']->getTimestamp();
-            $chunks[] = $f['chunk'];
-            $migrations[] = $migration->withState(new State($f['name'], $f['created']));
         }
 
-        array_multisort($timestamps, $chunks, SORT_ASC | SORT_NATURAL, $migrations);
+        \array_multisort($timestamps, $chunks, SORT_ASC | SORT_NATURAL, $migrations);
 
         return $migrations;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerMigration(string $name, string $class, string $body = null): string
     {
-        if (empty($body) && !class_exists($class)) {
+        if (empty($body) && ! \class_exists($class)) {
             throw new RepositoryException(
                 "Unable to register migration '{$class}', representing class does not exists"
             );
         }
 
-        $currentTimeStamp = date(self::TIMESTAMP_FORMAT);
+        $currentTimeStamp = \date(self::TIMESTAMP_FORMAT);
         $inflectedName = $this->inflector->tableize($name);
 
         foreach ($this->getMigrations() as $migration) {
@@ -111,13 +113,13 @@ final class FileRepository implements RepositoryInterface
     /**
      * Internal method to fetch all migration filenames.
      */
-    private function getFiles(): \Generator
+    private function getFiles(string $directory): \Generator
     {
-        foreach ($this->files->getFiles($this->config->getDirectory(), '*.php') as $filename) {
+        foreach ($this->files->getFiles($directory, '*.php') as $filename) {
             $reflection = new ReflectionFile($filename);
-            $definition = explode('_', basename($filename));
+            $definition = \explode('_', \basename($filename));
 
-            if (count($definition) < 3) {
+            if (\count($definition) < 3) {
                 throw new RepositoryException("Invalid migration filename '{$filename}'");
             }
 
@@ -131,10 +133,10 @@ final class FileRepository implements RepositoryInterface
                 'class' => $reflection->getClasses()[0],
                 'created' => $created,
                 'chunk' => $definition[1],
-                'name' => str_replace(
+                'name' => \str_replace(
                     '.php',
                     '',
-                    implode('_', array_slice($definition, 2))
+                    \implode('_', \array_slice($definition, 2))
                 ),
             ];
         }
@@ -147,15 +149,15 @@ final class FileRepository implements RepositoryInterface
     {
         $name = $this->inflector->tableize($name);
 
-        $filename = sprintf(
+        $filename = \sprintf(
             self::FILENAME_FORMAT,
-            date(self::TIMESTAMP_FORMAT),
+            \date(self::TIMESTAMP_FORMAT),
             $this->chunkID++,
             $name
         );
 
         return $this->files->normalizePath(
-            $this->config->getDirectory() . FilesInterface::SEPARATOR . $filename
+            $this->config->getDirectory().FilesInterface::SEPARATOR.$filename
         );
     }
 }
