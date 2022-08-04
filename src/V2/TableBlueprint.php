@@ -208,6 +208,15 @@ final class TableBlueprint
         $this->execute();
     }
 
+    public function truncate(): void
+    {
+        $this->addOperation(
+            new Operation\Table\Truncate($this->tableName)
+        );
+
+        $this->execute();
+    }
+
     public function addOperation(OperationInterface $operation): self
     {
         $this->operations[] = $operation;
