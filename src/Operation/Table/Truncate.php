@@ -22,6 +22,6 @@ final class Truncate extends AbstractOperation
             );
         }
 
-        $capsule->getDatabase()->execute(sprintf('TRUNCATE `%s`', $this->getTable()));
+        $capsule->getDatabase()->execute(sprintf('TRUNCATE "%s"', $this->getTable()));
     }
 }
