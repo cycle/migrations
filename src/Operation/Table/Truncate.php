@@ -8,6 +8,11 @@ use Cycle\Migrations\Operation\AbstractOperation;
 
 final class Truncate extends AbstractOperation
 {
+    public function __construct(string $table, private string $strategy)
+    {
+        parent::__construct($table);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -22,6 +27,6 @@ final class Truncate extends AbstractOperation
             );
         }
 
-        $capsule->getDatabase()->execute(sprintf('TRUNCATE "%s"', $this->getTable()));
+        $capsule->getDatabase()->execute(sprintf('TRUNCATE "%s" %s', $this->getTable(), $this->strategy));
     }
 }

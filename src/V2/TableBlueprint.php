@@ -208,10 +208,10 @@ final class TableBlueprint
         $this->execute();
     }
 
-    public function truncate(): void
+    public function truncate(string $strategy = ''): void
     {
         $this->addOperation(
-            new Operation\Table\Truncate($this->tableName)
+            new Operation\Table\Truncate($this->tableName, $strategy)
         );
 
         $this->execute();
