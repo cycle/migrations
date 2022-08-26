@@ -19,27 +19,27 @@ class FKAction
         $this->value = $value;
     }
 
-    public static function Cascade(): self
+    public static function cascade(): self
     {
         return new self(self::CASCADE);
     }
 
-    public static function SetNull(): self
+    public static function setNull(): self
     {
         return new self(self::SET_NULL);
     }
 
-    public static function SetDefault(): self
+    public static function setDefault(): self
     {
         return new self(self::SET_DEFAULT);
     }
 
-    public static function Restrict(): self
+    public static function restrict(): self
     {
         return new self(self::RESTRICT);
     }
 
-    public static function NoAction(): self
+    public static function noAction(): self
     {
         return new self(self::NO_ACTION);
     }

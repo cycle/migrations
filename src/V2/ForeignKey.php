@@ -19,8 +19,8 @@ class ForeignKey
         $this->outerTable = $table;
         $this->outerKeys = $outerKey;
 
-        $this->onDelete = FKAction::Cascade();
-        $this->onUpdate = FKAction::Cascade();
+        $this->onDelete = FKAction::cascade();
+        $this->onUpdate = FKAction::cascade();
     }
 
     public function name(?string $name): self
