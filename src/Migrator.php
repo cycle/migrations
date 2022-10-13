@@ -144,7 +144,7 @@ final class Migrator
                         ),
                         $exception->getMessage()
                     ),
-                    $exception->getCode(),
+                    (int)$exception->getCode(),
                     $exception
                 );
             }
