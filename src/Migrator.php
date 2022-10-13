@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Cycle\Migrations;
 
 use Cycle\Database\Database;
+use Cycle\Database\DatabaseInterface;
+use Cycle\Database\DatabaseManager;
 use Cycle\Database\DatabaseProviderInterface;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
@@ -43,7 +45,7 @@ final class Migrator
      */
     public function isConfigured(): bool
     {
-        foreach ($this->dbal->getDatabases() as $db) {
+        foreach ($this->getDatabases() as $db) {
             if (!$db->hasTable($this->config->getTable()) || !$this->checkMigrationTableStructure($db)) {
                 return false;
             }
@@ -61,7 +63,7 @@ final class Migrator
             return;
         }
 
-        foreach ($this->dbal->getDatabases() as $db) {
+        foreach ($this->getDatabases() as $db) {
             $schema = $db->table($this->config->getTable())->getSchema();
 
             // Schema update will automatically sync all needed data
@@ -118,7 +120,7 @@ final class Migrator
 
             try {
                 $capsule = $capsule ?? new Capsule($this->dbal->database($migration->getDatabase()));
-                $capsule->getDatabase($migration->getDatabase())->transaction(
+                $capsule->getDatabase()->transaction(
                     static function () use ($migration, $capsule): void {
                         $migration->withCapsule($capsule)->up();
                     }
@@ -282,7 +284,7 @@ final class Migrator
      */
     protected function isRestoreMigrationDataRequired(): bool
     {
-        foreach ($this->dbal->getDatabases() as $db) {
+        foreach ($this->getDatabases() as $db) {
             $table = $db->table($this->config->getTable());
 
             if (
@@ -306,5 +308,16 @@ final class Migrator
             $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT),
             $db->getDriver()->getTimezone()
         );
+    }
+
+    /**
+     * @return iterable<DatabaseInterface>
+     */
+    private function getDatabases(): iterable
+    {
+        if ($this->dbal instanceof DatabaseManager) {
+            return $this->dbal->getDatabases();
+        }
+        return [];
     }
 }

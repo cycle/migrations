@@ -17,7 +17,7 @@ abstract class Migration implements MigrationInterface
     protected const DATABASE = null;
 
     private ?State $state = null;
-    private CapsuleInterface $capsule;
+    private ?CapsuleInterface $capsule = null;
 
     /**
      * {@inheritdoc}
@@ -66,7 +66,7 @@ abstract class Migration implements MigrationInterface
      */
     protected function database(): DatabaseInterface
     {
-        if (empty($this->capsule)) {
+        if ($this->capsule === null) {
             throw new MigrationException('Unable to get database, no capsule are set');
         }
 
@@ -78,7 +78,7 @@ abstract class Migration implements MigrationInterface
      */
     protected function table(string $table): TableBlueprint
     {
-        if (empty($this->capsule)) {
+        if ($this->capsule === null) {
             throw new MigrationException('Unable to get table blueprint, no capsule are set');
         }
 
