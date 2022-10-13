@@ -1,6 +1,8 @@
 on:
-  - pull_request
-  - push
+  push:
+    branches:
+      - '4.*'
+  pull_request: null
 
 name: ci-mssql
 
