@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use DateTimeInterface;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Core\Container;
@@ -16,6 +17,14 @@ use Spiral\Tokenizer\Reflection\ReflectionFile;
 
 /**
  * Stores migrations as files.
+ *
+ * @psalm-type TFileArray = array{
+ *     filename: non-empty-string,
+ *     class: class-string,
+ *     created: DateTimeInterface|null,
+ *     chunk: string,
+ *     name: non-empty-string
+ * }
  */
 final class FileRepository implements RepositoryInterface
 {
@@ -43,25 +52,18 @@ final class FileRepository implements RepositoryInterface
         $chunks = [];
         $migrations = [];
 
-        $directories = \array_merge(
-            [$this->config->getDirectory()],
-            $this->config->getVendorDirectories()
-        );
-
-        foreach ($directories as $directory) {
-            foreach ($this->getFiles($directory) as $f) {
-                if (! \class_exists($f['class'], false)) {
-                    //Attempting to load migration class (we can not relay on autoloading here)
-                    require_once($f['filename']);
-                }
-
-                /** @var MigrationInterface $migration */
-                $migration = $this->factory->make($f['class']);
-
-                $timestamps[] = $f['created']->getTimestamp();
-                $chunks[] = $f['chunk'];
-                $migrations[] = $migration->withState(new State($f['name'], $f['created']));
+        foreach ($this->getFilesIterator() as $f) {
+            if (! \class_exists($f['class'], false)) {
+                //Attempting to load migration class (we can not relay on autoloading here)
+                require_once($f['filename']);
             }
+
+            /** @var MigrationInterface $migration */
+            $migration = $this->factory->make($f['class']);
+
+            $timestamps[] = $f['created']->getTimestamp();
+            $chunks[] = $f['chunk'];
+            $migrations[] = $migration->withState(new State($f['name'], $f['created']));
         }
 
         \array_multisort($timestamps, $chunks, SORT_ASC | SORT_NATURAL, $migrations);
@@ -111,7 +113,24 @@ final class FileRepository implements RepositoryInterface
     }
 
     /**
+     * @return \Generator<int, TFileArray>
+     */
+    private function getFilesIterator(): \Generator
+    {
+        foreach (
+            \array_merge(
+                [$this->config->getDirectory()],
+                $this->config->getVendorDirectories()
+            ) as $directory
+        ) {
+            yield from $this->getFiles($directory);
+        }
+    }
+
+    /**
      * Internal method to fetch all migration filenames.
+     *
+     * @return \Generator<int, TFileArray>
      */
     private function getFiles(string $directory): \Generator
     {
