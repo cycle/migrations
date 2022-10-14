@@ -3,7 +3,6 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd" bootstrap="tests/bootstrap.php"
          backupGlobals="false"
          backupStaticAttributes="false"
-
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="true"
@@ -15,7 +14,7 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="Cycle: DataMapper and ORM">
+        <testsuite name="Cycle Database Migrations">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
