@@ -21,6 +21,7 @@ composer require cycle/migrations ^4.0
 use Cycle\Migrations;
 use Cycle\Database;
 use Cycle\Database\Config;
+
 $dbal = new Database\DatabaseManager(new Config\DatabaseConfig([
     'default' => 'default',
     'databases' => [
@@ -35,16 +36,22 @@ $dbal = new Database\DatabaseManager(new Config\DatabaseConfig([
         ),
     ]
 ]));
+
 $config = new Migrations\Config\MigrationConfig([
     'directory' => __DIR__ . '/../migrations/',    // where to store migrations
-    'table'     => 'migrations'                    // database table to store migration status
-    'safe'      => true                            // When set to true no confirmation will be requested on migration run. 
+    'vendorDirectories' => [                       // Where to look for vendor package migrations
+        __DIR__ . '/../vendor/vendorName/packageName/migrations/'
+    ],
+    'table' => 'migrations'                       // database table to store migration status
+    'safe' => true                                // When set to true no confirmation will be requested on migration run. 
 ]);
+
 $migrator = new Migrations\Migrator(
     $config, 
     $dbal, 
     new Migrations\FileRepository($config)
 );
+
 // Init migration table
 $migrator->configure();
 ```

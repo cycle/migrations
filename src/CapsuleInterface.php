@@ -21,6 +21,8 @@ interface CapsuleInterface
     /**
      * Get schema associated with given database and table.
      *
+     * @param non-empty-string $table
+     *
      * @throws ContextException
      */
     public function getSchema(string $table): AbstractTable;

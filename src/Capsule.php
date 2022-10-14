@@ -14,6 +14,7 @@ use Cycle\Migrations\Exception\CapsuleException;
  */
 final class Capsule implements CapsuleInterface
 {
+    /** @var array<non-empty-string, AbstractTable> */
     private array $schemas = [];
 
     public function __construct(private DatabaseInterface $database)

@@ -19,6 +19,14 @@ final class MigrationConfig extends InjectableConfig
     }
 
     /**
+     * Vendor migrations directories.
+     */
+    public function getVendorDirectories(): array
+    {
+        return (array) ($this->config['vendorDirectories'] ?? []);
+    }
+
+    /**
      * Table to store list of executed migrations.
      */
     public function getTable(): string
