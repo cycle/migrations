@@ -42,4 +42,12 @@ class TypeBuilder
         $this->db->execute($query);
         $this->db->commit();
     }
+
+    public function drop(): void
+    {
+        $query = sprintf('DROP TYPE %s;', $this->name);
+        $this->db->execute($query);
+        $this->db->commit();
+
+    }
 }
