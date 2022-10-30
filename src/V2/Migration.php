@@ -74,11 +74,10 @@ abstract class Migration implements MigrationInterface
         return new ForeignKey($fields, $table, $outerKeys);
     }
 
-    protected function enum(string $name, array $values): TypeBuilder
+    protected function enum(string $name): TypeBuilder
     {
         return new TypeBuilder(
             $name,
-            $values,
             TypeBuilder::ENUM,
             $this->database()
         );
