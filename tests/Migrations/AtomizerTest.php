@@ -310,7 +310,7 @@ abstract class AtomizerTest extends BaseTest
         $this->migrator->configure();
 
         $schema = $this->schema('sample');
-        $column = $schema->datetime('value');
+        $column = $schema->datetime('value', size: 2, foo: 'bar');
         $column->defaultValue(new Fragment($column::DATETIME_NOW));
 
         $this->atomize('migration1', [$schema]);
@@ -318,7 +318,11 @@ abstract class AtomizerTest extends BaseTest
         $this->migrator->run();
 
         $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertSame((string)$column->getDefaultValue(), (string)$this->schema('sample')->column('value')->getDefaultValue());
+
+        $this->assertSame(
+            (string)$column->getDefaultValue(),
+            (string)$this->schema('sample')->column('value')->getDefaultValue()
+        );
 
         $this->migrator->rollback();
         $this->assertFalse($this->db->hasTable('sample'));
