@@ -318,7 +318,6 @@ abstract class AtomizerTest extends BaseTest
         $this->migrator->run();
 
         $this->assertTrue($this->db->hasTable('sample'));
-
         $this->assertSame(
             (string)$column->getDefaultValue(),
             (string)$this->schema('sample')->column('value')->getDefaultValue()
