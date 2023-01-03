@@ -43,21 +43,27 @@ abstract class Column extends AbstractOperation
         //Type configuring
         if (method_exists($column, $this->type)) {
             $arguments = [];
+            $variadic = false;
 
             $method = new \ReflectionMethod($column, $this->type);
             foreach ($method->getParameters() as $parameter) {
                 if ($this->hasOption($parameter->getName())) {
-                    $arguments[] = $this->getOption($parameter->getName());
+                    $arguments[$parameter->getName()] = $this->getOption($parameter->getName());
                 } elseif (!$parameter->isOptional()) {
                     throw new ColumnException(
                         "Option '{$parameter->getName()}' are required to define column with type '{$this->type}'"
                     );
-                } else {
-                    $arguments[] = $parameter->getDefaultValue();
+                } elseif ($parameter->isDefaultValueAvailable()) {
+                    $arguments[$parameter->getName()] = $parameter->getDefaultValue();
+                } elseif ($parameter->isVariadic()) {
+                    $variadic = true;
                 }
             }
 
-            call_user_func_array([$column, $this->type], $arguments);
+            \call_user_func_array(
+                [$column, $this->type],
+                $variadic ? $arguments + $this->options + $column->getAttributes() : $arguments,
+            );
         } else {
             $column->type($this->type);
         }
