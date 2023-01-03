@@ -62,7 +62,7 @@ abstract class Column extends AbstractOperation
 
             call_user_func_array(
                 [$column, $this->type],
-                $variadic ? $arguments + $this->options + $column->getAttributes() : $arguments
+                $variadic ? $arguments + $this->options + $column->getAttributes() : $arguments,
             );
         } else {
             $column->type($this->type);
