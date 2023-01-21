@@ -136,7 +136,7 @@ final class FileRepository implements RepositoryInterface
     {
         foreach ($this->files->getFiles($directory, '*.php') as $filename) {
             $reflection = new ReflectionFile($filename);
-            $definition = \explode('_', \basename($filename, ".php"), 3);
+            $definition = \explode('_', \basename($filename, '.php'), 3);
 
             if (\count($definition) < 3) {
                 throw new RepositoryException("Invalid migration filename '{$filename}'");
