@@ -136,7 +136,7 @@ final class FileRepository implements RepositoryInterface
     {
         foreach ($this->files->getFiles($directory, '*.php') as $filename) {
             $reflection = new ReflectionFile($filename);
-            $definition = \explode('_', \basename($filename));
+            $definition = \explode('_', \basename($filename, '.php'), 3);
 
             if (\count($definition) < 3) {
                 throw new RepositoryException("Invalid migration filename '{$filename}'");
@@ -152,11 +152,7 @@ final class FileRepository implements RepositoryInterface
                 'class' => $reflection->getClasses()[0],
                 'created' => $created,
                 'chunk' => $definition[1],
-                'name' => \str_replace(
-                    '.php',
-                    '',
-                    \implode('_', \array_slice($definition, 2))
-                ),
+                'name' => $definition[2],
             ];
         }
     }
