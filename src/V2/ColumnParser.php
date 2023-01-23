@@ -58,6 +58,10 @@ class ColumnParser extends Column
             $options['default'] = $this->getDefault();
         }
 
+        if ($this->getType() === ColumnType::TYPE_DATETIME) {
+            $options['attributes'] = [];
+        }
+
         return $options;
     }
 }
