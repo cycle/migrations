@@ -56,7 +56,7 @@ final class Add extends ForeignKey
             }
         }
 
-        $foreignKey = $schema->foreignKey($this->columns)->references(
+        $foreignKey = $schema->foreignKey($this->columns, $this->getOption('indexCreate', true))->references(
             $this->foreignTable,
             $this->foreignKeys
         );
