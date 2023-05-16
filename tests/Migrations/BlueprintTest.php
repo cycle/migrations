@@ -131,6 +131,21 @@ abstract class BlueprintTest extends BaseTest
         $this->assertTrue($blueprint->getSchema()->exists());
     }
 
+    public function testCreateForeignWithIndex(): void
+    {
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
+
+        $blueprint->addColumn('id', 'primary')->create();
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
+
+        $blueprint->addColumn('id', 'primary')
+            ->addColumn('sample_id', 'int')
+            ->addForeignKey(['sample_id'], 'sample1', ['id'])
+            ->create();
+
+        $this->assertTrue($blueprint->getSchema()->hasIndex(['sample_id']));
+    }
+
     public function testUpdateTableError(): void
     {
         $this->expectException(\Cycle\Migrations\Exception\Operation\TableException::class);

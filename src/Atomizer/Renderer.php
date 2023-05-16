@@ -282,6 +282,7 @@ final class Renderer implements RendererInterface
             'name' => $reference->getName(),
             'delete' => $reference->getDeleteRule(),
             'update' => $reference->getUpdateRule(),
+            'indexCreate' => $reference->hasIndex(),
         ];
     }
 
