@@ -12,6 +12,9 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Tests;
 
 use Cycle\Database\Injection\Fragment;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Migrations\Atomizer\Atomizer;
+use Cycle\Migrations\Atomizer\Renderer;
 use Cycle\Migrations\Migration;
 use Cycle\Migrations\State;
 
@@ -427,5 +430,20 @@ abstract class AtomizerTest extends BaseTest
 
         $this->migrator->rollback();
         $this->assertFalse($this->db->hasTable('sample'));
+    }
+
+    public function testSetTables(): void
+    {
+        $atomizer = new Atomizer(new Renderer());
+
+        $table1 = $this->createMock(AbstractTable::class);
+        $table2 = $this->createMock(AbstractTable::class);
+        $table3 = $this->createMock(AbstractTable::class);
+
+        $atomizer->addTable($table1);
+        $this->assertSame([$table1], $atomizer->getTables());
+
+        $atomizer->setTables([$table2, $table3]);
+        $this->assertSame([$table2, $table3], $atomizer->getTables());
     }
 }

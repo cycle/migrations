@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Atomizer;
 
 use Cycle\Database\Schema\AbstractTable;
-use Cycle\Database\Schema\Reflector;
 use Spiral\Reactor\Partial\Method;
 
 /**
@@ -18,7 +17,8 @@ final class Atomizer
     protected array $tables = [];
 
     public function __construct(
-        private readonly RendererInterface $renderer
+        private readonly RendererInterface $renderer,
+        private readonly TableSorter $tableSorter = new TableSorter()
     ) {
     }
 
@@ -28,6 +28,16 @@ final class Atomizer
     public function addTable(AbstractTable $table): self
     {
         $this->tables[] = $table;
+
+        return $this;
+    }
+
+    /**
+     * @param AbstractTable[] $tables
+     */
+    public function setTables(array $tables): self
+    {
+        $this->tables = $tables;
 
         return $this;
     }
@@ -47,7 +57,7 @@ final class Atomizer
      */
     public function declareChanges(Method $method): void
     {
-        foreach ($this->sortedTables() as $table) {
+        foreach ($this->tableSorter->sort($this->tables) as $table) {
             if (!$table->getComparator()->hasChanges()) {
                 continue;
             }
@@ -65,7 +75,7 @@ final class Atomizer
      */
     public function revertChanges(Method $method): void
     {
-        foreach ($this->sortedTables(true) as $table) {
+        foreach ($this->tableSorter->sort($this->tables, true) as $table) {
             if (!$table->getComparator()->hasChanges()) {
                 continue;
             }
@@ -76,25 +86,5 @@ final class Atomizer
                 $this->renderer->revertTable($method, $table);
             }
         }
-    }
-
-    /**
-     * Tables sorted in order of their dependencies.
-     *
-     * @return AbstractTable[]
-     */
-    protected function sortedTables($reverse = false): array
-    {
-        $reflector = new Reflector();
-        foreach ($this->tables as $table) {
-            $reflector->addTable($table);
-        }
-
-        $sorted = $reflector->sortedTables();
-        if ($reverse) {
-            return \array_reverse($sorted);
-        }
-
-        return $sorted;
     }
 }
