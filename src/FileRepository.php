@@ -66,7 +66,7 @@ final class FileRepository implements RepositoryInterface
             $migrations[] = $migration->withState(new State($f['name'], $f['created']));
         }
 
-        \array_multisort($timestamps, $chunks, SORT_ASC | SORT_NATURAL, $migrations);
+        \array_multisort($timestamps, $chunks, SORT_NATURAL, $migrations);
 
         return $migrations;
     }
