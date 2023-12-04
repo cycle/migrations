@@ -313,7 +313,7 @@ abstract class AtomizerTest extends BaseTest
         $this->migrator->configure();
 
         $schema = $this->schema('sample');
-        $column = $schema->datetime('value', size: 2, foo: 'bar');
+        $column = $schema->datetime('value');
         $column->defaultValue(new Fragment($column::DATETIME_NOW));
 
         $this->atomize('migration1', [$schema]);

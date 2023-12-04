@@ -251,7 +251,7 @@ final class Renderer implements RendererInterface
             $options['values'] = $column->getEnumValues();
         }
 
-        if ($column->getAbstractType() === 'string') {
+        if ($column->getAbstractType() === 'string' || $column->getSize() > 0) {
             $options['size'] = $column->getSize();
         }
 
