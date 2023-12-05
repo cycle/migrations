@@ -110,7 +110,7 @@ final class TableBlueprint
 
     /**
      * Example:
-     * $table->addForeignKey('user_id', 'users', 'id', ['delete' => 'CASCADE']);
+     * $table->addForeignKey(['user_id'], 'users', ['id'], ['delete' => 'CASCADE']);
      *
      * @param string $foreignTable Database isolation prefix will be automatically added.
      */
@@ -133,7 +133,7 @@ final class TableBlueprint
 
     /**
      * Example:
-     * $table->alterForeignKey('user_id', 'users', 'id', ['delete' => 'NO ACTION']);
+     * $table->alterForeignKey(['user_id'], 'users', ['id'], ['delete' => 'NO ACTION']);
      */
     public function alterForeignKey(
         array $columns,
@@ -154,7 +154,7 @@ final class TableBlueprint
 
     /**
      * Example:
-     * $table->dropForeignKey('user_id');
+     * $table->dropForeignKey(['user_id']);
      */
     public function dropForeignKey(array $columns): self
     {
