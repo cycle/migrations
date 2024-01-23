@@ -18,6 +18,7 @@ final class Renderer implements RendererInterface
      */
     public const NEW_STATE = 0;
     public const ORIGINAL_STATE = 1;
+    private const ALLOWED_ATTRIBUTES = ['scale', 'precision', 'unsigned', 'zerofill'];
 
     public function createTable(Method $method, AbstractTable $table): void
     {
@@ -255,9 +256,10 @@ final class Renderer implements RendererInterface
             $options['size'] = $column->getSize();
         }
 
-        if ($column->getAbstractType() === 'decimal') {
-            $options['scale'] = $column->getScale();
-            $options['precision'] = $column->getPrecision();
+        foreach ($column->getAttributes() as $attribute => $value) {
+            if (\in_array($attribute, self::ALLOWED_ATTRIBUTES, true)) {
+                $options[$attribute] = $value;
+            }
         }
 
         $default = $options['default'];
