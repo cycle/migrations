@@ -252,6 +252,9 @@ final class Renderer implements RendererInterface
         }
 
         foreach ($column->getAttributes() as $attribute => $value) {
+            if ($attribute === 'size' && $value === 0) {
+                continue;
+            }
             $options[$attribute] = $value;
         }
 
