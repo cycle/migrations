@@ -18,7 +18,6 @@ final class Renderer implements RendererInterface
      */
     public const NEW_STATE = 0;
     public const ORIGINAL_STATE = 1;
-    private const ALLOWED_ATTRIBUTES = ['scale', 'precision', 'unsigned', 'zerofill'];
 
     public function createTable(Method $method, AbstractTable $table): void
     {
@@ -245,26 +244,20 @@ final class Renderer implements RendererInterface
     {
         $options = [
             'nullable' => $column->isNullable(),
-            'default' => $column->getDefaultValue(),
+            'defaultValue' => $column->getDefaultValue(),
         ];
 
         if ($column->getAbstractType() === 'enum') {
             $options['values'] = $column->getEnumValues();
         }
 
-        if ($column->getAbstractType() === 'string' || $column->getSize() > 0) {
-            $options['size'] = $column->getSize();
-        }
-
         foreach ($column->getAttributes() as $attribute => $value) {
-            if (\in_array($attribute, self::ALLOWED_ATTRIBUTES, true)) {
-                $options[$attribute] = $value;
-            }
+            $options[$attribute] = $value;
         }
 
-        $default = $options['default'];
+        $default = $options['defaultValue'];
         if ($column::DATETIME_NOW === ($default instanceof \Stringable ? (string)$default : $default)) {
-            $options['default'] = AbstractColumn::DATETIME_NOW;
+            $options['defaultValue'] = AbstractColumn::DATETIME_NOW;
         }
 
         return $options;
