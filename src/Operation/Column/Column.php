@@ -73,10 +73,8 @@ abstract class Column extends AbstractOperation
 
         if ($this->hasOption('defaultValue')) {
             $column->defaultValue($this->getOption('defaultValue', null));
-        }
-
         // @deprecated since v4.3
-        if ($this->hasOption('default')) {
+        } elseif ($this->hasOption('default')) {
             $column->defaultValue($this->getOption('default', null));
         }
 
