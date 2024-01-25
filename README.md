@@ -68,7 +68,7 @@ while (($migration = $migrator->run()) !== null) {
 
 You can automatically generate a set of migration files during schema compilation. In this case, you have the freedom to
 alter such migrations manually before running them. To achieve that you must install
-the [Cycle migrations extension](https://github.com/cycle/schema-migrations-generator).
+the [Schema migrations generator extension](https://github.com/cycle/schema-migrations-generator).
 
 ## License:
 
