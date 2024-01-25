@@ -53,7 +53,7 @@ final class FileRepository implements RepositoryInterface
         $migrations = [];
 
         foreach ($this->getFilesIterator() as $f) {
-            if (! \class_exists($f['class'], false)) {
+            if (!\class_exists($f['class'], false)) {
                 //Attempting to load migration class (we can not relay on autoloading here)
                 require_once($f['filename']);
             }
@@ -73,7 +73,7 @@ final class FileRepository implements RepositoryInterface
 
     public function registerMigration(string $name, string $class, string $body = null): string
     {
-        if (empty($body) && ! \class_exists($class)) {
+        if (empty($body) && !\class_exists($class)) {
             throw new RepositoryException(
                 "Unable to register migration '{$class}', representing class does not exists"
             );

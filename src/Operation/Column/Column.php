@@ -71,7 +71,10 @@ abstract class Column extends AbstractOperation
         $column->nullable($this->getOption('nullable', false));
         $column->setAttributes($this->options + $column->getAttributes());
 
-        if ($this->hasOption('default')) {
+        if ($this->hasOption('defaultValue')) {
+            $column->defaultValue($this->getOption('defaultValue', null));
+        // @deprecated since v4.3
+        } elseif ($this->hasOption('default')) {
             $column->defaultValue($this->getOption('default', null));
         }
 

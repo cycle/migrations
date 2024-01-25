@@ -244,25 +244,23 @@ final class Renderer implements RendererInterface
     {
         $options = [
             'nullable' => $column->isNullable(),
-            'default' => $column->getDefaultValue(),
+            'defaultValue' => $column->getDefaultValue(),
         ];
 
         if ($column->getAbstractType() === 'enum') {
             $options['values'] = $column->getEnumValues();
         }
 
-        if ($column->getAbstractType() === 'string' || $column->getSize() > 0) {
-            $options['size'] = $column->getSize();
+        foreach ($column->getAttributes() as $attribute => $value) {
+            if ($attribute === 'size' && $value === 0) {
+                continue;
+            }
+            $options[$attribute] = $value;
         }
 
-        if ($column->getAbstractType() === 'decimal') {
-            $options['scale'] = $column->getScale();
-            $options['precision'] = $column->getPrecision();
-        }
-
-        $default = $options['default'];
+        $default = $options['defaultValue'];
         if ($column::DATETIME_NOW === ($default instanceof \Stringable ? (string)$default : $default)) {
-            $options['default'] = AbstractColumn::DATETIME_NOW;
+            $options['defaultValue'] = AbstractColumn::DATETIME_NOW;
         }
 
         return $options;
