@@ -1,13 +1,7 @@
 .idea/
 .env
-.coveralls.yml
+/runtime/
+/vendor/
 composer.lock
-/vendor
-tests/runtime/*
-build/logs/*
-build/
+/tests/runtime/*
 *.db
-clover.xml
-clover.json
-.phpunit.result.cache
-

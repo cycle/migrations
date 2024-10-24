@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\Postgres;
 
+/**
+ * @group driver
+ * @group driver-postgres
+ */
 class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
 {
     public const DRIVER = 'postgres';

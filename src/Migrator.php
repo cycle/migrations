@@ -8,6 +8,7 @@ use Cycle\Database\Database;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Database\DatabaseManager;
 use Cycle\Database\DatabaseProviderInterface;
+use Cycle\Database\Driver\ReadonlyHandler;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Exception\MigrationException;
@@ -316,7 +317,10 @@ final class Migrator
     private function getDatabases(): iterable
     {
         if ($this->dbal instanceof DatabaseManager) {
-            return $this->dbal->getDatabases();
+            return array_filter(
+                $this->dbal->getDatabases(),
+                fn (DatabaseInterface $db): bool => !$db->getDriver()->isReadonly()
+            );
         }
         return [];
     }

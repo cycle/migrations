@@ -18,7 +18,7 @@ mb_internal_encoding('UTF-8');
 //Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-\Cycle\Migrations\Tests\BaseTest::$config = [
+$drivers = [
     'debug' => false,
     'sqlite' => new Config\SQLiteDriverConfig(
         queryCache: true,
@@ -29,7 +29,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
             host: '127.0.0.1',
             port: 13306,
             user: 'root',
-            password: 'root',
+            password: 'YourStrong!Passw0rd',
         ),
         queryCache: true
     ),
@@ -39,7 +39,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
             host: '127.0.0.1',
             port: 15432,
             user: 'postgres',
-            password: 'postgres',
+            password: 'YourStrong!Passw0rd',
         ),
         schema: 'public',
         queryCache: true,
@@ -50,28 +50,20 @@ require dirname(__DIR__) . '/vendor/autoload.php';
             host: '127.0.0.1',
             port: 11433,
             user: 'SA',
-            password: 'SSpaSS__1'
+            password: 'YourStrong!Passw0rd'
         ),
         queryCache: true
     ),
 ];
 
-if (!empty(getenv('DB'))) {
-    switch (getenv('DB')) {
-        case 'mariadb':
-            \Cycle\Migrations\Tests\BaseTest::$config = [
-                'debug' => false,
-                'mysql' => new Config\MySQLDriverConfig(
-                    connection: new Config\MySQL\TcpConnectionConfig(
-                        database: 'spiral',
-                        host: '127.0.0.1',
-                        port: 23306,
-                        user: 'root',
-                        password: 'root',
-                    ),
-                    queryCache: true
-                ),
-            ];
-            break;
-    }
+$db = getenv('DB') ?: null;
+if ($db !== null) {
+    $db = [$db, "$db-mock"];
 }
+\Cycle\Migrations\Tests\BaseTest::$config = [
+    'debug' => getenv('DB_DEBUG') ?: false,
+] + (
+    $db === null
+        ? $drivers
+        : array_intersect_key($drivers, array_flip((array)$db))
+);

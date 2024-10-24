@@ -14,6 +14,10 @@ namespace Cycle\Migrations\Tests\SQLite;
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
 
+/**
+ * @group driver
+ * @group driver-sqlite
+ */
 class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'sqlite';
