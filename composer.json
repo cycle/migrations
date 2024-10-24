@@ -12,6 +12,7 @@
         "spiral/reactor": "^3.0"
     },
     "require-dev": {
+        "buggregator/trap": "^1.11",
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5",
         "spiral/code-style": "~2.2.0",
