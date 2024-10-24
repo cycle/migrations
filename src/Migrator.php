@@ -319,7 +319,7 @@ final class Migrator
         if ($this->dbal instanceof DatabaseManager) {
             return array_filter(
                 $this->dbal->getDatabases(),
-                fn (DatabaseInterface $db): bool => !$db->getDriver()->getSchemaHandler() instanceof ReadonlyHandler
+                fn (DatabaseInterface $db): bool => !$db->getDriver()->isReadonly()
             );
         }
         return [];
