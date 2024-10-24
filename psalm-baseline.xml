@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+  <file src="src/Atomizer/Renderer.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+      <code><![CDATA[$comparator]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$pair[self::NEW_STATE]]]></code>
+      <code><![CDATA[$pair[self::NEW_STATE]]]></code>
+      <code><![CDATA[$pair[self::ORIGINAL_STATE]]]></code>
+      <code><![CDATA[$pair[self::ORIGINAL_STATE]]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$pair[self::NEW_STATE]]]></code>
+      <code><![CDATA[$pair[self::NEW_STATE]]]></code>
+      <code><![CDATA[$pair[self::NEW_STATE]]]></code>
+      <code><![CDATA[$pair[self::NEW_STATE]]]></code>
+      <code><![CDATA[$pair[self::ORIGINAL_STATE]]]></code>
+      <code><![CDATA[$pair[self::ORIGINAL_STATE]]]></code>
+      <code><![CDATA[$pair[self::ORIGINAL_STATE]]]></code>
+      <code><![CDATA[$pair[self::ORIGINAL_STATE]]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code><![CDATA[$default]]></code>
+      <code><![CDATA[$options[$attribute]]]></code>
+      <code><![CDATA[$pair]]></code>
+      <code><![CDATA[$pair]]></code>
+      <code><![CDATA[$pair]]></code>
+      <code><![CDATA[$pair]]></code>
+      <code><![CDATA[$pair]]></code>
+      <code><![CDATA[$pair]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <PossiblyUndefinedStringArrayOffset>
+      <code><![CDATA[$options['defaultValue']]]></code>
+    </PossiblyUndefinedStringArrayOffset>
+  </file>
+  <file src="src/Atomizer/RendererInterface.php">
+    <MissingReturnType>
+      <code><![CDATA[createTable]]></code>
+      <code><![CDATA[dropTable]]></code>
+      <code><![CDATA[revertTable]]></code>
+      <code><![CDATA[updateTable]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="src/Atomizer/TableSorter.php">
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[$sorted]]></code>
+      <code><![CDATA[AbstractTable[]]]></code>
+      <code><![CDATA[\array_reverse($sorted)]]></code>
+    </MixedReturnTypeCoercion>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$reverse]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Capsule.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$table]]></code>
+    </ArgumentTypeCoercion>
+    <MixedInferredReturnType>
+      <code><![CDATA[AbstractTable]]></code>
+    </MixedInferredReturnType>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$this->schemas]]></code>
+    </MixedPropertyTypeCoercion>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->schemas[$table]]]></code>
+      <code><![CDATA[$this->schemas[$table]]]></code>
+    </MixedReturnStatement>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getSchema]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Config/MigrationConfig.php">
+    <MixedInferredReturnType>
+      <code><![CDATA[bool]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->config['directory'] ?? '']]></code>
+      <code><![CDATA[$this->config['directory'] ?? '']]></code>
+      <code><![CDATA[$this->config['namespace'] ?? 'Migration']]></code>
+      <code><![CDATA[$this->config['namespace'] ?? 'Migration']]></code>
+      <code><![CDATA[$this->config['safe'] ?? false]]></code>
+      <code><![CDATA[$this->config['safe'] ?? false]]></code>
+      <code><![CDATA[$this->config['table'] ?? 'migrations']]></code>
+      <code><![CDATA[$this->config['table'] ?? 'migrations']]></code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/FileRepository.php">
+    <MixedArgument>
+      <code><![CDATA[$directory]]></code>
+      <code><![CDATA[$filename]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$directory]]></code>
+      <code><![CDATA[$filename]]></code>
+    </MixedAssignment>
+    <MoreSpecificReturnType>
+      <code><![CDATA[\Generator<int, TFileArray>]]></code>
+    </MoreSpecificReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[getTimestamp]]></code>
+    </PossiblyNullReference>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($body)]]></code>
+      <code><![CDATA[empty($body)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnresolvableInclude>
+      <code><![CDATA[require_once($f['filename'])]]></code>
+    </UnresolvableInclude>
+  </file>
+  <file src="src/Migration.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->capsule->getDatabase()]]></code>
+    </LessSpecificReturnStatement>
+    <MixedInferredReturnType>
+      <code><![CDATA[?string]]></code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code><![CDATA[static::DATABASE]]></code>
+    </MixedReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Database]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/MigrationInterface.php">
+    <MissingReturnType>
+      <code><![CDATA[down]]></code>
+      <code><![CDATA[up]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="src/Migrator.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$db]]></code>
+      <code><![CDATA[$this->config->getTable()]]></code>
+      <code><![CDATA[$this->config->getTable()]]></code>
+      <code><![CDATA[$this->config->getTable()]]></code>
+      <code><![CDATA[$this->config->getTable()]]></code>
+      <code><![CDATA[$this->config->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <FalsableReturnStatement>
+      <code><![CDATA[\DateTimeImmutable::createFromFormat(
+            self::DB_DATE_FORMAT,
+            $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT),
+            $db->getDriver()->getTimezone(),
+        )]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[\DateTimeInterface]]></code>
+    </InvalidFalsableReturnType>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->dbal->database($database)->table($this->config->getTable())]]></code>
+    </LessSpecificReturnStatement>
+    <MixedArgument>
+      <code><![CDATA[$data['time_executed']]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$migrationData['id']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code><![CDATA[$migrationData]]></code>
+      <code><![CDATA[$migrationData]]></code>
+      <code><![CDATA[$schema]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[count]]></code>
+      <code><![CDATA[datetime]]></code>
+      <code><![CDATA[datetime]]></code>
+      <code><![CDATA[datetime]]></code>
+      <code><![CDATA[datetime]]></code>
+      <code><![CDATA[dropIndex]]></code>
+      <code><![CDATA[hasIndex]]></code>
+      <code><![CDATA[index]]></code>
+      <code><![CDATA[nullable]]></code>
+      <code><![CDATA[primary]]></code>
+      <code><![CDATA[save]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[unique]]></code>
+      <code><![CDATA[where]]></code>
+    </MixedMethodCall>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Table]]></code>
+    </MoreSpecificReturnType>
+    <PossiblyUndefinedStringArrayOffset>
+      <code><![CDATA[$migrationData['id']]]></code>
+    </PossiblyUndefinedStringArrayOffset>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($data['time_executed'])]]></code>
+      <code><![CDATA[empty($migrationData)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <TooManyArguments>
+      <code><![CDATA[select]]></code>
+    </TooManyArguments>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getSchema]]></code>
+      <code><![CDATA[select]]></code>
+    </UndefinedInterfaceMethod>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[MigrationInterface]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/Operation/Column/Add.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/Column/Alter.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/Column/Column.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->name]]></code>
+      <code><![CDATA[$this->type]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$this->getOption('nullable', false)]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->options + $column->getAttributes()]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$arguments[$parameter->getName()]]]></code>
+      <code><![CDATA[$arguments[$parameter->getName()]]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Column/Drop.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+      <code><![CDATA[$this->name]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/Column/Rename.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+      <code><![CDATA[$this->name]]></code>
+      <code><![CDATA[$this->newName]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/ForeignKey/Add.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->foreignTable]]></code>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidArgument>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+    </InvalidArgument>
+    <MixedArgument>
+      <code><![CDATA[$fk]]></code>
+      <code><![CDATA[$this->getOption('delete', ForeignKeyInterface::NO_ACTION)]]></code>
+      <code><![CDATA[$this->getOption('indexCreate', true)]]></code>
+      <code><![CDATA[$this->getOption('name')]]></code>
+      <code><![CDATA[$this->getOption('update', ForeignKeyInterface::NO_ACTION)]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$fk]]></code>
+    </MixedAssignment>
+    <PossiblyInvalidCast>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+    </PossiblyInvalidCast>
+  </file>
+  <file src="src/Operation/ForeignKey/Alter.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->foreignTable]]></code>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidArgument>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+    </InvalidArgument>
+    <MixedArgument>
+      <code><![CDATA[$fk]]></code>
+      <code><![CDATA[$this->getOption('delete', ForeignKeyInterface::NO_ACTION)]]></code>
+      <code><![CDATA[$this->getOption('update', ForeignKeyInterface::NO_ACTION)]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$fk]]></code>
+    </MixedAssignment>
+    <PossiblyInvalidCast>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+      <code><![CDATA[\str_replace(
+                '_',
+                ' ',
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
+            )]]></code>
+    </PossiblyInvalidCast>
+  </file>
+  <file src="src/Operation/ForeignKey/Drop.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/ForeignKey/ForeignKey.php">
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->columns]]></code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/Index/Add.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$this->getOption('name')]]></code>
+      <code><![CDATA[$this->getOption('unique', false)]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->columns]]></code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/Index/Alter.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$this->getOption('unique', false)]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->columns]]></code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/Index/Drop.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->columns]]></code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Operation/Table/Create.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$database]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Table/Drop.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$database]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Table/PrimaryKeys.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$database]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Table/Rename.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+      <code><![CDATA[$this->newName]]></code>
+      <code><![CDATA[$this->newName]]></code>
+    </ArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$database]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Table/Update.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTable()]]></code>
+    </ArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$database]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Traits/OptionsTrait.php">
+    <MixedArgument>
+      <code><![CDATA[$aliases]]></code>
+      <code><![CDATA[$aliases]]></code>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$source]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$source]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$aliases]]></code>
+      <code><![CDATA[$aliases]]></code>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$source]]></code>
+    </MixedAssignment>
+    <UnusedVariable>
+      <code><![CDATA[$source]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/TableBlueprint.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->table]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->operations]]></code>
+    </MixedArgumentTypeCoercion>
+  </file>
+</files>
