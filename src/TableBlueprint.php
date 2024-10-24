@@ -16,9 +16,7 @@ final class TableBlueprint
     private bool $executed = false;
     private array $operations = [];
 
-    public function __construct(private CapsuleInterface $capsule, private string $table)
-    {
-    }
+    public function __construct(private CapsuleInterface $capsule, private string $table) {}
 
     /**
      * Get associated table schema.
@@ -38,7 +36,7 @@ final class TableBlueprint
     public function addColumn(string $name, string $type, array $options = []): self
     {
         return $this->addOperation(
-            new Operation\Column\Add($this->table, $name, $type, $options)
+            new Operation\Column\Add($this->table, $name, $type, $options),
         );
     }
 
@@ -49,7 +47,7 @@ final class TableBlueprint
     public function alterColumn(string $name, string $type, array $options = []): self
     {
         return $this->addOperation(
-            new Operation\Column\Alter($this->table, $name, $type, $options)
+            new Operation\Column\Alter($this->table, $name, $type, $options),
         );
     }
 
@@ -60,7 +58,7 @@ final class TableBlueprint
     public function renameColumn(string $name, string $newName): self
     {
         return $this->addOperation(
-            new Operation\Column\Rename($this->table, $name, $newName)
+            new Operation\Column\Rename($this->table, $name, $newName),
         );
     }
 
@@ -71,7 +69,7 @@ final class TableBlueprint
     public function dropColumn(string $name): self
     {
         return $this->addOperation(
-            new Operation\Column\Drop($this->table, $name)
+            new Operation\Column\Drop($this->table, $name),
         );
     }
 
@@ -82,7 +80,7 @@ final class TableBlueprint
     public function addIndex(array $columns, array $options = []): self
     {
         return $this->addOperation(
-            new Operation\Index\Add($this->table, $columns, $options)
+            new Operation\Index\Add($this->table, $columns, $options),
         );
     }
 
@@ -93,7 +91,7 @@ final class TableBlueprint
     public function alterIndex(array $columns, array $options): self
     {
         return $this->addOperation(
-            new Operation\Index\Alter($this->table, $columns, $options)
+            new Operation\Index\Alter($this->table, $columns, $options),
         );
     }
 
@@ -104,7 +102,7 @@ final class TableBlueprint
     public function dropIndex(array $columns): self
     {
         return $this->addOperation(
-            new Operation\Index\Drop($this->table, $columns)
+            new Operation\Index\Drop($this->table, $columns),
         );
     }
 
@@ -118,7 +116,7 @@ final class TableBlueprint
         array $columns,
         string $foreignTable,
         array $foreignKeys,
-        array $options = []
+        array $options = [],
     ): self {
         return $this->addOperation(
             new Operation\ForeignKey\Add(
@@ -126,8 +124,8 @@ final class TableBlueprint
                 $columns,
                 $foreignTable,
                 $foreignKeys,
-                $options
-            )
+                $options,
+            ),
         );
     }
 
@@ -139,7 +137,7 @@ final class TableBlueprint
         array $columns,
         string $foreignTable,
         array $foreignKeys,
-        array $options = []
+        array $options = [],
     ): self {
         return $this->addOperation(
             new Operation\ForeignKey\Alter(
@@ -147,8 +145,8 @@ final class TableBlueprint
                 $columns,
                 $foreignTable,
                 $foreignKeys,
-                $options
-            )
+                $options,
+            ),
         );
     }
 
@@ -159,7 +157,7 @@ final class TableBlueprint
     public function dropForeignKey(array $columns): self
     {
         return $this->addOperation(
-            new Operation\ForeignKey\Drop($this->table, $columns)
+            new Operation\ForeignKey\Drop($this->table, $columns),
         );
     }
 
@@ -169,7 +167,7 @@ final class TableBlueprint
     public function setPrimaryKeys(array $keys): self
     {
         return $this->addOperation(
-            new Operation\Table\PrimaryKeys($this->table, $keys)
+            new Operation\Table\PrimaryKeys($this->table, $keys),
         );
     }
 
@@ -179,7 +177,7 @@ final class TableBlueprint
     public function create(): void
     {
         $this->addOperation(
-            new Operation\Table\Create($this->table)
+            new Operation\Table\Create($this->table),
         );
 
         $this->execute();
@@ -191,7 +189,7 @@ final class TableBlueprint
     public function update(): void
     {
         $this->addOperation(
-            new Operation\Table\Update($this->table)
+            new Operation\Table\Update($this->table),
         );
 
         $this->execute();
@@ -203,7 +201,7 @@ final class TableBlueprint
     public function drop(): void
     {
         $this->addOperation(
-            new Operation\Table\Drop($this->table)
+            new Operation\Table\Drop($this->table),
         );
 
         $this->execute();
@@ -215,7 +213,7 @@ final class TableBlueprint
     public function rename(string $newName): void
     {
         $this->addOperation(
-            new Operation\Table\Rename($this->table, $newName)
+            new Operation\Table\Rename($this->table, $newName),
         );
 
         $this->execute();

@@ -17,6 +17,7 @@ final class Renderer implements RendererInterface
      * Comparator alteration states.
      */
     public const NEW_STATE = 0;
+
     public const ORIGINAL_STATE = 1;
 
     public function createTable(Method $method, AbstractTable $table): void
@@ -73,6 +74,31 @@ final class Renderer implements RendererInterface
         $method->addBody('$this->table(?)->drop();', [$this->getTableName($table)]);
     }
 
+    protected function alterColumn(
+        Method $method,
+        AbstractColumn $column,
+        AbstractColumn $original,
+    ): void {
+        if ($column->getName() !== $original->getName()) {
+            $name = $original->getName();
+        } else {
+            $name = $column->getName();
+        }
+
+        $method->addBody('->alterColumn(?, ?, ?)', [
+            $name,
+            $column->getDeclaredType() ?? $column->getAbstractType(),
+            $this->columnOptions($column),
+        ]);
+
+        if ($column->getName() !== $original->getName()) {
+            $method->addBody('->renameColumn(?, ?)', [
+                $name,
+                $column->getName(),
+            ]);
+        }
+    }
+
     private function declareColumns(Method $method, Comparator $comparator): void
     {
         foreach ($comparator->addedColumns() as $column) {
@@ -87,7 +113,7 @@ final class Renderer implements RendererInterface
             $this->alterColumn(
                 $method,
                 $pair[self::NEW_STATE],
-                $pair[self::ORIGINAL_STATE]
+                $pair[self::ORIGINAL_STATE],
             );
         }
 
@@ -157,7 +183,7 @@ final class Renderer implements RendererInterface
             $this->alterColumn(
                 $method,
                 $pair[self::ORIGINAL_STATE],
-                $pair[self::NEW_STATE]
+                $pair[self::NEW_STATE],
             );
         }
 
@@ -215,31 +241,6 @@ final class Renderer implements RendererInterface
         }
     }
 
-    protected function alterColumn(
-        Method $method,
-        AbstractColumn $column,
-        AbstractColumn $original
-    ): void {
-        if ($column->getName() !== $original->getName()) {
-            $name = $original->getName();
-        } else {
-            $name = $column->getName();
-        }
-
-        $method->addBody('->alterColumn(?, ?, ?)', [
-            $name,
-            $column->getDeclaredType() ?? $column->getAbstractType(),
-            $this->columnOptions($column),
-        ]);
-
-        if ($column->getName() !== $original->getName()) {
-            $method->addBody('->renameColumn(?, ?)', [
-                $name,
-                $column->getName(),
-            ]);
-        }
-    }
-
     private function columnOptions(AbstractColumn $column): array
     {
         $options = [
@@ -259,7 +260,7 @@ final class Renderer implements RendererInterface
         }
 
         $default = $options['defaultValue'];
-        if ($column::DATETIME_NOW === ($default instanceof \Stringable ? (string)$default : $default)) {
+        if ($column::DATETIME_NOW === ($default instanceof \Stringable ? (string) $default : $default)) {
             $options['defaultValue'] = AbstractColumn::DATETIME_NOW;
         }
 

@@ -11,9 +11,6 @@ use Cycle\Migrations\Operation\AbstractOperation;
 
 final class Update extends AbstractOperation
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -21,7 +18,7 @@ final class Update extends AbstractOperation
 
         if (!$schema->exists()) {
             throw new TableException(
-                "Unable to update table '{$database}'.'{$this->getTable()}', no table exists"
+                "Unable to update table '{$database}'.'{$this->getTable()}', no table exists",
             );
         }
 

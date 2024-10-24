@@ -18,9 +18,8 @@ final class Atomizer
 
     public function __construct(
         private readonly RendererInterface $renderer,
-        private readonly TableSorter $tableSorter = new TableSorter()
-    ) {
-    }
+        private readonly TableSorter $tableSorter = new TableSorter(),
+    ) {}
 
     /**
      * Add new table into atomizer.

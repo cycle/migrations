@@ -6,6 +6,4 @@ namespace Cycle\Migrations\Exception\Operation;
 
 use Cycle\Migrations\Exception\OperationException;
 
-class IndexException extends OperationException
-{
-}
+class IndexException extends OperationException {}

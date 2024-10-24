@@ -21,11 +21,8 @@ abstract class ForeignKey extends AbstractOperation
         parent::__construct($table);
     }
 
-    /**
-     * @return string
-     */
     public function columnNames(): string
     {
-        return implode(', ', $this->columns);
+        return \implode(', ', $this->columns);
     }
 }

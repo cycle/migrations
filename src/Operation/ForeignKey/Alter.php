@@ -18,15 +18,12 @@ final class Alter extends ForeignKey
         array $columns,
         private string $foreignTable,
         private array $foreignKeys,
-        array $options
+        array $options,
     ) {
         $this->options = $options;
         parent::__construct($table, $columns);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -34,7 +31,7 @@ final class Alter extends ForeignKey
         if (!$schema->hasForeignKey($this->columns)) {
             throw new ForeignKeyException(
                 "Unable to alter foreign key '{$schema->getName()}'.({$this->columnNames()}), "
-                . 'key does not exists'
+                . 'key does not exists',
             );
         }
 
@@ -43,7 +40,7 @@ final class Alter extends ForeignKey
         if ($this->foreignTable != $this->table && !$outerSchema->exists()) {
             throw new ForeignKeyException(
                 "Unable to alter foreign key '{$schema->getName()}'.'{$this->columnNames()}', "
-                . "foreign table '{$this->foreignTable}' does not exists"
+                . "foreign table '{$this->foreignTable}' does not exists",
             );
         }
 
@@ -52,14 +49,14 @@ final class Alter extends ForeignKey
             if ($this->foreignTable != $this->table && !$outerSchema->hasColumn($fk)) {
                 throw new ForeignKeyException(
                     "Unable to alter foreign key '{$schema->getName()}'.'{$this->columnNames()}',"
-                    . " foreign column '{$this->foreignTable}'.'{$fk}' does not exists"
+                    . " foreign column '{$this->foreignTable}'.'{$fk}' does not exists",
                 );
             }
         }
 
         $foreignKey = $schema->foreignKey($this->columns)->references(
             $this->foreignTable,
-            $this->foreignKeys
+            $this->foreignKeys,
         );
 
         /*
@@ -67,19 +64,19 @@ final class Alter extends ForeignKey
          */
 
         $foreignKey->onDelete(
-            str_replace(
+            \str_replace(
                 '_',
                 ' ',
-                $this->getOption('delete', ForeignKeyInterface::NO_ACTION)
-            )
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
+            ),
         );
 
         $foreignKey->onUpdate(
-            str_replace(
+            \str_replace(
                 '_',
                 ' ',
-                $this->getOption('update', ForeignKeyInterface::NO_ACTION)
-            )
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
+            ),
         );
     }
 }

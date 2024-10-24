@@ -9,16 +9,13 @@ use Cycle\Migrations\Exception\Operation\ColumnException;
 
 final class Alter extends Column
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
         if (!$schema->hasColumn($this->name)) {
             throw new ColumnException(
-                "Unable to alter column '{$schema->getName()}'.'{$this->name}', column does not exists"
+                "Unable to alter column '{$schema->getName()}'.'{$this->name}', column does not exists",
             );
         }
 

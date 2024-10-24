@@ -13,7 +13,7 @@ trait OptionsTrait
 
     protected function hasOption(string $name): bool
     {
-        if (array_key_exists($name, $this->options)) {
+        if (\array_key_exists($name, $this->options)) {
             return true;
         }
 
@@ -22,7 +22,7 @@ trait OptionsTrait
         }
 
         foreach ($this->aliases as $source => $aliases) {
-            if (in_array($name, $aliases, true)) {
+            if (\in_array($name, $aliases, true)) {
                 return true;
             }
         }
@@ -36,7 +36,7 @@ trait OptionsTrait
             return $default;
         }
 
-        if (array_key_exists($name, $this->options)) {
+        if (\array_key_exists($name, $this->options)) {
             return $this->options[$name];
         }
 
@@ -45,7 +45,7 @@ trait OptionsTrait
         }
 
         foreach ($this->aliases as $source => $aliases) {
-            if (in_array($name, $aliases, true)) {
+            if (\in_array($name, $aliases, true)) {
                 return $this->getOption($source);
             }
         }

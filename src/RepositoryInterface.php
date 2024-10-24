@@ -14,9 +14,9 @@ interface RepositoryInterface
      *
      * Attention, Capsule must be set for migration before executing it.
      *
+     * @return MigrationInterface[]
      * @throws RepositoryException
      *
-     * @return MigrationInterface[]
      */
     public function getMigrations(): array;
 
@@ -24,14 +24,12 @@ interface RepositoryInterface
      * Register new migration using given migration file body (must be valid filename), every
      * migration must have unique class name.
      *
-     * @param string $name
-     * @param string $class
      * @param string $body When body is null repository will try to copy content from a specific
      *                     class filename. Must include all PHP headers.
      *
+     * @return string      Migration filename.
      * @throws RepositoryException
      *
-     * @return string      Migration filename.
      */
     public function registerMigration(string $name, string $class, string $body = null): string;
 }

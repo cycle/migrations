@@ -13,6 +13,7 @@ final class TableSorter
      * Tables sorted in order of their dependencies.
      *
      * @param AbstractTable[] $tables
+     * @param mixed $reverse
      *
      * @return AbstractTable[]
      */

@@ -11,9 +11,6 @@ use Cycle\Migrations\Operation\AbstractOperation;
 
 final class Create extends AbstractOperation
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -21,13 +18,13 @@ final class Create extends AbstractOperation
 
         if ($schema->exists()) {
             throw new TableException(
-                "Unable to create table '{$database}'.'{$this->getTable()}', table already exists"
+                "Unable to create table '{$database}'.'{$this->getTable()}', table already exists",
             );
         }
 
         if (empty($schema->getColumns())) {
             throw new TableException(
-                "Unable to create table '{$database}'.'{$this->getTable()}', no columns were added"
+                "Unable to create table '{$database}'.'{$this->getTable()}', no columns were added",
             );
         }
 

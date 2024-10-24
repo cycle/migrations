@@ -75,7 +75,7 @@ final class FileRepository implements RepositoryInterface
     {
         if (empty($body) && !\class_exists($class)) {
             throw new RepositoryException(
-                "Unable to register migration '{$class}', representing class does not exists"
+                "Unable to register migration '{$class}', representing class does not exists",
             );
         }
 
@@ -85,7 +85,7 @@ final class FileRepository implements RepositoryInterface
         foreach ($this->getMigrations() as $migration) {
             if ($migration::class === $class) {
                 throw new RepositoryException(
-                    "Unable to register migration '{$class}', migration already exists"
+                    "Unable to register migration '{$class}', migration already exists",
                 );
             }
 
@@ -94,7 +94,7 @@ final class FileRepository implements RepositoryInterface
                 && $migration->getState()->getTimeCreated()->format(self::TIMESTAMP_FORMAT) === $currentTimeStamp
             ) {
                 throw new RepositoryException(
-                    "Unable to register migration '{$inflectedName}', migration under the same name already exists"
+                    "Unable to register migration '{$inflectedName}', migration under the same name already exists",
                 );
             }
         }
@@ -120,7 +120,7 @@ final class FileRepository implements RepositoryInterface
         foreach (
             \array_merge(
                 [$this->config->getDirectory()],
-                $this->config->getVendorDirectories()
+                $this->config->getVendorDirectories(),
             ) as $directory
         ) {
             yield from $this->getFiles($directory);
@@ -143,7 +143,7 @@ final class FileRepository implements RepositoryInterface
             }
 
             $created = \DateTime::createFromFormat(self::TIMESTAMP_FORMAT, $definition[0]);
-            if (false === $created) {
+            if ($created === false) {
                 throw new RepositoryException("Invalid migration filename '{$filename}' - corrupted date format");
             }
 
@@ -168,11 +168,11 @@ final class FileRepository implements RepositoryInterface
             self::FILENAME_FORMAT,
             \date(self::TIMESTAMP_FORMAT),
             $this->chunkID++,
-            $name
+            $name,
         );
 
         return $this->files->normalizePath(
-            $this->config->getDirectory() . FilesInterface::SEPARATOR . $filename
+            $this->config->getDirectory() . FilesInterface::SEPARATOR . $filename,
         );
     }
 }

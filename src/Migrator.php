@@ -8,7 +8,6 @@ use Cycle\Database\Database;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Database\DatabaseManager;
 use Cycle\Database\DatabaseProviderInterface;
-use Cycle\Database\Driver\ReadonlyHandler;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Exception\MigrationException;
@@ -16,7 +15,6 @@ use Cycle\Migrations\Exception\MigrationException;
 final class Migrator
 {
     private const DB_DATE_FORMAT = 'Y-m-d H:i:s';
-
     private const MIGRATION_TABLE_FIELDS_LIST = [
         'id',
         'migration',
@@ -27,9 +25,8 @@ final class Migrator
     public function __construct(
         private MigrationConfig $config,
         private DatabaseProviderInterface $dbal,
-        private RepositoryInterface $repository
-    ) {
-    }
+        private RepositoryInterface $repository,
+    ) {}
 
     public function getConfig(): MigrationConfig
     {
@@ -124,7 +121,7 @@ final class Migrator
                 $capsule->getDatabase()->transaction(
                     static function () use ($migration, $capsule): void {
                         $migration->withCapsule($capsule)->up();
-                    }
+                    },
                 );
 
                 $this->migrationTable($migration->getDatabase())->insertOne(
@@ -132,7 +129,7 @@ final class Migrator
                         'migration' => $migration->getState()->getName(),
                         'time_executed' => new \DateTime('now'),
                         'created_at' => $this->getMigrationCreatedAtForDb($migration),
-                    ]
+                    ],
                 );
 
                 return $migration->withState($this->resolveState($migration));
@@ -143,12 +140,12 @@ final class Migrator
                         \sprintf(
                             '%s (%s)',
                             $migration->getState()->getName(),
-                            $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT)
+                            $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT),
                         ),
-                        $exception->getMessage()
+                        $exception->getMessage(),
                     ),
-                    (int)$exception->getCode(),
-                    $exception
+                    (int) $exception->getCode(),
+                    $exception,
                 );
             }
         }
@@ -168,7 +165,7 @@ final class Migrator
         }
 
         /** @var MigrationInterface $migration */
-        foreach (array_reverse($this->getMigrations()) as $migration) {
+        foreach (\array_reverse($this->getMigrations()) as $migration) {
             if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
                 continue;
             }
@@ -177,7 +174,7 @@ final class Migrator
             $capsule->getDatabase()->transaction(
                 static function () use ($migration, $capsule): void {
                     $migration->withCapsule($capsule)->down();
-                }
+                },
             );
 
             $migrationData = $this->fetchMigrationData($migration);
@@ -209,14 +206,13 @@ final class Migrator
 
         return $migration->getState()->withStatus(
             State::STATUS_EXECUTED,
-            new \DateTimeImmutable($data['time_executed'], $db->getDriver()->getTimezone())
+            new \DateTimeImmutable($data['time_executed'], $db->getDriver()->getTimezone()),
         );
     }
 
     /**
      * Migration table, all migration information will be stored in it.
      *
-     * @param string|null $database
      */
     protected function migrationTable(string $database = null): Table
     {
@@ -247,12 +243,12 @@ final class Migrator
                 [
                     'migration' => $migration->getState()->getName(),
                     'created_at' => $this->getMigrationCreatedAtForDb($migration)->format(self::DB_DATE_FORMAT),
-                ]
+                ],
             )
             ->run()
             ->fetch();
 
-        return is_array($migrationData) ? $migrationData : [];
+        return \is_array($migrationData) ? $migrationData : [];
     }
 
     protected function restoreMigrationData(): void
@@ -264,7 +260,7 @@ final class Migrator
                     [
                         'migration' => $migration->getState()->getName(),
                         'created_at' => null,
-                    ]
+                    ],
                 )
                 ->run()
                 ->fetch();
@@ -273,7 +269,7 @@ final class Migrator
                 $this->migrationTable($migration->getDatabase())
                     ->update(
                         ['created_at' => $this->getMigrationCreatedAtForDb($migration)],
-                        ['id' => $migrationData['id']]
+                        ['id' => $migrationData['id']],
                     )
                     ->run();
             }
@@ -307,7 +303,7 @@ final class Migrator
         return \DateTimeImmutable::createFromFormat(
             self::DB_DATE_FORMAT,
             $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT),
-            $db->getDriver()->getTimezone()
+            $db->getDriver()->getTimezone(),
         );
     }
 
@@ -317,9 +313,9 @@ final class Migrator
     private function getDatabases(): iterable
     {
         if ($this->dbal instanceof DatabaseManager) {
-            return array_filter(
+            return \array_filter(
                 $this->dbal->getDatabases(),
-                fn (DatabaseInterface $db): bool => !$db->getDriver()->isReadonly()
+                static fn(DatabaseInterface $db): bool => !$db->getDriver()->isReadonly(),
             );
         }
         return [];

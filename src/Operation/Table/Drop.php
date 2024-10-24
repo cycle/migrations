@@ -11,9 +11,6 @@ use Cycle\Migrations\Operation\AbstractOperation;
 
 final class Drop extends AbstractOperation
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -21,7 +18,7 @@ final class Drop extends AbstractOperation
 
         if (!$schema->exists()) {
             throw new TableException(
-                "Unable to drop table '{$database}'.'{$this->getTable()}', table does not exists"
+                "Unable to drop table '{$database}'.'{$this->getTable()}', table does not exists",
             );
         }
 

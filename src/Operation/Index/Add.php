@@ -18,22 +18,19 @@ final class Add extends Index
         parent::__construct($table, $columns);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
         if ($schema->hasIndex($this->columns)) {
-            $columns = implode(',', $this->columns);
+            $columns = \implode(',', $this->columns);
             throw new IndexException(
-                "Unable to create index '{$schema->getName()}'.({$columns}), index already exists"
+                "Unable to create index '{$schema->getName()}'.({$columns}), index already exists",
             );
         }
 
         $schema->index($this->columns)->unique(
-            $this->getOption('unique', false)
+            $this->getOption('unique', false),
         );
 
         if ($this->hasOption('name')) {

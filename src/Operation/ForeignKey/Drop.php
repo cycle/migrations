@@ -9,9 +9,6 @@ use Cycle\Migrations\Exception\Operation\ForeignKeyException;
 
 final class Drop extends ForeignKey
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -19,7 +16,7 @@ final class Drop extends ForeignKey
         if (!$schema->hasForeignKey($this->columns)) {
             throw new ForeignKeyException(
                 "Unable to drop foreign key '{$schema->getName()}'.'{$this->columnNames()}', "
-                . 'foreign key does not exists'
+                . 'foreign key does not exists',
             );
         }
 

@@ -18,22 +18,19 @@ final class Alter extends Index
         parent::__construct($table, $columns);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
         if (!$schema->hasIndex($this->columns)) {
-            $columns = implode(',', $this->columns);
+            $columns = \implode(',', $this->columns);
             throw new IndexException(
-                "Unable to alter index '{$schema->getName()}'.({$columns}), no such index"
+                "Unable to alter index '{$schema->getName()}'.({$columns}), no such index",
             );
         }
 
         $schema->index($this->columns)->unique(
-            $this->getOption('unique', false)
+            $this->getOption('unique', false),
         );
     }
 }
