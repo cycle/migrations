@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\Postgres;
 
+/**
+ * @group driver
+ * @group driver-postgres
+ */
 class MigratorTest extends \Cycle\Migrations\Tests\MigratorTest
 {
     public const DRIVER = 'postgres';

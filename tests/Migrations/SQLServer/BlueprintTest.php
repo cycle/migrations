@@ -14,6 +14,10 @@ namespace Cycle\Migrations\Tests\SQLServer;
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
 
+/**
+ * @group driver
+ * @group driver-sqlserver
+ */
 class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'sqlserver';

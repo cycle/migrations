@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\SQLServer;
 
+/**
+ * @group driver
+ * @group driver-sqlserver
+ */
 class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
 {
     public const DRIVER = 'sqlserver';
