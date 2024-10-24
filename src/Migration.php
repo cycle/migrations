@@ -19,17 +19,11 @@ abstract class Migration implements MigrationInterface
     private ?State $state = null;
     private ?CapsuleInterface $capsule = null;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDatabase(): ?string
     {
         return static::DATABASE;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withCapsule(CapsuleInterface $capsule): MigrationInterface
     {
         $migration = clone $this;
@@ -38,9 +32,6 @@ abstract class Migration implements MigrationInterface
         return $migration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withState(State $state): MigrationInterface
     {
         $migration = clone $this;
@@ -49,9 +40,6 @@ abstract class Migration implements MigrationInterface
         return $migration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getState(): State
     {
         if (empty($this->state)) {

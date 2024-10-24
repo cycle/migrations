@@ -15,27 +15,24 @@ final class Rename extends AbstractOperation
         parent::__construct($table);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
         if (!$schema->hasColumn($this->name)) {
             throw new ColumnException(
-                "Unable to rename column '{$schema->getName()}'.'{$this->name}', column does not exists"
+                "Unable to rename column '{$schema->getName()}'.'{$this->name}', column does not exists",
             );
         }
 
         if ($schema->hasColumn($this->newName)) {
             throw new ColumnException(
-                sprintf(
+                \sprintf(
                     "Unable to rename column '%s'.'%s', column '%s' already exists",
                     $schema->getName(),
                     $this->name,
-                    $this->newName
-                )
+                    $this->newName,
+                ),
             );
         }
 

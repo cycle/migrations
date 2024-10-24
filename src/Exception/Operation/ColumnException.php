@@ -6,6 +6,4 @@ namespace Cycle\Migrations\Exception\Operation;
 
 use Cycle\Migrations\Exception\OperationException;
 
-class ColumnException extends OperationException
-{
-}
+class ColumnException extends OperationException {}

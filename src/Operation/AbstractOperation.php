@@ -8,13 +8,8 @@ use Cycle\Migrations\OperationInterface;
 
 abstract class AbstractOperation implements OperationInterface
 {
-    public function __construct(protected string $table)
-    {
-    }
+    public function __construct(protected string $table) {}
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTable(): string
     {
         return $this->table;

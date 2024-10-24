@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Exception;
 
-class RepositoryException extends MigrationException
-{
-}
+class RepositoryException extends MigrationException {}

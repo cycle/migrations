@@ -27,7 +27,7 @@ abstract class Column extends AbstractOperation
         string $table,
         protected string $name,
         protected string $type = 'string',
-        array $options = []
+        array $options = [],
     ) {
         $this->options = $options;
         parent::__construct($table);
@@ -41,7 +41,7 @@ abstract class Column extends AbstractOperation
         $column = $schema->column($this->name);
 
         //Type configuring
-        if (method_exists($column, $this->type)) {
+        if (\method_exists($column, $this->type)) {
             $arguments = [];
             $variadic = false;
 
@@ -51,7 +51,7 @@ abstract class Column extends AbstractOperation
                     $arguments[$parameter->getName()] = $this->getOption($parameter->getName());
                 } elseif (!$parameter->isOptional()) {
                     throw new ColumnException(
-                        "Option '{$parameter->getName()}' are required to define column with type '{$this->type}'"
+                        "Option '{$parameter->getName()}' are required to define column with type '{$this->type}'",
                     );
                 } elseif ($parameter->isDefaultValueAvailable()) {
                     $arguments[$parameter->getName()] = $parameter->getDefaultValue();
@@ -73,7 +73,7 @@ abstract class Column extends AbstractOperation
 
         if ($this->hasOption('defaultValue')) {
             $column->defaultValue($this->getOption('defaultValue', null));
-        // @deprecated since v4.3
+            // @deprecated since v4.3
         } elseif ($this->hasOption('default')) {
             $column->defaultValue($this->getOption('default', null));
         }

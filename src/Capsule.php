@@ -17,29 +17,18 @@ final class Capsule implements CapsuleInterface
     /** @var array<non-empty-string, AbstractTable> */
     private array $schemas = [];
 
-    public function __construct(private DatabaseInterface $database)
-    {
-    }
+    public function __construct(private DatabaseInterface $database) {}
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDatabase(): DatabaseInterface
     {
         return $this->database;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTable(string $table): TableInterface
     {
         return $this->database->table($table);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSchema(string $table): AbstractTable
     {
         if (!isset($this->schemas[$table])) {
@@ -51,7 +40,7 @@ final class Capsule implements CapsuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     *
      *
      * @throws \Throwable
      */
@@ -60,10 +49,10 @@ final class Capsule implements CapsuleInterface
         foreach ($operations as $operation) {
             if (!$operation instanceof OperationInterface) {
                 throw new CapsuleException(
-                    sprintf(
+                    \sprintf(
                         'Migration operation expected to be an instance of `OperationInterface`, `%s` given',
-                        $operation::class
-                    )
+                        $operation::class,
+                    ),
                 );
             }
 

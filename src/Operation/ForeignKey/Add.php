@@ -18,15 +18,12 @@ final class Add extends ForeignKey
         array $columns,
         private string $foreignTable,
         private array $foreignKeys,
-        array $options
+        array $options,
     ) {
         $this->options = $options;
         parent::__construct($table, $columns);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -34,7 +31,7 @@ final class Add extends ForeignKey
         if ($schema->hasForeignKey($this->columns)) {
             throw new ForeignKeyException(
                 "Unable to add foreign key '{$schema->getName()}'.({$this->columnNames()}), "
-                . 'foreign key already exists'
+                . 'foreign key already exists',
             );
         }
 
@@ -43,7 +40,7 @@ final class Add extends ForeignKey
         if ($this->foreignTable !== $this->table && !$foreignSchema->exists()) {
             throw new ForeignKeyException(
                 "Unable to add foreign key '{$schema->getName()}'.'{$this->columnNames()}', "
-                . "foreign table '{$this->foreignTable}' does not exists"
+                . "foreign table '{$this->foreignTable}' does not exists",
             );
         }
 
@@ -51,14 +48,14 @@ final class Add extends ForeignKey
             if ($this->foreignTable !== $this->table && !$foreignSchema->hasColumn($fk)) {
                 throw new ForeignKeyException(
                     "Unable to add foreign key '{$schema->getName()}'.'{$this->columnNames()}',"
-                    . " foreign column '{$this->foreignTable}'.'{$fk}' does not exists"
+                    . " foreign column '{$this->foreignTable}'.'{$fk}' does not exists",
                 );
             }
         }
 
         $foreignKey = $schema->foreignKey($this->columns, $this->getOption('indexCreate', true))->references(
             $this->foreignTable,
-            $this->foreignKeys
+            $this->foreignKeys,
         );
 
         if ($this->hasOption('name')) {
@@ -70,19 +67,19 @@ final class Add extends ForeignKey
          */
 
         $foreignKey->onDelete(
-            str_replace(
+            \str_replace(
                 '_',
                 ' ',
-                $this->getOption('delete', ForeignKeyInterface::NO_ACTION)
-            )
+                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
+            ),
         );
 
         $foreignKey->onUpdate(
-            str_replace(
+            \str_replace(
                 '_',
                 ' ',
-                $this->getOption('update', ForeignKeyInterface::NO_ACTION)
-            )
+                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
+            ),
         );
     }
 }

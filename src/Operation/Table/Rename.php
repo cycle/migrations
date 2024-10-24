@@ -16,9 +16,6 @@ final class Rename extends AbstractOperation
         parent::__construct($table);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -26,13 +23,13 @@ final class Rename extends AbstractOperation
 
         if (!$schema->exists()) {
             throw new TableException(
-                "Unable to rename table '{$database}'.'{$this->getTable()}', table does not exists"
+                "Unable to rename table '{$database}'.'{$this->getTable()}', table does not exists",
             );
         }
 
         if ($capsule->getDatabase()->hasTable($this->newName)) {
             throw new TableException(
-                "Unable to rename table '{$database}'.'{$this->getTable()}', table '{$this->newName}' already exists"
+                "Unable to rename table '{$database}'.'{$this->getTable()}', table '{$this->newName}' already exists",
             );
         }
 

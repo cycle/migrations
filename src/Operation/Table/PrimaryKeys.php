@@ -15,9 +15,6 @@ final class PrimaryKeys extends AbstractOperation
         parent::__construct($table);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
@@ -25,7 +22,7 @@ final class PrimaryKeys extends AbstractOperation
 
         if ($schema->exists()) {
             throw new TableException(
-                "Unable to set primary keys for table '{$database}'.'{$this->getTable()}', table already exists"
+                "Unable to set primary keys for table '{$database}'.'{$this->getTable()}', table already exists",
             );
         }
 

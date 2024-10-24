@@ -15,16 +15,13 @@ final class Drop extends AbstractOperation
         parent::__construct($table);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(CapsuleInterface $capsule): void
     {
         $schema = $capsule->getSchema($this->getTable());
 
         if (!$schema->hasColumn($this->name)) {
             throw new ColumnException(
-                "Unable to drop column '{$schema->getName()}'.'{$this->name}', column does not exists"
+                "Unable to drop column '{$schema->getName()}'.'{$this->name}', column does not exists",
             );
         }
 
