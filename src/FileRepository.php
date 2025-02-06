@@ -39,7 +39,7 @@ final class FileRepository implements RepositoryInterface
     private FilesInterface $files;
     private Inflector $inflector;
 
-    public function __construct(private MigrationConfig $config, FactoryInterface $factory = null)
+    public function __construct(private MigrationConfig $config, ?FactoryInterface $factory = null)
     {
         $this->files = new Files();
         $this->factory = $factory ?? new Container();
@@ -71,7 +71,7 @@ final class FileRepository implements RepositoryInterface
         return $migrations;
     }
 
-    public function registerMigration(string $name, string $class, string $body = null): string
+    public function registerMigration(string $name, string $class, ?string $body = null): string
     {
         if (empty($body) && !\class_exists($class)) {
             throw new RepositoryException(

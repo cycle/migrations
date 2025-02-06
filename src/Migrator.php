@@ -105,7 +105,7 @@ final class Migrator
      *
      * @throws MigrationException
      */
-    public function run(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function run(?CapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             throw new MigrationException('Unable to run migration, Migrator not configured');
@@ -158,7 +158,7 @@ final class Migrator
      *
      * @throws \Throwable
      */
-    public function rollback(CapsuleInterface $capsule = null): ?MigrationInterface
+    public function rollback(?CapsuleInterface $capsule = null): ?MigrationInterface
     {
         if (!$this->isConfigured()) {
             throw new MigrationException('Unable to run migration, Migrator not configured');
@@ -214,7 +214,7 @@ final class Migrator
      * Migration table, all migration information will be stored in it.
      *
      */
-    protected function migrationTable(string $database = null): Table
+    protected function migrationTable(?string $database = null): Table
     {
         return $this->dbal->database($database)->table($this->config->getTable());
     }
