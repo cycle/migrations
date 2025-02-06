@@ -123,12 +123,15 @@ final class FileRepository implements RepositoryInterface
                 $this->config->getVendorDirectories(),
             ) as $directory
         ) {
+            $directory === '' and $directory = '.';
             yield from $this->getFiles($directory);
         }
     }
 
     /**
      * Internal method to fetch all migration filenames.
+     *
+     * @param non-empty-string $directory
      *
      * @return \Generator<int, TFileArray>
      */
