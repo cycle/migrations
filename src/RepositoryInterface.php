@@ -31,5 +31,5 @@ interface RepositoryInterface
      * @throws RepositoryException
      *
      */
-    public function registerMigration(string $name, string $class, string $body = null): string;
+    public function registerMigration(string $name, string $class, ?string $body = null): string;
 }

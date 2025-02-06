@@ -15,8 +15,8 @@
         "buggregator/trap": "^1.11",
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5",
-        "spiral/code-style": "~2.2.0",
-        "vimeo/psalm": "^5.25"
+        "spiral/code-style": "^2.2.0",
+        "vimeo/psalm": "^6.4"
     },
     "autoload": {
         "psr-4": {

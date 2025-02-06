@@ -41,7 +41,7 @@ final class State
         return $this->timeExecuted;
     }
 
-    public function withStatus(int $status, \DateTimeInterface $timeExecuted = null): self
+    public function withStatus(int $status, ?\DateTimeInterface $timeExecuted = null): self
     {
         $state = clone $this;
         $state->status = $status;
