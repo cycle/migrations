@@ -256,6 +256,12 @@ final class Renderer implements RendererInterface
             if ($attribute === 'size' && $value === 0) {
                 continue;
             }
+            if ($attribute === 'after' && $value === '') {
+                continue;
+            }
+            if ($attribute === 'first' && $value === false) {
+                continue;
+            }
             $options[$attribute] = $value;
         }
 
