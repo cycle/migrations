@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.4.0@04f312ac6ea48ba1c3e5db4d815bf6d74641c0ee">
+<files psalm-version="6.12.1@e71404b0465be25cf7f8a631b298c01c5ddd864f">
   <file src="src/Atomizer/Renderer.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$comparator]]></code>
@@ -12,6 +12,12 @@
       <code><![CDATA[$comparator]]></code>
       <code><![CDATA[$comparator]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function createTable(Method $method, AbstractTable $table): void]]></code>
+      <code><![CDATA[public function dropTable(Method $method, AbstractTable $table): void]]></code>
+      <code><![CDATA[public function revertTable(Method $method, AbstractTable $table): void]]></code>
+      <code><![CDATA[public function updateTable(Method $method, AbstractTable $table): void]]></code>
+    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$pair[self::NEW_STATE]]]></code>
       <code><![CDATA[$pair[self::NEW_STATE]]]></code>
@@ -65,6 +71,12 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$table]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(array $operations): void]]></code>
+      <code><![CDATA[public function getDatabase(): DatabaseInterface]]></code>
+      <code><![CDATA[public function getSchema(string $table): AbstractTable]]></code>
+      <code><![CDATA[public function getTable(string $table): TableInterface]]></code>
+    </MissingOverrideAttribute>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$this->schemas]]></code>
     </MixedPropertyTypeCoercion>
@@ -88,10 +100,54 @@
       <code><![CDATA[$this->config['table'] ?? 'migrations']]></code>
     </MixedReturnStatement>
   </file>
+  <file src="src/Exception/BlueprintException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlueprintException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/CapsuleException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CapsuleException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/ContextException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ContextException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/Operation/ColumnException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ColumnException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/Operation/ForeignKeyException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ForeignKeyException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/Operation/IndexException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[IndexException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/Operation/TableException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TableException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/RepositoryException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RepositoryException]]></code>
+    </ClassMustBeFinal>
+  </file>
   <file src="src/FileRepository.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$directory]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getMigrations(): array]]></code>
+      <code><![CDATA[public function registerMigration(string $name, string $class, ?string $body = null): string]]></code>
+    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$directory]]></code>
     </MixedArgument>
@@ -116,6 +172,12 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->capsule->getDatabase()]]></code>
     </LessSpecificReturnStatement>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getDatabase(): ?string]]></code>
+      <code><![CDATA[public function getState(): State]]></code>
+      <code><![CDATA[public function withCapsule(CapsuleInterface $capsule): MigrationInterface]]></code>
+      <code><![CDATA[public function withState(State $state): MigrationInterface]]></code>
+    </MissingOverrideAttribute>
     <MixedReturnStatement>
       <code><![CDATA[static::DATABASE]]></code>
     </MixedReturnStatement>
@@ -199,15 +261,26 @@
       <code><![CDATA[MigrationInterface]]></code>
     </UnnecessaryVarAnnotation>
   </file>
+  <file src="src/Operation/AbstractOperation.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getTable(): string]]></code>
+    </MissingOverrideAttribute>
+  </file>
   <file src="src/Operation/Column/Add.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
   </file>
   <file src="src/Operation/Column/Alter.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
   </file>
   <file src="src/Operation/Column/Column.php">
     <ArgumentTypeCoercion>
@@ -230,6 +303,9 @@
       <code><![CDATA[$this->getTable()]]></code>
       <code><![CDATA[$this->name]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
   </file>
   <file src="src/Operation/Column/Rename.php">
     <ArgumentTypeCoercion>
@@ -237,6 +313,9 @@
       <code><![CDATA[$this->name]]></code>
       <code><![CDATA[$this->newName]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
   </file>
   <file src="src/Operation/ForeignKey/Add.php">
     <ArgumentTypeCoercion>
@@ -255,6 +334,9 @@
                 $this->getOption('update', ForeignKeyInterface::NO_ACTION),
             )]]></code>
     </InvalidArgument>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$fk]]></code>
       <code><![CDATA[$this->getOption('delete', ForeignKeyInterface::NO_ACTION)]]></code>
@@ -295,6 +377,9 @@
                 $this->getOption('update', ForeignKeyInterface::NO_ACTION),
             )]]></code>
     </InvalidArgument>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$fk]]></code>
       <code><![CDATA[$this->getOption('delete', ForeignKeyInterface::NO_ACTION)]]></code>
@@ -320,6 +405,9 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
   </file>
   <file src="src/Operation/ForeignKey/ForeignKey.php">
     <MixedArgumentTypeCoercion>
@@ -330,6 +418,9 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$this->getOption('name')]]></code>
       <code><![CDATA[$this->getOption('unique', false)]]></code>
@@ -342,6 +433,9 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$this->getOption('unique', false)]]></code>
     </MixedArgument>
@@ -353,6 +447,9 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columns]]></code>
     </MixedArgumentTypeCoercion>
@@ -361,25 +458,43 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedAssignment>
       <code><![CDATA[$database]]></code>
     </MixedAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->database]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/Operation/Table/Drop.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedAssignment>
       <code><![CDATA[$database]]></code>
     </MixedAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->database]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/Operation/Table/PrimaryKeys.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedAssignment>
       <code><![CDATA[$database]]></code>
     </MixedAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->database]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/Operation/Table/Rename.php">
     <ArgumentTypeCoercion>
@@ -387,17 +502,29 @@
       <code><![CDATA[$this->newName]]></code>
       <code><![CDATA[$this->newName]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedAssignment>
       <code><![CDATA[$database]]></code>
     </MixedAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->database]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/Operation/Table/Update.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getTable()]]></code>
     </ArgumentTypeCoercion>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute(CapsuleInterface $capsule): void]]></code>
+    </MissingOverrideAttribute>
     <MixedAssignment>
       <code><![CDATA[$database]]></code>
     </MixedAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->database]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/Operation/Traits/OptionsTrait.php">
     <MixedArgument>
