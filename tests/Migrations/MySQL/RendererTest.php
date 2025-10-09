@@ -29,25 +29,16 @@ class RendererTest extends \Cycle\Migrations\Tests\RendererTest
     {
         $method = new Method('up');
 
-        $schema = [
-            [
-                'Non_unique' => 1,       // 1 = обычный индекс, 0 = уникальный
-                'Column_name' => 'email',
-                'Collation' => 'A',      // 'A' = ASC, 'D' = DESC
-            ],
-            [
-                'Non_unique' => 0,       // уникальный индекс
-                'Column_name' => 'username',
-                'Collation' => 'A',      // сортировка по возрастанию
-            ],
-        ];
+        $columns = ['email', 'username'];
 
-        $indexA = MySQLIndex::createInstance('table', 'idx_email_username', $schema);
+        $indexA = new MySQLIndex('table', 'idx_email_username');
+        $indexA->columns($columns);
         $initial = new State('test_table');
         $initial->registerIndex($indexA);
 
 
-        $indexB = MySQLIndex::createInstance('table', 'idx_email_username', \array_reverse($schema));
+        $indexB = new MySQLIndex('table', 'idx_email_username');
+        $indexB->columns(\array_reverse($columns));
         $current = new State('test_table');
         $current->registerIndex($indexB);
 
@@ -63,6 +54,6 @@ class RendererTest extends \Cycle\Migrations\Tests\RendererTest
          */
         $reflectionMethod->invoke($renderer, $method, $comparator);
 
-        self::assertSame('1', $method->getBody());
+        self::assertSame('', $method->getBody());
     }
 }
