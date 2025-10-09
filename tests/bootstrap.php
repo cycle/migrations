@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 use Cycle\Database\Config;
 
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', '1');
-mb_internal_encoding('UTF-8');
+\error_reporting(E_ALL | E_STRICT);
+\ini_set('display_errors', '1');
+\mb_internal_encoding('UTF-8');
 
 //Composer
-require dirname(__DIR__) . '/vendor/autoload.php';
+require \dirname(__DIR__) . '/vendor/autoload.php';
 
 $drivers = [
     'debug' => false,
@@ -31,7 +31,7 @@ $drivers = [
             user: 'root',
             password: 'YourStrong!Passw0rd',
         ),
-        queryCache: true
+        queryCache: true,
     ),
     'postgres' => new Config\PostgresDriverConfig(
         connection: new Config\Postgres\TcpConnectionConfig(
@@ -53,18 +53,18 @@ $drivers = [
             user: 'SA',
             password: 'YourStrong!Passw0rd',
         ),
-        queryCache: true
+        queryCache: true,
     ),
 ];
 
-$db = getenv('DB') ?: null;
+$db = \getenv('DB') ?: null;
 if ($db !== null) {
     $db = [$db, "$db-mock"];
 }
 \Cycle\Migrations\Tests\BaseTest::$config = [
-    'debug' => getenv('DB_DEBUG') ?: false,
+    'debug' => \getenv('DB_DEBUG') ?: false,
 ] + (
     $db === null
         ? $drivers
-        : array_intersect_key($drivers, array_flip((array)$db))
+        : \array_intersect_key($drivers, \array_flip((array) $db))
 );
