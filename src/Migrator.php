@@ -8,6 +8,7 @@ use Cycle\Database\Database;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Database\DatabaseManager;
 use Cycle\Database\DatabaseProviderInterface;
+use Cycle\Database\Schema\AbstractTable;
 use Cycle\Database\Table;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Exception\MigrationException;
@@ -62,19 +63,12 @@ final class Migrator
         }
 
         foreach ($this->getDatabases() as $db) {
-            $schema = $db->table($this->config->getTable())->getSchema();
+            $table = $db->table($this->config->getTable());
+            \assert($table instanceof Table);
+            $schema = $table->getSchema();
 
             // Schema update will automatically sync all needed data
-            $schema->primary('id');
-            $schema->string('migration', 191)->nullable(false);
-            $schema->datetime('time_executed')->datetime();
-            $schema->datetime('created_at')->datetime();
-            $schema->index(['migration', 'created_at'])
-                ->unique(true);
-
-            if ($schema->hasIndex(['migration'])) {
-                $schema->dropIndex(['migration']);
-            }
+            $this->declareMigrationTableSchema($schema);
 
             $schema->save();
         }
@@ -229,7 +223,16 @@ final class Migrator
             }
         }
 
-        return !(!$table->hasIndex(['migration', 'created_at']));
+        if (!$table->hasIndex(['migration', 'created_at'])) {
+            return false;
+        }
+
+        // The table may have been created by a previous version of the package
+        // with a different column definition (e.g. datetime precision).
+        $schema = $table->getSchema();
+        $this->declareMigrationTableSchema($schema);
+
+        return !$schema->getComparator()->hasChanges();
     }
 
     /**
@@ -242,7 +245,7 @@ final class Migrator
             ->where(
                 [
                     'migration' => $migration->getState()->getName(),
-                    'created_at' => $this->getMigrationCreatedAtForDb($migration)->format(self::DB_DATE_FORMAT),
+                    'created_at' => $this->getMigrationCreatedAtForDb($migration),
                 ],
             )
             ->run()
@@ -305,6 +308,26 @@ final class Migrator
             $migration->getState()->getTimeCreated()->format(self::DB_DATE_FORMAT),
             $db->getDriver()->getTimezone(),
         );
+    }
+
+    /**
+     * Declare the desired structure of the migration table on the given schema.
+     */
+    private function declareMigrationTableSchema(AbstractTable $schema): void
+    {
+        $schema->primary('id');
+        $schema->string('migration', 191)->nullable(false);
+        // Second precision is enough for migrations; size is set to keep the column
+        // type compatible with the `withDatetimeMicroseconds` driver option
+        // (on SQL Server the legacy DATETIME type rejects values with microseconds)
+        $schema->datetime('time_executed')->datetime(6);
+        $schema->datetime('created_at')->datetime(6);
+        $schema->index(['migration', 'created_at'])
+            ->unique(true);
+
+        if ($schema->hasIndex(['migration'])) {
+            $schema->dropIndex(['migration']);
+        }
     }
 
     /**

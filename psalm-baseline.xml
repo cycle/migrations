@@ -222,22 +222,9 @@
     <MixedAssignment>
       <code><![CDATA[$migrationData]]></code>
       <code><![CDATA[$migrationData]]></code>
-      <code><![CDATA[$schema]]></code>
     </MixedAssignment>
     <MixedMethodCall>
       <code><![CDATA[count]]></code>
-      <code><![CDATA[datetime]]></code>
-      <code><![CDATA[datetime]]></code>
-      <code><![CDATA[datetime]]></code>
-      <code><![CDATA[datetime]]></code>
-      <code><![CDATA[dropIndex]]></code>
-      <code><![CDATA[hasIndex]]></code>
-      <code><![CDATA[index]]></code>
-      <code><![CDATA[nullable]]></code>
-      <code><![CDATA[primary]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[unique]]></code>
       <code><![CDATA[where]]></code>
     </MixedMethodCall>
     <MoreSpecificReturnType>
@@ -254,7 +241,6 @@
       <code><![CDATA[select]]></code>
     </TooManyArguments>
     <UndefinedInterfaceMethod>
-      <code><![CDATA[getSchema]]></code>
       <code><![CDATA[select]]></code>
     </UndefinedInterfaceMethod>
     <UnnecessaryVarAnnotation>
