@@ -242,7 +242,7 @@ final class Migrator
             ->where(
                 [
                     'migration' => $migration->getState()->getName(),
-                    'created_at' => $this->getMigrationCreatedAtForDb($migration)->format(self::DB_DATE_FORMAT),
+                    'created_at' => $this->getMigrationCreatedAtForDb($migration),
                 ],
             )
             ->run()
