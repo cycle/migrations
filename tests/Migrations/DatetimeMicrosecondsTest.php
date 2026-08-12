@@ -63,6 +63,33 @@ abstract class DatetimeMicrosecondsTest extends BaseTest
         $this->assertNull($this->migrator->run());
     }
 
+    public function testUpgradeFromLegacyTableStructure(): void
+    {
+        // The migration table as it was created by previous versions of the package:
+        // datetime columns without precision
+        $schema = $this->db->table('migrations')->getSchema();
+        $schema->primary('id');
+        $schema->string('migration', 191)->nullable(false);
+        $schema->datetime('time_executed')->datetime();
+        $schema->datetime('created_at')->datetime();
+        $schema->index(['migration', 'created_at'])->unique(true);
+        $schema->save();
+
+        $this->migrator->configure();
+        $this->assertTrue($this->migrator->isConfigured());
+
+        $schema = $this->schema('sample');
+        $schema->primary('id');
+        $schema->integer('value');
+        $this->atomize('migration1', [$schema]);
+
+        $migration = $this->migrator->run();
+
+        $this->assertInstanceOf(Migration::class, $migration);
+        $this->assertSame(State::STATUS_EXECUTED, $migration->getState()->getStatus());
+        $this->assertNull($this->migrator->run());
+    }
+
     public function testRollbackAfterRun(): void
     {
         $this->migrator->configure();
