@@ -7,3 +7,5 @@ composer.lock
 *.db
 /vendor-bin/*/vendor/
 /vendor-bin/*/composer.lock
+/.agents/
+/.claude/
