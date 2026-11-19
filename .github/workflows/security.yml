@@ -1,0 +1,43 @@
+---
+
+name: Security
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - 4.x
+  pull_request: null
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  audit:
+    name: Composer audit
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+
+      - name: Install dependencies with composer
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: highest
+
+      - name: Check dependencies for security advisories
+        run: composer audit --ansi
+
+...
