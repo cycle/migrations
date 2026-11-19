@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\Postgres;
 
-/**
- * @group driver
- * @group driver-postgres
- */
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('driver')]
+#[Group('driver-postgres')]
 class RendererTest extends \Cycle\Migrations\Tests\RendererTest
 {
     public const DRIVER = 'postgres';

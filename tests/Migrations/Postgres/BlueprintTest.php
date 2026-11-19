@@ -13,11 +13,10 @@ namespace Cycle\Migrations\Tests\Postgres;
 
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-postgres
- */
+#[Group('driver')]
+#[Group('driver-postgres')]
 class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'postgres';

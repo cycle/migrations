@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\SQLServer;
 
-/**
- * @group driver
- * @group driver-sqlserver
- */
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('driver')]
+#[Group('driver-sqlserver')]
 class ExceptionsTest extends \Cycle\Migrations\Tests\ExceptionsTest
 {
     public const DRIVER = 'sqlserver';

@@ -2,22 +2,26 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="tests/bootstrap.php"
-         cacheResultFile="runtime/phpunit/result.cache"
+         cacheDirectory="runtime/phpunit"
          backupGlobals="false"
-         backupStaticAttributes="false"
-         convertWarningsToExceptions="true"
+         backupStaticProperties="false"
          processIsolation="false"
          stopOnFailure="true"
          stopOnError="true"
 >
-    <coverage>
+    <source>
         <include>
             <directory>src/</directory>
         </include>
-    </coverage>
+    </source>
     <testsuites>
         <testsuite name="Cycle Database Migrations">
-            <directory>./tests/</directory>
+            <directory>./tests/Migrations/MySQL</directory>
+            <directory>./tests/Migrations/Postgres</directory>
+            <directory>./tests/Migrations/SQLite</directory>
+            <directory>./tests/Migrations/SQLServer</directory>
+            <directory>./tests/Migrations/Unit</directory>
+            <file>./tests/Migrations/ConfigTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

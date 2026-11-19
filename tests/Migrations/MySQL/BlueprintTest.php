@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\MySQL;
 
-/**
- * @group driver
- * @group driver-mysql
- */
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('driver')]
+#[Group('driver-mysql')]
 class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'mysql';
