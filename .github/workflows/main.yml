@@ -1,112 +1,96 @@
+---
+
 name: build
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - '4.*'
+      - 4.x
   pull_request: null
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  test:
-    name: Test PHP ${{ matrix.php-versions }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ['8.1']
-    steps:
-      - name: Install ODBC driver.
-        run: |
-          sudo curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
-          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup DB services
-        run: |
-          cd tests
-          docker compose up -d
-          cd ..
-
-      - name: Setup PHP ${{ matrix.php-versions }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: pcov
-          tools: pecl
-          extensions: mbstring, pdo, pdo_sqlite, pdo_pgsql, pdo_sqlsrv, pdo_mysql
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Restore Composer Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install dependencies with composer
-        if: matrix.php-versions != '8.5'
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
-
-      - name: Install dependencies with composer php 8.5
-        if: matrix.php-versions == '8.5'
-        run: composer update --ignore-platform-reqs --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
-
-      - name: Execute Tests
-        run: |
-          vendor/bin/phpunit --coverage-clover=coverage.clover
-      - name: Upload coverage to Codecov
-        continue-on-error: true # if is fork
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.clover
-
-      - name: Upload coverage to Scrutinizer
-        continue-on-error: true # if is fork
-        uses: sudo-bot/action-scrutinizer@latest
-        with:
-          cli-args: "--format=php-clover coverage.clover"
-
   sqlite:
-    name: SQLite PHP ${{ matrix.php-versions }}
+    name: SQLite · PHP ${{ matrix.php-version }} · ${{ matrix.dependencies }}
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        php-versions: ['8.1', '8.4']
+        php-version:
+          - '8.2'
+          - '8.3'
+          - '8.4'
+          - '8.5'
+        dependencies:
+          - lowest
+          - highest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup PHP ${{ matrix.php-versions }}
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: pcov
-          tools: pecl
+          php-version: ${{ matrix.php-version }}
           extensions: mbstring, pdo, pdo_sqlite
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Restore Composer Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
+          ini-values: error_reporting=E_ALL
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --ansi --strict
 
       - name: Install dependencies with composer
-        if: matrix.php-versions != '8.5'
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
 
-      - name: Install dependencies with composer php 8.5
-        if: matrix.php-versions == '8.5'
-        run: composer update --ignore-platform-reqs --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
-
-      - name: Execute Tests
+      - name: Execute tests
         env:
           DB: sqlite
-        run: |
-          vendor/bin/phpunit tests/Migrations/SQLite
+        run: vendor/bin/phpunit --colors=always --exclude-group driver-mysql --exclude-group driver-postgres --exclude-group driver-sqlserver
+
+  coverage:
+    name: Code coverage
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo, pdo_sqlite
+          ini-values: error_reporting=E_ALL
+          coverage: pcov
+
+      - name: Install dependencies with composer
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: highest
+
+      - name: Collect code coverage
+        env:
+          DB: sqlite
+        run: vendor/bin/phpunit --colors=always --exclude-group driver-mysql --exclude-group driver-postgres --exclude-group driver-sqlserver --coverage-clover=runtime/clover.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          files: runtime/clover.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+...
