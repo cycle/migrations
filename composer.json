@@ -12,10 +12,9 @@
         "spiral/tokenizer": "^3.18"
     },
     "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.8",
         "buggregator/trap": "^1.11",
-        "phpunit/phpunit": "^11.5",
-        "spiral/code-style": "^2.2.0",
-        "vimeo/psalm": "^6.4"
+        "phpunit/phpunit": "^11.5"
     },
     "autoload": {
         "psr-4": {
@@ -29,14 +28,24 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
+    },
+    "extra": {
+        "bamarni-bin": {
+            "bin-links": true,
+            "forward-command": false,
+            "target-directory": "vendor-bin"
+        }
     },
     "scripts": {
-        "cs:diff": "php-cs-fixer fix --dry-run -v --diff",
-        "cs:fix": "php-cs-fixer fix -v",
-        "psalm": "psalm",
-        "psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
-        "psalm:ci": "psalm --output-format=github --shepherd --show-info=false --stats --threads=4",
+        "cs:diff": "php-cs-fixer fix --dry-run -v --diff --config=vendor-bin/code-style/.php-cs-fixer.dist.php",
+        "cs:fix": "php-cs-fixer fix -v --config=vendor-bin/code-style/.php-cs-fixer.dist.php",
+        "psalm": "psalm -c vendor-bin/psalm/psalm.xml",
+        "psalm:baseline": "psalm -c vendor-bin/psalm/psalm.xml --set-baseline=vendor-bin/psalm/psalm-baseline.xml",
+        "psalm:ci": "psalm -c vendor-bin/psalm/psalm.xml --output-format=github --shepherd --show-info=false --stats --threads=4",
         "test": "phpunit --color=always"
     },
     "minimum-stability": "dev",
