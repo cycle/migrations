@@ -62,10 +62,14 @@
         "psalm:ci": "psalm -c vendor-bin/psalm/psalm.xml --output-format=github --shepherd --show-info=false --stats --threads=4",
         "test": "testo",
         "test:mysql": "testo --suite=Feature/MySQL --suite=Regression/MySQL",
+        "test:new-case": "cycle-testing new-case --template=database",
         "test:postgres": "testo --suite=Feature/Postgres --suite=Regression/Postgres",
         "test:sqlite": "testo --suite=Feature/SQLite --suite=Regression/SQLite",
         "test:sqlserver": "testo --suite=Feature/SQLServer --suite=Regression/SQLServer",
         "test:unit": "testo --suite=Unit"
+    },
+    "scripts-descriptions": {
+        "test:new-case": "Generate a regression case for an issue: composer test:new-case -- <issue>"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

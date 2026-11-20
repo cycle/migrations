@@ -12,7 +12,8 @@ Please make sure that the following requirements are satisfied before submitting
 ## Testing
 Tests run on [Testo](https://github.com/php-testo/testo) through the `cycle/testing` harness: `tests/Unit` needs no
 database, `tests/Feature` runs once per database driver, and reproductions of reported issues go to
-`tests/Regression/Issue<N>/`. Generated migration files land in `tests/files/` and are removed after each test.
+`tests/Regression/Issue<N>/` (`composer test:new-case -- <N>` writes a starting case there). Generated migration
+files land in `tests/files/` and are removed after each test.
 
 Unit and SQLite tests need no docker:
 
