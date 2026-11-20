@@ -6,7 +6,7 @@ namespace Cycle\Migrations\Tests\Regression\Issue66;
 
 use Cycle\Migrations\Migration;
 use Cycle\Migrations\State;
-use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Tests\Support\MigrationsTestCase;
 use Testo\Assert;
 use Testo\Test;
 

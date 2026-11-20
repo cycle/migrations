@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Support;
 
 use Cycle\Database\Config\DatabaseConfig;
 use Cycle\Database\Database;
@@ -29,7 +29,7 @@ use Testo\Lifecycle\BeforeTest;
  */
 abstract class MigrationsTestCase extends DatabaseTestCase
 {
-    protected const FILES = __DIR__ . '/files/';
+    protected const FILES = __DIR__ . '/../files/';
     protected const CONFIG = [
         'directory' => self::FILES,
         'table' => 'migrations',

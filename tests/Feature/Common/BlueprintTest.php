@@ -14,7 +14,7 @@ namespace Cycle\Migrations\Tests\Feature\Common;
 use Cycle\Database\ForeignKeyInterface;
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
-use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Tests\Support\MigrationsTestCase;
 use Cycle\Testing\Database\Attribute\ExceptDriver;
 use Cycle\Testing\Database\Driver;
 use Testo\Assert;

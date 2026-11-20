@@ -24,7 +24,7 @@ use Cycle\Migrations\Fixtures\DropNonExistedMigration;
 use Cycle\Migrations\Fixtures\DuplicateColumnMigration;
 use Cycle\Migrations\Fixtures\RenameColumnMigration;
 use Cycle\Migrations\Fixtures\RenameTableMigration;
-use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Tests\Support\MigrationsTestCase;
 use Testo\Assert\ExpectException;
 use Testo\Expect;
 use Testo\Test;

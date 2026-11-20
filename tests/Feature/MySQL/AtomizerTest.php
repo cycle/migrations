@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\Feature\MySQL;
 
-use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Tests\Support\MigrationsTestCase;
 use Testo\Assert;
 use Testo\Test;
 

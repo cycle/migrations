@@ -17,7 +17,7 @@ use Cycle\Migrations\Atomizer\Atomizer;
 use Cycle\Migrations\Atomizer\Renderer;
 use Cycle\Migrations\Migration;
 use Cycle\Migrations\State;
-use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Tests\Support\MigrationsTestCase;
 use Cycle\Testing\Database\Attribute\OnlyDriver;
 use Cycle\Testing\Database\Driver;
 use Mockery;

@@ -15,7 +15,7 @@ use Cycle\Migrations\Capsule;
 use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\Fixtures\TestMigration;
 use Cycle\Migrations\State;
-use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Tests\Support\MigrationsTestCase;
 use Testo\Assert;
 use Testo\Expect;
 use Testo\Test;
