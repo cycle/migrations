@@ -19,6 +19,7 @@ use Cycle\Migrations\Fixtures\AlterNonExistedIndexMigration;
 use Cycle\Migrations\Fixtures\CreateEmptyMigration;
 use Cycle\Migrations\Fixtures\CreateSampleMigration;
 use Cycle\Migrations\Fixtures\DropForeignKeyMigration;
+use Cycle\Migrations\Fixtures\DropNonExistedColumnMigration;
 use Cycle\Migrations\Fixtures\DropNonExistedIndexMigration;
 use Cycle\Migrations\Fixtures\DropNonExistedMigration;
 use Cycle\Migrations\Fixtures\DuplicateColumnMigration;
@@ -189,6 +190,22 @@ final class ExceptionsTest extends MigrationsTestCase
         $this->repository->registerMigration('m', AlterNonExistedColumnMigration::class);
 
         Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to alter column '.+'\.'.+', column does not exists/");
+
+        $this->migrator->run();
+    }
+
+    #[Test]
+    public function testDropNonExistedColumn(): void
+    {
+        $this->migrator->configure();
+
+        $s = $this->db->table('sample')->getSchema();
+        $s->primary('id');
+        $s->save();
+
+        $this->repository->registerMigration('m', DropNonExistedColumnMigration::class);
+
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to drop column '.+'\.'column', column does not exists/");
 
         $this->migrator->run();
     }
