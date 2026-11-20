@@ -10,30 +10,32 @@ Please make sure that the following requirements are satisfied before submitting
 > Use our discord server to check for the advice or suggestion https://discord.gg/FZ9BCWg
 
 ## Testing
-To test Cycle Database Migrations locally, download the `cycle/migrations` repository and start docker containers inside the tests folder:
+Tests run on [Testo](https://github.com/php-testo/testo) through the `cycle/testing` harness: `tests/Unit` needs no
+database, `tests/Feature` runs once per database driver, and reproductions of reported issues go to
+`tests/Regression/Issue<N>/` (`composer test:new-case -- <N>` writes a starting case there). Generated migration
+files land in `tests/files/` and are removed after each test.
+
+Unit and SQLite tests need no docker:
 
 ```bash
-cd tests/
-docker composer up
+composer test:unit
+composer test:sqlite
 ```
 
-To run full test suite:
+The other drivers run against the shared test databases:
 
 ```bash
-./vendor/bin/phpunit
-```
-
-To run quick test suite:
-
-```bash
-./vendor/bin/phpunit tests/Migrations/SQLite
+composer db:up              # or: composer db:up -- mysql
+composer test               # every suite; drivers whose server is down are skipped
+composer test:mysql         # also test:postgres, test:sqlserver
+composer db:down
 ```
 
 ## Help Needed In
 If you want to help but don't know where to start:
 
 * TODOs
-* Updating to latest dev-dependencies (PHPUnit, Mockery, etc)
+* Updating to latest dev-dependencies (Testo, Mockery, etc)
 * Quality recommendations and improvements
 * Check [Open Issues](https://github.com/cycle/migrations/issues)
 * More tests are always welcome
