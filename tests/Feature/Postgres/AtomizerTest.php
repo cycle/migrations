@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Tests\Feature\Postgres;
 
 use Cycle\Migrations\Tests\MigrationsTestCase;
+use Testo\Assert;
+use Testo\Test;
 
 final class AtomizerTest extends MigrationsTestCase
 {
-    #[\Testo\Test]
+    #[Test]
     public function testChangeBitColumnSize(): void
     {
         $this->migrator->configure();
@@ -26,7 +28,7 @@ final class AtomizerTest extends MigrationsTestCase
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
+        Assert::same($this->schema('sample')->column('value')->getSize(), 16);
 
         $schema = $this->schema('sample');
         $schema->bit('value', size: 255);
@@ -34,16 +36,16 @@ final class AtomizerTest extends MigrationsTestCase
 
         $this->migrator->run();
 
-        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 255);
+        Assert::same($this->schema('sample')->column('value')->getSize(), 255);
 
-        \Testo\Assert::true($this->db->hasTable('sample'));
-
-        $this->migrator->rollback();
-        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
-
-        \Testo\Assert::true($this->db->hasTable('sample'));
+        Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        \Testo\Assert::false($this->db->hasTable('sample'));
+        Assert::same($this->schema('sample')->column('value')->getSize(), 16);
+
+        Assert::true($this->db->hasTable('sample'));
+
+        $this->migrator->rollback();
+        Assert::false($this->db->hasTable('sample'));
     }
 }

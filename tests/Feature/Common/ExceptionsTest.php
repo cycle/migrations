@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\Feature\Common;
 
-use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\Fixtures\AddForeignKeyMigration;
 use Cycle\Migrations\Fixtures\AlterForeignKeyMigration;
 use Cycle\Migrations\Fixtures\AlterNonExistedColumnMigration;
@@ -24,38 +24,41 @@ use Cycle\Migrations\Fixtures\DropNonExistedMigration;
 use Cycle\Migrations\Fixtures\DuplicateColumnMigration;
 use Cycle\Migrations\Fixtures\RenameColumnMigration;
 use Cycle\Migrations\Fixtures\RenameTableMigration;
-use Cycle\Migrations\Exception\MigrationException;
+use Cycle\Migrations\Tests\MigrationsTestCase;
+use Testo\Assert\ExpectException;
+use Testo\Expect;
+use Testo\Test;
 
 final class ExceptionsTest extends MigrationsTestCase
 {
     private const MIGRATION_EXCEPTION_PREFIX_REGEX = "/Error in the migration \([0-9a-z_\-]+ \(\d{4}-\d{2}-\d{2} "
     . "\d{2}:\d{2}:\d{2}\)\) occurred: ";
 
-    #[\Testo\Test]
+    #[Test]
     public function testDropNonExisted(): void
     {
         //Create thought migration
         $this->migrator->configure();
         $this->repository->registerMigration('m', DropNonExistedMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to drop table \'.+\'\.\'.+\', table does not exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to drop table \'.+\'\.\'.+\', table does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateEmpty(): void
     {
         //Create thought migration
         $this->migrator->configure();
         $this->repository->registerMigration('m', CreateEmptyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to create table \'.+\'\.\'.+\', no columns were added/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to create table \'.+\'\.\'.+\', no columns were added/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateDuplicate(): void
     {
         //Create thought migration
@@ -67,12 +70,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', CreateSampleMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to create table '.+'\.'.+', table already exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to create table '.+'\.'.+', table already exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testUpdateNonExisted(): void
     {
         //Create thought migration
@@ -80,12 +83,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', DuplicateColumnMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to update table '.+'\.'.+', no table exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to update table '.+'\.'.+', no table exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRenameNonExisted(): void
     {
         //Create thought migration
@@ -93,12 +96,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', RenameTableMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename table '.+'\.'.+', table does not exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename table '.+'\.'.+', table does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRenameButBusy(): void
     {
         //Create thought migration
@@ -114,12 +117,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', RenameTableMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename table '.+'\.'.+', table '.+' already exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename table '.+'\.'.+', table '.+' already exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testDuplicateColumn(): void
     {
         //Create thought migration
@@ -132,12 +135,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', DuplicateColumnMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to create column '.+'\.'.+', column already exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to create column '.+'\.'.+', column already exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testDropNonExistedIndex(): void
     {
         //Create thought migration
@@ -150,12 +153,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', DropNonExistedIndexMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to drop index '.+'\.(.+), index does not exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to drop index '.+'\.(.+), index does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAlterNonExistedIndex(): void
     {
         //Create thought migration
@@ -168,12 +171,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AlterNonExistedIndexMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to alter index '.+'\.(.+), no such index/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to alter index '.+'\.(.+), no such index/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAlterNonExistedColumn(): void
     {
         //Create thought migration
@@ -185,12 +188,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AlterNonExistedColumnMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to alter column '.+'\.'.+', column does not exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to alter column '.+'\.'.+', column does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRenameNonExistedColumn(): void
     {
         //Create thought migration
@@ -202,12 +205,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', RenameColumnMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename column '.+'\.'.+', column does not exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename column '.+'\.'.+', column does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRenameDuplicateExistedColumn(): void
     {
         //Create thought migration
@@ -221,12 +224,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', RenameColumnMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename column '.+'\.'.+', column '.+' already exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to rename column '.+'\.'.+', column '.+' already exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAddForeignNoTarget(): void
     {
         //Create thought migration
@@ -239,13 +242,13 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AddForeignKeyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
         . "Unable to add foreign key 'tests_sample'.'column', foreign table 'target' does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAddForeignNoTargetColumn(): void
     {
         //Create thought migration
@@ -262,13 +265,13 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AddForeignKeyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
         . "Unable to add foreign key '.+'\.'.+', foreign column '.+'\.'.+' does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAlterForeignNoFK(): void
     {
         //Create thought migration
@@ -281,12 +284,12 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AlterForeignKeyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to alter foreign key '.+'\.(.+), key does not exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to alter foreign key '.+'\.(.+), key does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAlterForeignNoTable(): void
     {
         //Create thought migration
@@ -304,13 +307,13 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AlterForeignKeyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
         . "Unable to alter foreign key '.+'\.'.+', foreign table '.+' does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAlterForeignNoColumn(): void
     {
         //Create thought migration
@@ -332,13 +335,13 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AlterForeignKeyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
         . "Unable to alter foreign key '.+'\.'.+', foreign column '.+'\.'.+' does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testDropNonExistedFK(): void
     {
         //Create thought migration
@@ -351,13 +354,13 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', DropForeignKeyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX
         . "Unable to drop foreign key '.+'\.'.+', foreign key does not exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testAddExisted(): void
     {
         //Create thought migration
@@ -375,50 +378,50 @@ final class ExceptionsTest extends MigrationsTestCase
 
         $this->repository->registerMigration('m', AddForeignKeyMigration::class);
 
-        \Testo\Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to add foreign key '.+'\.(.+), foreign key already exists/");
+        Expect::exception(MigrationException::class)->withMessageMatchingRegex(self::MIGRATION_EXCEPTION_PREFIX_REGEX . "Unable to add foreign key '.+'\.(.+), foreign key already exists/");
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testBadMigrationFile(): void
     {
         file_put_contents(self::FILES . 'mmm.php', 'test');
 
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class)->withMessageMatchingRegex("/Invalid migration filename '.+'/");
+        Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class)->withMessageMatchingRegex("/Invalid migration filename '.+'/");
         $this->repository->getMigrations();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testBadDateFormatMigrationFile(): void
     {
         $fileName = (new \DateTime())->format('dmY-his') . '_0_test.php';
         file_put_contents(self::FILES . "{$fileName}", 'test');
 
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class)->withMessageMatchingRegex("/Invalid migration filename '.+' - corrupted date format/");
+        Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class)->withMessageMatchingRegex("/Invalid migration filename '.+' - corrupted date format/");
         $this->repository->getMigrations();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testDuplicateClassMigration(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class);
+        Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('unique_name_1', DuplicateColumnMigration::class);
         $this->repository->registerMigration('unique_name_2', DuplicateColumnMigration::class);
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testDuplicateFileNameMigration(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class);
+        Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('camel_case_duplicate', DuplicateColumnMigration::class);
         $this->repository->registerMigration('camelCaseDuplicate', CreateEmptyMigration::class);
     }
 
-    #[\Testo\Test]
+    #[Test]
+    #[ExpectException(\Cycle\Migrations\Exception\RepositoryException::class)]
     public function testInvalidMigration(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class);
         $this->repository->registerMigration('m', 'invalid');
     }
 }

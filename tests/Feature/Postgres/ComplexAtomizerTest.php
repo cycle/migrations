@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Tests\Feature\Postgres;
 
 use Cycle\Migrations\Tests\MigrationsTestCase;
+use Testo\Assert;
+use Testo\Test;
 
 final class ComplexAtomizerTest extends MigrationsTestCase
 {
-    #[\Testo\Test]
+    #[Test]
     public function testTableSorting(): void
     {
         $this->migrator->configure();
@@ -36,17 +38,17 @@ final class ComplexAtomizerTest extends MigrationsTestCase
         $this->atomize('migration1', [$schema, $schema1, $schema2]);
         $this->migrator->run();
 
-        \Testo\Assert::true($this->db->hasTable('messages'));
-        \Testo\Assert::true($this->db->table('messages')->hasForeignKey(['thread_id']));
-        \Testo\Assert::true($this->db->table('messages')->hasForeignKey(['user_id']));
+        Assert::true($this->db->hasTable('messages'));
+        Assert::true($this->db->table('messages')->hasForeignKey(['thread_id']));
+        Assert::true($this->db->table('messages')->hasForeignKey(['user_id']));
 
-        \Testo\Assert::true($this->db->hasTable('users'));
-        \Testo\Assert::true($this->db->hasTable('threads'));
+        Assert::true($this->db->hasTable('users'));
+        Assert::true($this->db->hasTable('threads'));
 
         $this->migrator->rollback();
 
-        \Testo\Assert::false($this->db->hasTable('messages'));
-        \Testo\Assert::false($this->db->hasTable('users'));
-        \Testo\Assert::false($this->db->hasTable('threads'));
+        Assert::false($this->db->hasTable('messages'));
+        Assert::false($this->db->hasTable('users'));
+        Assert::false($this->db->hasTable('threads'));
     }
 }

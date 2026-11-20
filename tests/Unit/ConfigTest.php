@@ -12,26 +12,27 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Tests\Unit;
 
 use Cycle\Migrations\Config\MigrationConfig;
+use Testo\Assert;
+use Testo\Test;
 
+#[Test]
 final class ConfigTest
 {
-    #[\Testo\Test]
     public function testNotSafe(): void
     {
         $c = new MigrationConfig([
             'safe' => false,
         ]);
 
-        \Testo\Assert::false($c->isSafe());
+        Assert::false($c->isSafe());
     }
 
-    #[\Testo\Test]
     public function testSafe(): void
     {
         $c = new MigrationConfig([
             'safe' => true,
         ]);
 
-        \Testo\Assert::true($c->isSafe());
+        Assert::true($c->isSafe());
     }
 }

@@ -11,16 +11,18 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\Feature\Common;
 
-use Cycle\Migrations\Tests\MigrationsTestCase;
-use Cycle\Migrations\Fixtures\TestMigration;
-use CycleMigrationsTestsixturestestmigration;
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\Exception\MigrationException;
+use Cycle\Migrations\Fixtures\TestMigration;
 use Cycle\Migrations\State;
+use Cycle\Migrations\Tests\MigrationsTestCase;
+use Testo\Assert;
+use Testo\Expect;
+use Testo\Test;
 
 final class MigratorTest extends MigrationsTestCase
 {
-    #[\Testo\Test]
+    #[Test]
     public function testSortingOrder(): void
     {
         $files = [
@@ -62,94 +64,94 @@ final class MigratorTest extends MigrationsTestCase
             array_values($migrations)
         );
 
-        \Testo\Assert::same($classes, [
+        Assert::same($classes, [
             'A3Vendor', 'A1Vendor', 'A1', 'A2Vendor', 'A2', 'A3', 'A4Vendor', 'A4',
             'B1Vendor', 'B1', 'B2Vendor', 'B2', 'B3', 'B3Vendor',
             'C', 'CVendor',
         ]);
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testIsConfigured(): void
     {
-        \Testo\Assert::false($this->migrator->isConfigured());
+        Assert::false($this->migrator->isConfigured());
 
         $this->migrator->configure();
-        \Testo\Assert::true($this->migrator->isConfigured());
+        Assert::true($this->migrator->isConfigured());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testConfigure(): void
     {
-        \Testo\Assert::false($this->migrator->isConfigured());
+        Assert::false($this->migrator->isConfigured());
 
         $this->migrator->configure();
-        \Testo\Assert::true($this->db->hasTable('migrations'));
+        Assert::true($this->db->hasTable('migrations'));
     }
 
     //no errors expected
-    #[\Testo\Test]
+    #[Test]
     public function testConfigureTwice(): void
     {
-        \Testo\Assert::false($this->migrator->isConfigured());
+        Assert::false($this->migrator->isConfigured());
 
         $this->migrator->configure();
-        \Testo\Assert::true($this->db->hasTable('migrations'));
+        Assert::true($this->db->hasTable('migrations'));
 
         $this->migrator->configure();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testConfiguredTableStructure(): void
     {
         $this->migrator->configure();
         $table = $this->db->table('migrations');
 
-        \Testo\Assert::true($table->hasColumn('id'));
-        \Testo\Assert::true($table->hasColumn('migration'));
-        \Testo\Assert::true($table->hasColumn('time_executed'));
-        \Testo\Assert::true($table->hasColumn('created_at'));
+        Assert::true($table->hasColumn('id'));
+        Assert::true($table->hasColumn('migration'));
+        Assert::true($table->hasColumn('time_executed'));
+        Assert::true($table->hasColumn('created_at'));
 
-        \Testo\Assert::false($table->hasIndex(['migration']));
-        \Testo\Assert::true($table->hasIndex(['migration', 'created_at']));
+        Assert::false($table->hasIndex(['migration']));
+        Assert::true($table->hasIndex(['migration', 'created_at']));
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testGetEmptyMigrations(): void
     {
         $this->migrator->configure();
-        \Testo\Assert::same($this->migrator->getMigrations(), []);
+        Assert::same($this->migrator->getMigrations(), []);
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRepository(): void
     {
-        \Testo\Assert::same($this->migrator->getRepository(), $this->repository);
+        Assert::same($this->migrator->getRepository(), $this->repository);
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testConfig(): void
     {
-        \Testo\Assert::same($this->migrator->getConfig(), $this->migrationConfig);
+        Assert::same($this->migrator->getConfig(), $this->migrationConfig);
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRunUnconfigured(): void
     {
-        \Testo\Expect::exception(MigrationException::class)->withMessageContaining('Unable to run migration, Migrator not configured');
+        Expect::exception(MigrationException::class)->withMessageContaining('Unable to run migration, Migrator not configured');
 
         $this->migrator->run();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRollbackUnconfigured(): void
     {
-        \Testo\Expect::exception(MigrationException::class)->withMessageContaining('Unable to run migration, Migrator not configured');
+        Expect::exception(MigrationException::class)->withMessageContaining('Unable to run migration, Migrator not configured');
 
         $this->migrator->rollback();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCapsule(): void
     {
         $capsule = new Capsule($this->db);
@@ -158,13 +160,13 @@ final class MigratorTest extends MigrationsTestCase
         $s->primary('id');
         $s->save();
 
-        \Testo\Assert::true($capsule->getTable('test')->exists());
+        Assert::true($capsule->getTable('test')->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCapsuleException(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\CapsuleException::class);
+        Expect::exception(\Cycle\Migrations\Exception\CapsuleException::class);
         $capsule = new Capsule($this->db);
 
         $capsule->execute([
@@ -172,46 +174,46 @@ final class MigratorTest extends MigrationsTestCase
         ]);
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testNoState(): void
     {
-        \Testo\Expect::exception(MigrationException::class)->withMessageContaining('Unable to get migration state, no state are set');
+        Expect::exception(MigrationException::class)->withMessageContaining('Unable to get migration state, no state are set');
 
         $x = new TestMigration();
         $x->up();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testNoCapsule(): void
     {
-        \Testo\Expect::exception(MigrationException::class)->withMessageContaining('Unable to get table blueprint, no capsule are set');
+        Expect::exception(MigrationException::class)->withMessageContaining('Unable to get table blueprint, no capsule are set');
 
         $x = new TestMigration();
         $x->getTable();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testNoCapsule2(): void
     {
-        \Testo\Expect::exception(MigrationException::class)->withMessageContaining('Unable to get database, no capsule are set');
+        Expect::exception(MigrationException::class)->withMessageContaining('Unable to get database, no capsule are set');
 
         $x = new TestMigration();
         $x->down();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testDatabase(): void
     {
         $x = new TestMigration();
-        \Testo\Assert::same($x->withCapsule(new Capsule($this->db))->down(), $this->db);
+        Assert::same($x->withCapsule(new Capsule($this->db))->down(), $this->db);
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testState(): void
     {
         $x = new TestMigration();
 
         $s = new State('name', new \DateTime());
-        \Testo\Assert::same($x->withState($s)->up(), $s);
+        Assert::same($x->withState($s)->up(), $s);
     }
 }

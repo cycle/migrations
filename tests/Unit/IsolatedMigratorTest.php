@@ -11,24 +11,26 @@ use Cycle\Database\Driver\DriverInterface;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Migrator;
 use Cycle\Migrations\RepositoryInterface;
+use Mockery;
+use Testo\Test;
 
+#[Test]
 final class IsolatedMigratorTest
 {
-    #[\Testo\Test]
-    public function testReadonlyDriversMustNotBeUsed()
+    public function testReadonlyDriversMustNotBeUsed(): void
     {
         $dbal = new DatabaseManager(new DatabaseConfig());
         $dbal->addDatabase(
             new Database(
                 'foo',
                 '',
-                $driver = \Mockery::mock(DriverInterface::class),
+                $driver = Mockery::mock(DriverInterface::class),
             ),
         );
         // Without shouldIgnoreMissing(), any other driver call fails the test.
         $driver->shouldReceive('isReadonly')->atLeast()->once()->andReturn(true);
 
-        $repository = \Mockery::mock(RepositoryInterface::class)->shouldIgnoreMissing();
+        $repository = Mockery::mock(RepositoryInterface::class)->shouldIgnoreMissing();
 
         $migrator = new Migrator(
             new MigrationConfig([]),

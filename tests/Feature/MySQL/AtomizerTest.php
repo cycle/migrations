@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace Cycle\Migrations\Tests\Feature\MySQL;
 
 use Cycle\Migrations\Tests\MigrationsTestCase;
+use Testo\Assert;
+use Testo\Test;
 
 final class AtomizerTest extends MigrationsTestCase
 {
-    #[\Testo\Test]
+    #[Test]
     public function testUnsigned(): void
     {
         $this->migrator->configure();
@@ -30,11 +32,11 @@ final class AtomizerTest extends MigrationsTestCase
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        \Testo\Assert::false($this->schema('sample')->column('int')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('int_unsigned')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('tiny_integer_unsigned')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('small_integer_unsigned')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('big_integer_unsigned')->isUnsigned());
+        Assert::false($this->schema('sample')->column('int')->isUnsigned());
+        Assert::true($this->schema('sample')->column('int_unsigned')->isUnsigned());
+        Assert::true($this->schema('sample')->column('tiny_integer_unsigned')->isUnsigned());
+        Assert::true($this->schema('sample')->column('small_integer_unsigned')->isUnsigned());
+        Assert::true($this->schema('sample')->column('big_integer_unsigned')->isUnsigned());
 
         $schema = $this->schema('sample');
         $schema->integer('int', unsigned: true);
@@ -46,24 +48,24 @@ final class AtomizerTest extends MigrationsTestCase
 
         $this->migrator->run();
 
-        \Testo\Assert::true($this->schema('sample')->column('int')->isUnsigned());
-        \Testo\Assert::false($this->schema('sample')->column('int_unsigned')->isUnsigned());
-        \Testo\Assert::false($this->schema('sample')->column('tiny_integer_unsigned')->isUnsigned());
-        \Testo\Assert::false($this->schema('sample')->column('small_integer_unsigned')->isUnsigned());
-        \Testo\Assert::false($this->schema('sample')->column('big_integer_unsigned')->isUnsigned());
+        Assert::true($this->schema('sample')->column('int')->isUnsigned());
+        Assert::false($this->schema('sample')->column('int_unsigned')->isUnsigned());
+        Assert::false($this->schema('sample')->column('tiny_integer_unsigned')->isUnsigned());
+        Assert::false($this->schema('sample')->column('small_integer_unsigned')->isUnsigned());
+        Assert::false($this->schema('sample')->column('big_integer_unsigned')->isUnsigned());
 
         $this->migrator->rollback();
 
-        \Testo\Assert::false($this->schema('sample')->column('int')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('int_unsigned')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('tiny_integer_unsigned')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('small_integer_unsigned')->isUnsigned());
-        \Testo\Assert::true($this->schema('sample')->column('big_integer_unsigned')->isUnsigned());
+        Assert::false($this->schema('sample')->column('int')->isUnsigned());
+        Assert::true($this->schema('sample')->column('int_unsigned')->isUnsigned());
+        Assert::true($this->schema('sample')->column('tiny_integer_unsigned')->isUnsigned());
+        Assert::true($this->schema('sample')->column('small_integer_unsigned')->isUnsigned());
+        Assert::true($this->schema('sample')->column('big_integer_unsigned')->isUnsigned());
 
         $this->migrator->rollback();
-        \Testo\Assert::false($this->db->hasTable('sample'));
+        Assert::false($this->db->hasTable('sample'));
     }
-    #[\Testo\Test]
+    #[Test]
     public function testZerofill(): void
     {
         $this->migrator->configure();
@@ -78,11 +80,11 @@ final class AtomizerTest extends MigrationsTestCase
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        \Testo\Assert::false($this->schema('sample')->column('int')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('int_zerofill')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('tiny_integer_zerofill')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('small_integer_zerofill')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('big_integer_zerofill')->isZerofill());
+        Assert::false($this->schema('sample')->column('int')->isZerofill());
+        Assert::true($this->schema('sample')->column('int_zerofill')->isZerofill());
+        Assert::true($this->schema('sample')->column('tiny_integer_zerofill')->isZerofill());
+        Assert::true($this->schema('sample')->column('small_integer_zerofill')->isZerofill());
+        Assert::true($this->schema('sample')->column('big_integer_zerofill')->isZerofill());
 
         $schema = $this->schema('sample');
         $schema->integer('int', zerofill: true);
@@ -94,21 +96,21 @@ final class AtomizerTest extends MigrationsTestCase
 
         $this->migrator->run();
 
-        \Testo\Assert::true($this->schema('sample')->column('int')->isZerofill());
-        \Testo\Assert::false($this->schema('sample')->column('int_zerofill')->isZerofill());
-        \Testo\Assert::false($this->schema('sample')->column('tiny_integer_zerofill')->isZerofill());
-        \Testo\Assert::false($this->schema('sample')->column('small_integer_zerofill')->isZerofill());
-        \Testo\Assert::false($this->schema('sample')->column('big_integer_zerofill')->isZerofill());
+        Assert::true($this->schema('sample')->column('int')->isZerofill());
+        Assert::false($this->schema('sample')->column('int_zerofill')->isZerofill());
+        Assert::false($this->schema('sample')->column('tiny_integer_zerofill')->isZerofill());
+        Assert::false($this->schema('sample')->column('small_integer_zerofill')->isZerofill());
+        Assert::false($this->schema('sample')->column('big_integer_zerofill')->isZerofill());
 
         $this->migrator->rollback();
 
-        \Testo\Assert::false($this->schema('sample')->column('int')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('int_zerofill')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('tiny_integer_zerofill')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('small_integer_zerofill')->isZerofill());
-        \Testo\Assert::true($this->schema('sample')->column('big_integer_zerofill')->isZerofill());
+        Assert::false($this->schema('sample')->column('int')->isZerofill());
+        Assert::true($this->schema('sample')->column('int_zerofill')->isZerofill());
+        Assert::true($this->schema('sample')->column('tiny_integer_zerofill')->isZerofill());
+        Assert::true($this->schema('sample')->column('small_integer_zerofill')->isZerofill());
+        Assert::true($this->schema('sample')->column('big_integer_zerofill')->isZerofill());
 
         $this->migrator->rollback();
-        \Testo\Assert::false($this->db->hasTable('sample'));
+        Assert::false($this->db->hasTable('sample'));
     }
 }

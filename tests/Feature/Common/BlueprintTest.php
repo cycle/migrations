@@ -11,16 +11,19 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\Feature\Common;
 
-use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Database\ForeignKeyInterface;
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
+use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Testing\Database\Attribute\ExceptDriver;
 use Cycle\Testing\Database\Driver;
+use Testo\Assert;
+use Testo\Expect;
+use Testo\Test;
 
 final class BlueprintTest extends MigrationsTestCase
 {
-    #[\Testo\Test]
+    #[Test]
     public function testCreateButNot(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -28,10 +31,10 @@ final class BlueprintTest extends MigrationsTestCase
         $blueprint->addColumn('id', 'primary');
 
         //Not created
-        \Testo\Assert::false($blueprint->getSchema()->exists());
+        Assert::false($blueprint->getSchema()->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreate(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -39,10 +42,10 @@ final class BlueprintTest extends MigrationsTestCase
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateWithColumns(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -52,10 +55,10 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateWithIndexesAndDropIndex(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -66,17 +69,17 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->dropIndex(['value'])->update();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateWithNamedIndex(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -86,10 +89,10 @@ final class BlueprintTest extends MigrationsTestCase
             ->addIndex(['value'], ['unique' => true, 'name' => 'super_index'])
             ->create();
 
-        \Testo\Assert::same($this->schema('sample')->index(['value'])->getName(), 'super_index');
+        Assert::same($this->schema('sample')->index(['value'])->getName(), 'super_index');
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateWithForeign(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
@@ -97,7 +100,7 @@ final class BlueprintTest extends MigrationsTestCase
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
@@ -112,10 +115,10 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateWithForeignAliased(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
@@ -123,7 +126,7 @@ final class BlueprintTest extends MigrationsTestCase
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -138,10 +141,10 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testCreateForeignWithIndex(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
@@ -154,13 +157,13 @@ final class BlueprintTest extends MigrationsTestCase
             ->addForeignKey(['sample_id'], 'sample1', ['id'])
             ->create();
 
-        \Testo\Assert::true($blueprint->getSchema()->hasIndex(['sample_id']));
+        Assert::true($blueprint->getSchema()->hasIndex(['sample_id']));
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testUpdateTableError(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\TableException::class);
+        Expect::exception(\Cycle\Migrations\Exception\Operation\TableException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -169,7 +172,7 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -177,10 +180,10 @@ final class BlueprintTest extends MigrationsTestCase
             ->create(); //wrong
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testUpdateTable(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -191,7 +194,7 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
@@ -199,10 +202,10 @@ final class BlueprintTest extends MigrationsTestCase
             ->update();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testUpdateTableError2(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\ColumnException::class);
+        Expect::exception(\Cycle\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -211,17 +214,17 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('value', 'int')->update();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testUpdateTableError5(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\ColumnException::class);
+        Expect::exception(\Cycle\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -230,17 +233,17 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('value', 'int')->update();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testUpdateTableError3(): void
     {
-        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\IndexException::class);
+        Expect::exception(\Cycle\Migrations\Exception\Operation\IndexException::class);
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -249,14 +252,14 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addIndex(['value'])->update();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testDropTable(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -267,14 +270,14 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->drop();
     }
 
-    #[\Testo\Test]
+    #[Test]
     public function testRenameTable(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -285,14 +288,14 @@ final class BlueprintTest extends MigrationsTestCase
             ->create();
 
         //Not created
-        \Testo\Assert::true($blueprint->getSchema()->exists());
+        Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->rename('new_name');
     }
 
-    #[\Testo\Test]
+    #[Test]
     #[ExceptDriver(Driver::MySQL)]
     public function testCreateForeignWithoutIndex(): void
     {
@@ -306,6 +309,6 @@ final class BlueprintTest extends MigrationsTestCase
             ->addForeignKey(['sample_id'], 'sample1', ['id'], ['indexCreate' => false])
             ->create();
 
-        \Testo\Assert::false($blueprint->getSchema()->hasIndex(['sample_id']));
+        Assert::false($blueprint->getSchema()->hasIndex(['sample_id']));
     }
 }

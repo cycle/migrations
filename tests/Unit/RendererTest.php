@@ -13,10 +13,12 @@ namespace Cycle\Migrations\Tests\Unit;
 
 use Cycle\Database\Schema\AbstractColumn;
 use Cycle\Migrations\Atomizer\Renderer;
+use Testo\Assert;
+use Testo\Test;
 
+#[Test]
 final class RendererTest
 {
-    #[\Testo\Test]
     public function testColumnOptionsForEnumColumn(): void
     {
         $column = self::column(nullable: true, default: 'one', attributes: [], type: 'enum', enum: ['one', 'two', 'three']);
@@ -28,13 +30,12 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('values');
-        \Testo\Assert::true($options['nullable']);
-        \Testo\Assert::same($options['defaultValue'], 'one');
-        \Testo\Assert::same($options['values'], ['one', 'two', 'three']);
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('values');
+        Assert::true($options['nullable']);
+        Assert::same($options['defaultValue'], 'one');
+        Assert::same($options['values'], ['one', 'two', 'three']);
     }
 
-    #[\Testo\Test]
     public function testColumnOptionsWithDateTimeNow(): void
     {
         $column = self::column(nullable: false, default: AbstractColumn::DATETIME_NOW, attributes: [], type: 'datetime');
@@ -46,12 +47,11 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue');
-        \Testo\Assert::false($options['nullable']);
-        \Testo\Assert::same($options['defaultValue'], AbstractColumn::DATETIME_NOW);
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue');
+        Assert::false($options['nullable']);
+        Assert::same($options['defaultValue'], AbstractColumn::DATETIME_NOW);
     }
 
-    #[\Testo\Test]
     public function testColumnOptionsSizeNotZeroIsAccepted(): void
     {
         $column = self::column(nullable: true, default: null, attributes: ['size' => 11], type: 'integer');
@@ -63,13 +63,12 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('size');
-        \Testo\Assert::true($options['nullable']);
-        \Testo\Assert::null($options['defaultValue']);
-        \Testo\Assert::same($options['size'], 11);
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('size');
+        Assert::true($options['nullable']);
+        Assert::null($options['defaultValue']);
+        Assert::same($options['size'], 11);
     }
 
-    #[\Testo\Test]
     public function testColumnOptionsSizeZeroIsIgnored(): void
     {
         $column = self::column(nullable: true, default: null, attributes: ['size' => 0], type: 'integer');
@@ -81,12 +80,11 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('size');
-        \Testo\Assert::true($options['nullable']);
-        \Testo\Assert::null($options['defaultValue']);
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('size');
+        Assert::true($options['nullable']);
+        Assert::null($options['defaultValue']);
     }
 
-    #[\Testo\Test]
     public function testColumnOptionsAfterNotEmptyStringIsAccepted(): void
     {
         $column = self::column(nullable: true, default: null, attributes: ['after' => 'email'], type: 'integer');
@@ -98,13 +96,12 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('after');
-        \Testo\Assert::true($options['nullable']);
-        \Testo\Assert::null($options['defaultValue']);
-        \Testo\Assert::same($options['after'], 'email');
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('after');
+        Assert::true($options['nullable']);
+        Assert::null($options['defaultValue']);
+        Assert::same($options['after'], 'email');
     }
 
-    #[\Testo\Test]
     public function testColumnOptionsAfterEmptyStringIsIgnored(): void
     {
         $column = self::column(nullable: true, default: null, attributes: ['after' => ''], type: 'integer');
@@ -116,12 +113,11 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('after');
-        \Testo\Assert::true($options['nullable']);
-        \Testo\Assert::null($options['defaultValue']);
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('after');
+        Assert::true($options['nullable']);
+        Assert::null($options['defaultValue']);
     }
 
-    #[\Testo\Test]
     public function testColumnOptionsFirstNotFalseIsAccepted(): void
     {
         $column = self::column(nullable: true, default: null, attributes: ['first' => true], type: 'integer');
@@ -133,13 +129,12 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('first');
-        \Testo\Assert::true($options['nullable']);
-        \Testo\Assert::null($options['defaultValue']);
-        \Testo\Assert::true($options['first']);
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('first');
+        Assert::true($options['nullable']);
+        Assert::null($options['defaultValue']);
+        Assert::true($options['first']);
     }
 
-    #[\Testo\Test]
     public function testColumnOptionsFirstFalseIsIgnored(): void
     {
         $column = self::column(nullable: true, default: null, attributes: ['first' => false], type: 'integer');
@@ -151,9 +146,9 @@ final class RendererTest
 
         $options = $method->invoke($renderer, $column);
 
-        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('first');
-        \Testo\Assert::true($options['nullable']);
-        \Testo\Assert::null($options['defaultValue']);
+        Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('first');
+        Assert::true($options['nullable']);
+        Assert::null($options['defaultValue']);
     }
     private static function column(bool $nullable, mixed $default, array $attributes, string $type, array $enum = []): AbstractColumn
     {
