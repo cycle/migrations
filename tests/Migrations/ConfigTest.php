@@ -14,23 +14,25 @@ namespace Cycle\Migrations\Tests;
 use PHPUnit\Framework\TestCase;
 use Cycle\Migrations\Config\MigrationConfig;
 
-class ConfigTest extends TestCase
+class ConfigTest
 {
+    #[\Testo\Test]
     public function testNotSafe(): void
     {
         $c = new MigrationConfig([
             'safe' => false,
         ]);
 
-        $this->assertFalse($c->isSafe());
+        \Testo\Assert::false($c->isSafe());
     }
 
+    #[\Testo\Test]
     public function testSafe(): void
     {
         $c = new MigrationConfig([
             'safe' => true,
         ]);
 
-        $this->assertTrue($c->isSafe());
+        \Testo\Assert::true($c->isSafe());
     }
 }

@@ -20,6 +20,7 @@ use Cycle\Migrations\State;
 
 abstract class AtomizerTest extends BaseTest
 {
+    #[\Testo\Test]
     public function testCreateAndDiff(): void
     {
         //Create thought migration
@@ -33,17 +34,18 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
         $migration = $this->migrator->run();
 
-        $this->assertInstanceOf(Migration::class, $migration);
-        $this->assertSame(State::STATUS_EXECUTED, $migration->getState()->getStatus());
-        $this->assertInstanceOf(\DateTimeInterface::class, $migration->getState()->getTimeCreated());
-        $this->assertInstanceOf(\DateTimeInterface::class, $migration->getState()->getTimeExecuted());
+        \Testo\Assert::instanceOf($migration, Migration::class);
+        \Testo\Assert::same($migration->getState()->getStatus(), State::STATUS_EXECUTED);
+        \Testo\Assert::instanceOf($migration->getState()->getTimeCreated(), \DateTimeInterface::class);
+        \Testo\Assert::instanceOf($migration->getState()->getTimeExecuted(), \DateTimeInterface::class);
 
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndThenUpdate(): void
     {
         //Create thought migration
@@ -56,24 +58,25 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getAbstractType(), 'integer');
 
         $schema = $this->schema('sample');
         $schema->float('value');
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('float', $this->schema('sample')->column('value')->getAbstractType());
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::same($this->schema('sample')->column('value')->getAbstractType(), 'float');
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::same($this->schema('sample')->column('value')->getAbstractType(), 'integer');
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndThenRenameColumn(): void
     {
         //Create thought migration
@@ -85,26 +88,27 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('value'));
 
         $schema = $this->schema('sample');
         $schema->integer('value')->setName('value2');
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasColumn('value2'));
-        $this->assertFalse($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('value2'));
+        \Testo\Assert::false($this->schema('sample')->hasColumn('value'));
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasColumn('value'));
-        $this->assertFalse($this->schema('sample')->hasColumn('value2'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::false($this->schema('sample')->hasColumn('value2'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndThenRenameColumnWithIndex(): void
     {
         //Create thought migration
@@ -117,7 +121,7 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('value'));
 
         $schema = $this->schema('sample');
 
@@ -125,19 +129,20 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasColumn('value2'));
-        $this->assertFalse($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('value2'));
+        \Testo\Assert::false($this->schema('sample')->hasColumn('value'));
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasColumn('value'));
-        $this->assertFalse($this->schema('sample')->hasColumn('value2'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::false($this->schema('sample')->hasColumn('value2'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndThenUpdateAddDefault(): void
     {
         //Create thought migration
@@ -150,7 +155,7 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getAbstractType(), 'integer');
 
         $schema = $this->schema('sample');
         $schema->float('value')->defaultValue(2);
@@ -158,21 +163,22 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame('float', $this->schema('sample')->column('value')->getAbstractType());
-        $this->assertEquals(2, $this->schema('sample')->column('value')->getDefaultValue());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getAbstractType(), 'float');
+        \Testo\Assert::equals($this->schema('sample')->column('value')->getDefaultValue(), 2);
 
-        $this->assertTrue($this->db->hasTable('sample'));
-
-        $this->migrator->rollback();
-        $this->assertSame('integer', $this->schema('sample')->column('value')->getAbstractType());
-        $this->assertSame(null, $this->schema('sample')->column('value')->getDefaultValue());
-
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::same($this->schema('sample')->column('value')->getAbstractType(), 'integer');
+        \Testo\Assert::same($this->schema('sample')->column('value')->getDefaultValue(), null);
+
+        \Testo\Assert::true($this->db->hasTable('sample'));
+
+        $this->migrator->rollback();
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndTThenAddIndexAndMakeUnique(): void
     {
         //Create thought migration
@@ -184,8 +190,8 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertFalse($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->schema('sample')->hasIndex(['value']));
 
         $schema = $this->schema('sample');
         $schema->index(['value']);
@@ -193,9 +199,9 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasIndex(['value']));
-        $this->assertFalse($this->schema('sample')->index(['value'])->isUnique());
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::false($this->schema('sample')->index(['value'])->isUnique());
 
         $schema = $this->schema('sample');
         $schema->index(['value'])->unique(true);
@@ -203,23 +209,24 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration3', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasIndex(['value']));
-        $this->assertTrue($this->schema('sample')->index(['value'])->isUnique());
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::true($this->schema('sample')->index(['value'])->isUnique());
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasIndex(['value']));
-        $this->assertFalse($this->schema('sample')->index(['value'])->isUnique());
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::false($this->schema('sample')->index(['value'])->isUnique());
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertFalse($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->schema('sample')->hasIndex(['value']));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndDropIndex(): void
     {
         //Create thought migration
@@ -232,8 +239,8 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasIndex(['value']));
 
         $schema = $this->schema('sample');
         $schema->dropIndex(['value']);
@@ -241,17 +248,18 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertFalse($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->schema('sample')->hasIndex(['value']));
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasIndex(['value']));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndDropColumn(): void
     {
         //Create thought migration
@@ -264,8 +272,8 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasIndex(['value']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasIndex(['value']));
 
         $schema = $this->schema('sample');
         $schema->dropColumn('value');
@@ -274,19 +282,20 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertFalse($this->schema('sample')->hasColumn('value'));
-        $this->assertTrue($this->schema('sample')->hasColumn('name'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('name'));
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->schema('sample')->hasColumn('value'));
-        $this->assertFalse($this->schema('sample')->hasColumn('name'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->schema('sample')->hasColumn('value'));
+        \Testo\Assert::false($this->schema('sample')->hasColumn('name'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testSetPrimaryKeys(): void
     {
         //Create thought migration
@@ -300,13 +309,14 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertSame(['id', 'value'], $this->schema('sample')->getPrimaryKeys());
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::same($this->schema('sample')->getPrimaryKeys(), ['id', 'value']);
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testCreateDatetimeNowColumn(): void
     {
         //Create thought migration
@@ -320,16 +330,14 @@ abstract class AtomizerTest extends BaseTest
 
         $this->migrator->run();
 
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertSame(
-            (string)$column->getDefaultValue(),
-            (string)$this->schema('sample')->column('value')->getDefaultValue()
-        );
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::same((string)$this->schema('sample')->column('value')->getDefaultValue(), (string)$column->getDefaultValue());
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testChangePrimaryKeys(): void
     {
         //Create thought migration
@@ -343,8 +351,8 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertSame(['id', 'value'], $this->schema('sample')->getPrimaryKeys());
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::same($this->schema('sample')->getPrimaryKeys(), ['id', 'value']);
 
         $schema = $this->schema('sample');
         $schema->dropColumn('value');
@@ -352,15 +360,13 @@ abstract class AtomizerTest extends BaseTest
 
         $this->atomize('migration2', [$schema]);
 
-        $this->expectException(\Cycle\Migrations\Exception\MigrationException::class);
-        $this->expectExceptionMessageMatches(
-            "/Error in the migration \([0-9a-z_\-]+ \(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)\) occurred: "
-            . "Unable to set primary keys for table \'.+\'\.\'.+\', table already exists/"
-        );
+        \Testo\Expect::exception(\Cycle\Migrations\Exception\MigrationException::class)->withMessageMatchingRegex("/Error in the migration \([0-9a-z_\-]+ \(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)\) occurred: "
+        . "Unable to set primary keys for table \'.+\'\.\'.+\', table already exists/");
 
         $this->migrator->run();
     }
 
+    #[\Testo\Test]
     public function testCreateAndThenUpdateEnumDefault(): void
     {
         //Create thought migration
@@ -373,7 +379,7 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame(['a', 'b'], $this->schema('sample')->column('value')->getEnumValues());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getEnumValues(), ['a', 'b']);
 
         $schema = $this->schema('sample');
         $schema->enum('value', ['a', 'b', 'c']);
@@ -381,22 +387,20 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame(
-            ['a', 'b', 'c'],
-            $this->schema('sample')->column('value')->getEnumValues()
-        );
+        \Testo\Assert::same($this->schema('sample')->column('value')->getEnumValues(), ['a', 'b', 'c']);
 
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertSame(['a', 'b'], $this->schema('sample')->column('value')->getEnumValues());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getEnumValues(), ['a', 'b']);
 
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testChangeColumnScale(): void
     {
         //Create thought migration
@@ -408,8 +412,8 @@ abstract class AtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame(2, $this->schema('sample')->column('value')->getPrecision());
-        $this->assertSame(1, $this->schema('sample')->column('value')->getScale());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getPrecision(), 2);
+        \Testo\Assert::same($this->schema('sample')->column('value')->getScale(), 1);
 
         $schema = $this->schema('sample');
         $schema->decimal('value', 3, 2);
@@ -417,33 +421,34 @@ abstract class AtomizerTest extends BaseTest
 
         $this->migrator->run();
 
-        $this->assertSame(3, $this->schema('sample')->column('value')->getPrecision());
-        $this->assertSame(2, $this->schema('sample')->column('value')->getScale());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getPrecision(), 3);
+        \Testo\Assert::same($this->schema('sample')->column('value')->getScale(), 2);
 
-        $this->assertTrue($this->db->hasTable('sample'));
-
-        $this->migrator->rollback();
-        $this->assertSame(2, $this->schema('sample')->column('value')->getPrecision());
-        $this->assertSame(1, $this->schema('sample')->column('value')->getScale());
-
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::same($this->schema('sample')->column('value')->getPrecision(), 2);
+        \Testo\Assert::same($this->schema('sample')->column('value')->getScale(), 1);
+
+        \Testo\Assert::true($this->db->hasTable('sample'));
+
+        $this->migrator->rollback();
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 
+    #[\Testo\Test]
     public function testSetTables(): void
     {
         $atomizer = new Atomizer(new Renderer());
 
-        $table1 = $this->createMock(AbstractTable::class);
-        $table2 = $this->createMock(AbstractTable::class);
-        $table3 = $this->createMock(AbstractTable::class);
+        $table1 = \Mockery::mock(AbstractTable::class)->shouldIgnoreMissing();
+        $table2 = \Mockery::mock(AbstractTable::class)->shouldIgnoreMissing();
+        $table3 = \Mockery::mock(AbstractTable::class)->shouldIgnoreMissing();
 
         $atomizer->addTable($table1);
-        $this->assertSame([$table1], $atomizer->getTables());
+        \Testo\Assert::same($atomizer->getTables(), [$table1]);
 
         $atomizer->setTables([$table2, $table3]);
-        $this->assertSame([$table2, $table3], $atomizer->getTables());
+        \Testo\Assert::same($atomizer->getTables(), [$table2, $table3]);
     }
 }

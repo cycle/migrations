@@ -13,12 +13,11 @@ namespace Cycle\Migrations\Tests\SQLServer;
 
 use PHPUnit\Framework\Attributes\Group;
 
-#[Group('driver')]
-#[Group('driver-sqlserver')]
+#[\Testo\Filter\Group('driver', 'driver-sqlserver')]
 class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
 {
     public const DRIVER = 'sqlserver';
-
+    #[\Testo\Test]
     public function testChangeBinaryColumnSize(): void
     {
         $this->migrator->configure();
@@ -29,7 +28,7 @@ class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertSame(16, $this->schema('sample')->column('value')->getSize());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
 
         $schema = $this->schema('sample');
         $schema->binary('value', size: 255);
@@ -37,16 +36,16 @@ class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
 
         $this->migrator->run();
 
-        $this->assertSame(255, $this->schema('sample')->column('value')->getSize());
+        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 255);
 
-        $this->assertTrue($this->db->hasTable('sample'));
-
-        $this->migrator->rollback();
-        $this->assertSame(16, $this->schema('sample')->column('value')->getSize());
-
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
+
+        \Testo\Assert::true($this->db->hasTable('sample'));
+
+        $this->migrator->rollback();
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 }

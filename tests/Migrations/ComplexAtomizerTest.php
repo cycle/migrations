@@ -15,6 +15,7 @@ use Cycle\Database\ForeignKeyInterface;
 
 abstract class ComplexAtomizerTest extends BaseTest
 {
+    #[\Testo\Test]
     public function testCreateMultiple(): void
     {
         //Create thought migration
@@ -34,14 +35,15 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema, $schema1]);
         $this->migrator->run();
 
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
-        $this->assertFalse($this->db->hasTable('sample1'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample1'));
     }
 
+    #[\Testo\Test]
     public function testCreateMultipleChangeFK(): void
     {
         //Create thought migration
@@ -63,12 +65,12 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema, $schema1]);
         $this->migrator->run();
 
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
 
         $fk = $this->schema('sample1')->foreignKey(['sample_id']);
-        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getDeleteRule());
-        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getUpdateRule());
+        \Testo\Assert::same($fk->getDeleteRule(), ForeignKeyInterface::CASCADE);
+        \Testo\Assert::same($fk->getUpdateRule(), ForeignKeyInterface::CASCADE);
 
         $schema1 = $this->schema('sample1');
         $schema1->foreignKey(['sample_id'])->references('sample', ['id'])
@@ -79,22 +81,23 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->migrator->run();
 
         $fk = $this->schema('sample1')->foreignKey(['sample_id']);
-        $this->assertSame(ForeignKeyInterface::NO_ACTION, $fk->getDeleteRule());
-        $this->assertSame(ForeignKeyInterface::NO_ACTION, $fk->getUpdateRule());
+        \Testo\Assert::same($fk->getDeleteRule(), ForeignKeyInterface::NO_ACTION);
+        \Testo\Assert::same($fk->getUpdateRule(), ForeignKeyInterface::NO_ACTION);
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
 
         $fk = $this->schema('sample1')->foreignKey(['sample_id']);
-        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getDeleteRule());
-        $this->assertSame(ForeignKeyInterface::CASCADE, $fk->getUpdateRule());
+        \Testo\Assert::same($fk->getDeleteRule(), ForeignKeyInterface::CASCADE);
+        \Testo\Assert::same($fk->getUpdateRule(), ForeignKeyInterface::CASCADE);
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
-        $this->assertFalse($this->db->hasTable('sample1'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample1'));
     }
 
+    #[\Testo\Test]
     public function testCreateMultipleWithPivot(): void
     {
         //Create thought migration
@@ -120,16 +123,17 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema, $schema1, $schema2]);
         $this->migrator->run();
 
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
-        $this->assertTrue($this->db->hasTable('sample2'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
+        \Testo\Assert::true($this->db->hasTable('sample2'));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
-        $this->assertFalse($this->db->hasTable('sample1'));
-        $this->assertFalse($this->db->hasTable('sample2'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample1'));
+        \Testo\Assert::false($this->db->hasTable('sample2'));
     }
 
+    #[\Testo\Test]
     public function testCreateAndAddFK(): void
     {
         //Create thought migration
@@ -146,8 +150,8 @@ abstract class ComplexAtomizerTest extends BaseTest
 
         $this->atomize('migration1', [$schema, $schema1]);
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
 
         $schema1 = $this->schema('sample1');
         $schema1->integer('sample_id');
@@ -156,20 +160,21 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->atomize('migration2', [$this->schema('sample'), $schema1]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
-        $this->assertTrue($this->schema('sample1')->hasForeignKey(['sample_id']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
+        \Testo\Assert::true($this->schema('sample1')->hasForeignKey(['sample_id']));
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
-        $this->assertFalse($this->schema('sample1')->hasForeignKey(['sample_id']));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
+        \Testo\Assert::false($this->schema('sample1')->hasForeignKey(['sample_id']));
 
         $this->migrator->rollback();
-        $this->assertFalse($this->db->hasTable('sample'));
-        $this->assertFalse($this->db->hasTable('sample1'));
+        \Testo\Assert::false($this->db->hasTable('sample'));
+        \Testo\Assert::false($this->db->hasTable('sample1'));
     }
 
+    #[\Testo\Test]
     public function testDropFK(): void
     {
         //Create thought migration
@@ -189,10 +194,10 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->atomize('migration1', [$schema, $schema1]);
         $this->migrator->run();
 
-        $this->assertTrue($this->db->hasTable('sample'));
-        $this->assertTrue($this->db->hasTable('sample1'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample1'));
 
-        $this->assertTrue($this->db->table('sample1')->hasForeignKey(['sk']));
+        \Testo\Assert::true($this->db->table('sample1')->hasForeignKey(['sk']));
 
         $schema1 = $this->schema('sample1');
         $schema1->dropForeignKey(['sk']);
@@ -200,9 +205,9 @@ abstract class ComplexAtomizerTest extends BaseTest
         $this->atomize('migration2', [$this->schema('sample'), $schema1]);
 
         $this->migrator->run();
-        $this->assertFalse($this->db->table('sample1')->hasForeignKey(['sk']));
+        \Testo\Assert::false($this->db->table('sample1')->hasForeignKey(['sk']));
 
         $this->migrator->rollback();
-        $this->assertTrue($this->db->table('sample1')->hasForeignKey(['sk']));
+        \Testo\Assert::true($this->db->table('sample1')->hasForeignKey(['sk']));
     }
 }

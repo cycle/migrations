@@ -13,12 +13,11 @@ namespace Cycle\Migrations\Tests\Postgres;
 
 use PHPUnit\Framework\Attributes\Group;
 
-#[Group('driver')]
-#[Group('driver-postgres')]
+#[\Testo\Filter\Group('driver', 'driver-postgres')]
 class ComplexAtomizerTest extends \Cycle\Migrations\Tests\ComplexAtomizerTest
 {
     public const DRIVER = 'postgres';
-
+    #[\Testo\Test]
     public function testTableSorting(): void
     {
         $this->migrator->configure();
@@ -39,17 +38,17 @@ class ComplexAtomizerTest extends \Cycle\Migrations\Tests\ComplexAtomizerTest
         $this->atomize('migration1', [$schema, $schema1, $schema2]);
         $this->migrator->run();
 
-        $this->assertTrue($this->db->hasTable('messages'));
-        $this->assertTrue($this->db->table('messages')->hasForeignKey(['thread_id']));
-        $this->assertTrue($this->db->table('messages')->hasForeignKey(['user_id']));
+        \Testo\Assert::true($this->db->hasTable('messages'));
+        \Testo\Assert::true($this->db->table('messages')->hasForeignKey(['thread_id']));
+        \Testo\Assert::true($this->db->table('messages')->hasForeignKey(['user_id']));
 
-        $this->assertTrue($this->db->hasTable('users'));
-        $this->assertTrue($this->db->hasTable('threads'));
+        \Testo\Assert::true($this->db->hasTable('users'));
+        \Testo\Assert::true($this->db->hasTable('threads'));
 
         $this->migrator->rollback();
 
-        $this->assertFalse($this->db->hasTable('messages'));
-        $this->assertFalse($this->db->hasTable('users'));
-        $this->assertFalse($this->db->hasTable('threads'));
+        \Testo\Assert::false($this->db->hasTable('messages'));
+        \Testo\Assert::false($this->db->hasTable('users'));
+        \Testo\Assert::false($this->db->hasTable('threads'));
     }
 }

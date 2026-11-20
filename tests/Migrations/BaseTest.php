@@ -34,7 +34,7 @@ use Cycle\Migrations\Migrator;
 use Spiral\Reactor\FileDeclaration;
 use Spiral\Reactor\Partial\PhpNamespace;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTest
 {
     public const DRIVER = null;
 
@@ -55,6 +55,7 @@ abstract class BaseTest extends TestCase
     protected Database $db;
     protected FileRepository $repository;
 
+    #[\Testo\Lifecycle\BeforeTest]
     public function setUp(): void
     {
         if (static::$config['debug'] ?? false) {
@@ -76,6 +77,7 @@ abstract class BaseTest extends TestCase
     /**
      * @throws \Throwable
      */
+    #[\Testo\Lifecycle\AfterTest]
     public function tearDown(): void
     {
         $files = new Files();
@@ -130,7 +132,7 @@ abstract class BaseTest extends TestCase
             $atomizer->addTable($table);
         }
 
-        $this->assertCount(count($tables), $atomizer->getTables());
+        \Testo\Assert::count($atomizer->getTables(), count($tables));
 
         //Rendering
         $namespace = new PhpNamespace('Migrations');
@@ -218,6 +220,7 @@ abstract class BaseTest extends TestCase
         }
     }
 
+    #[\Testo\Common\Attribute\AssertMethod]
     protected function assertSameAsInDB(AbstractTable $current): void
     {
         $source = $current->getState();
@@ -225,105 +228,53 @@ abstract class BaseTest extends TestCase
 
         // testing changes
 
-        $this->assertSame(
-            $source->getPrimaryKeys(),
-            $target->getPrimaryKeys(),
-            'Primary keys changed'
-        );
+        \Testo\Assert::same($target->getPrimaryKeys(), $source->getPrimaryKeys(), 'Primary keys changed');
 
-        $this->assertSame(
-            count($source->getColumns()),
-            count($target->getColumns()),
-            'Column number has changed'
-        );
+        \Testo\Assert::same(count($target->getColumns()), count($source->getColumns()), 'Column number has changed');
 
-        $this->assertSame(
-            count($source->getIndexes()),
-            count($target->getIndexes()),
-            'Index number has changed'
-        );
+        \Testo\Assert::same(count($target->getIndexes()), count($source->getIndexes()), 'Index number has changed');
 
-        $this->assertSame(
-            count($source->getForeignKeys()),
-            count($target->getForeignKeys()),
-            'FK number has changed'
-        );
+        \Testo\Assert::same(count($target->getForeignKeys()), count($source->getForeignKeys()), 'FK number has changed');
 
         // columns
 
         foreach ($source->getColumns() as $column) {
-            $this->assertTrue(
-                $target->hasColumn($column->getName()),
-                "Column {$column} has been removed"
-            );
+            \Testo\Assert::true($target->hasColumn($column->getName()), "Column {$column} has been removed");
 
-            $this->assertTrue(
-                $column->compare($target->findColumn($column->getName())),
-                "Column {$column} has been changed"
-            );
+            \Testo\Assert::true($column->compare($target->findColumn($column->getName())), "Column {$column} has been changed");
         }
 
         foreach ($target->getColumns() as $column) {
-            $this->assertTrue(
-                $source->hasColumn($column->getName()),
-                "Column {$column} has been added"
-            );
+            \Testo\Assert::true($source->hasColumn($column->getName()), "Column {$column} has been added");
 
-            $this->assertTrue(
-                $column->compare($source->findColumn($column->getName())),
-                "Column {$column} has been changed"
-            );
+            \Testo\Assert::true($column->compare($source->findColumn($column->getName())), "Column {$column} has been changed");
         }
 
         // indexes
 
         foreach ($source->getIndexes() as $index) {
-            $this->assertTrue(
-                $target->hasIndex($index->getColumns()),
-                "Index {$index->getName()} has been removed"
-            );
+            \Testo\Assert::true($target->hasIndex($index->getColumns()), "Index {$index->getName()} has been removed");
 
-            $this->assertTrue(
-                $index->compare($target->findIndex($index->getColumns())),
-                "Index {$index->getName()} has been changed"
-            );
+            \Testo\Assert::true($index->compare($target->findIndex($index->getColumns())), "Index {$index->getName()} has been changed");
         }
 
         foreach ($target->getIndexes() as $index) {
-            $this->assertTrue(
-                $source->hasIndex($index->getColumns()),
-                "Index {$index->getName()} has been removed"
-            );
+            \Testo\Assert::true($source->hasIndex($index->getColumns()), "Index {$index->getName()} has been removed");
 
-            $this->assertTrue(
-                $index->compare($source->findIndex($index->getColumns())),
-                "Index {$index->getName()} has been changed"
-            );
+            \Testo\Assert::true($index->compare($source->findIndex($index->getColumns())), "Index {$index->getName()} has been changed");
         }
 
         // FK
         foreach ($source->getForeignKeys() as $key) {
-            $this->assertTrue(
-                $target->hasForeignKey($key->getColumns()),
-                "FK {$key->getName()} has been removed"
-            );
+            \Testo\Assert::true($target->hasForeignKey($key->getColumns()), "FK {$key->getName()} has been removed");
 
-            $this->assertTrue(
-                $key->compare($target->findForeignKey($key->getColumns())),
-                "FK {$key->getName()} has been changed"
-            );
+            \Testo\Assert::true($key->compare($target->findForeignKey($key->getColumns())), "FK {$key->getName()} has been changed");
         }
 
         foreach ($target->getForeignKeys() as $key) {
-            $this->assertTrue(
-                $source->hasForeignKey($key->getColumns()),
-                "FK {$key->getName()} has been removed"
-            );
+            \Testo\Assert::true($source->hasForeignKey($key->getColumns()), "FK {$key->getName()} has been removed");
 
-            $this->assertTrue(
-                $key->compare($source->findForeignKey($key->getColumns())),
-                "FK {$key->getName()} has been changed"
-            );
+            \Testo\Assert::true($key->compare($source->findForeignKey($key->getColumns())), "FK {$key->getName()} has been changed");
         }
 
         // everything else
@@ -333,7 +284,7 @@ abstract class BaseTest extends TestCase
         );
 
         if ($comparator->hasChanges()) {
-            $this->fail($this->makeMessage($current->getName(), $comparator));
+            \Testo\Assert::fail($this->makeMessage($current->getName(), $comparator));
         }
     }
 

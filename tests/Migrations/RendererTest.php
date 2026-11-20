@@ -16,14 +16,15 @@ use Cycle\Migrations\Atomizer\Renderer;
 
 abstract class RendererTest extends BaseTest
 {
+    #[\Testo\Test]
     public function testColumnOptionsForEnumColumn(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(true);
-        $column->method('getDefaultValue')->willReturn('one');
-        $column->method('getAttributes')->willReturn([]);
-        $column->method('getAbstractType')->willReturn('enum');
-        $column->method('getEnumValues')->willReturn(['one', 'two', 'three']);
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(true);
+        $column->shouldReceive('getDefaultValue')->andReturn('one');
+        $column->shouldReceive('getAttributes')->andReturn([]);
+        $column->shouldReceive('getAbstractType')->andReturn('enum');
+        $column->shouldReceive('getEnumValues')->andReturn(['one', 'two', 'three']);
 
         $renderer = new Renderer();
 
@@ -32,21 +33,20 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertArrayHasKey('values', $options);
-        $this->assertTrue($options['nullable']);
-        $this->assertSame('one', $options['defaultValue']);
-        $this->assertSame(['one', 'two', 'three'], $options['values']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('values');
+        \Testo\Assert::true($options['nullable']);
+        \Testo\Assert::same($options['defaultValue'], 'one');
+        \Testo\Assert::same($options['values'], ['one', 'two', 'three']);
     }
 
+    #[\Testo\Test]
     public function testColumnOptionsWithDateTimeNow(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(false);
-        $column->method('getDefaultValue')->willReturn(AbstractColumn::DATETIME_NOW);
-        $column->method('getAttributes')->willReturn([]);
-        $column->method('getAbstractType')->willReturn('datetime');
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(false);
+        $column->shouldReceive('getDefaultValue')->andReturn(AbstractColumn::DATETIME_NOW);
+        $column->shouldReceive('getAttributes')->andReturn([]);
+        $column->shouldReceive('getAbstractType')->andReturn('datetime');
 
         $renderer = new Renderer();
 
@@ -55,19 +55,19 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertFalse($options['nullable']);
-        $this->assertSame(AbstractColumn::DATETIME_NOW, $options['defaultValue']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue');
+        \Testo\Assert::false($options['nullable']);
+        \Testo\Assert::same($options['defaultValue'], AbstractColumn::DATETIME_NOW);
     }
 
+    #[\Testo\Test]
     public function testColumnOptionsSizeNotZeroIsAccepted(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(true);
-        $column->method('getDefaultValue')->willReturn(null);
-        $column->method('getAttributes')->willReturn(['size' => 11]);
-        $column->method('getAbstractType')->willReturn('integer');
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(true);
+        $column->shouldReceive('getDefaultValue')->andReturn(null);
+        $column->shouldReceive('getAttributes')->andReturn(['size' => 11]);
+        $column->shouldReceive('getAbstractType')->andReturn('integer');
 
         $renderer = new Renderer();
 
@@ -76,21 +76,20 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertArrayHasKey('size', $options);
-        $this->assertTrue($options['nullable']);
-        $this->assertNull($options['defaultValue']);
-        $this->assertSame(11, $options['size']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('size');
+        \Testo\Assert::true($options['nullable']);
+        \Testo\Assert::null($options['defaultValue']);
+        \Testo\Assert::same($options['size'], 11);
     }
 
+    #[\Testo\Test]
     public function testColumnOptionsSizeZeroIsIgnored(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(true);
-        $column->method('getDefaultValue')->willReturn(null);
-        $column->method('getAttributes')->willReturn(['size' => 0]);
-        $column->method('getAbstractType')->willReturn('integer');
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(true);
+        $column->shouldReceive('getDefaultValue')->andReturn(null);
+        $column->shouldReceive('getAttributes')->andReturn(['size' => 0]);
+        $column->shouldReceive('getAbstractType')->andReturn('integer');
 
         $renderer = new Renderer();
 
@@ -99,20 +98,19 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertArrayNotHasKey('size', $options);
-        $this->assertTrue($options['nullable']);
-        $this->assertNull($options['defaultValue']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('size');
+        \Testo\Assert::true($options['nullable']);
+        \Testo\Assert::null($options['defaultValue']);
     }
 
+    #[\Testo\Test]
     public function testColumnOptionsAfterNotEmptyStringIsAccepted(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(true);
-        $column->method('getDefaultValue')->willReturn(null);
-        $column->method('getAttributes')->willReturn(['after' => 'email']);
-        $column->method('getAbstractType')->willReturn('integer');
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(true);
+        $column->shouldReceive('getDefaultValue')->andReturn(null);
+        $column->shouldReceive('getAttributes')->andReturn(['after' => 'email']);
+        $column->shouldReceive('getAbstractType')->andReturn('integer');
 
         $renderer = new Renderer();
 
@@ -121,21 +119,20 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertArrayHasKey('after', $options);
-        $this->assertTrue($options['nullable']);
-        $this->assertNull($options['defaultValue']);
-        $this->assertSame('email', $options['after']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('after');
+        \Testo\Assert::true($options['nullable']);
+        \Testo\Assert::null($options['defaultValue']);
+        \Testo\Assert::same($options['after'], 'email');
     }
 
+    #[\Testo\Test]
     public function testColumnOptionsAfterEmptyStringIsIgnored(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(true);
-        $column->method('getDefaultValue')->willReturn(null);
-        $column->method('getAttributes')->willReturn(['after' => '']);
-        $column->method('getAbstractType')->willReturn('integer');
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(true);
+        $column->shouldReceive('getDefaultValue')->andReturn(null);
+        $column->shouldReceive('getAttributes')->andReturn(['after' => '']);
+        $column->shouldReceive('getAbstractType')->andReturn('integer');
 
         $renderer = new Renderer();
 
@@ -144,20 +141,19 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertArrayNotHasKey('after', $options);
-        $this->assertTrue($options['nullable']);
-        $this->assertNull($options['defaultValue']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('after');
+        \Testo\Assert::true($options['nullable']);
+        \Testo\Assert::null($options['defaultValue']);
     }
 
+    #[\Testo\Test]
     public function testColumnOptionsFirstNotFalseIsAccepted(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(true);
-        $column->method('getDefaultValue')->willReturn(null);
-        $column->method('getAttributes')->willReturn(['first' => true]);
-        $column->method('getAbstractType')->willReturn('integer');
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(true);
+        $column->shouldReceive('getDefaultValue')->andReturn(null);
+        $column->shouldReceive('getAttributes')->andReturn(['first' => true]);
+        $column->shouldReceive('getAbstractType')->andReturn('integer');
 
         $renderer = new Renderer();
 
@@ -166,21 +162,20 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertArrayHasKey('first', $options);
-        $this->assertTrue($options['nullable']);
-        $this->assertNull($options['defaultValue']);
-        $this->assertTrue($options['first']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->hasKeys('first');
+        \Testo\Assert::true($options['nullable']);
+        \Testo\Assert::null($options['defaultValue']);
+        \Testo\Assert::true($options['first']);
     }
 
+    #[\Testo\Test]
     public function testColumnOptionsFirstFalseIsIgnored(): void
     {
-        $column = $this->createMock(AbstractColumn::class);
-        $column->method('isNullable')->willReturn(true);
-        $column->method('getDefaultValue')->willReturn(null);
-        $column->method('getAttributes')->willReturn(['first' => false]);
-        $column->method('getAbstractType')->willReturn('integer');
+        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
+        $column->shouldReceive('isNullable')->andReturn(true);
+        $column->shouldReceive('getDefaultValue')->andReturn(null);
+        $column->shouldReceive('getAttributes')->andReturn(['first' => false]);
+        $column->shouldReceive('getAbstractType')->andReturn('integer');
 
         $renderer = new Renderer();
 
@@ -189,10 +184,8 @@ abstract class RendererTest extends BaseTest
 
         $options = $method->invoke($renderer, $column);
 
-        $this->assertArrayHasKey('nullable', $options);
-        $this->assertArrayHasKey('defaultValue', $options);
-        $this->assertArrayNotHasKey('first', $options);
-        $this->assertTrue($options['nullable']);
-        $this->assertNull($options['defaultValue']);
+        \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('first');
+        \Testo\Assert::true($options['nullable']);
+        \Testo\Assert::null($options['defaultValue']);
     }
 }

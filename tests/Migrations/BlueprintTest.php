@@ -17,6 +17,7 @@ use Cycle\Migrations\TableBlueprint;
 
 abstract class BlueprintTest extends BaseTest
 {
+    #[\Testo\Test]
     public function testCreateButNot(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -24,9 +25,10 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->addColumn('id', 'primary');
 
         //Not created
-        $this->assertFalse($blueprint->getSchema()->exists());
+        \Testo\Assert::false($blueprint->getSchema()->exists());
     }
 
+    #[\Testo\Test]
     public function testCreate(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -34,9 +36,10 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
     }
 
+    #[\Testo\Test]
     public function testCreateWithColumns(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -46,9 +49,10 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
     }
 
+    #[\Testo\Test]
     public function testCreateWithIndexesAndDropIndex(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -59,16 +63,17 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->dropIndex(['value'])->update();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
     }
 
+    #[\Testo\Test]
     public function testCreateWithNamedIndex(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -78,9 +83,10 @@ abstract class BlueprintTest extends BaseTest
             ->addIndex(['value'], ['unique' => true, 'name' => 'super_index'])
             ->create();
 
-        $this->assertSame('super_index', $this->schema('sample')->index(['value'])->getName());
+        \Testo\Assert::same($this->schema('sample')->index(['value'])->getName(), 'super_index');
     }
 
+    #[\Testo\Test]
     public function testCreateWithForeign(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
@@ -88,7 +94,7 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
@@ -103,9 +109,10 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
     }
 
+    #[\Testo\Test]
     public function testCreateWithForeignAliased(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
@@ -113,7 +120,7 @@ abstract class BlueprintTest extends BaseTest
         $blueprint->addColumn('id', 'primary')->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -128,9 +135,10 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
     }
 
+    #[\Testo\Test]
     public function testCreateForeignWithIndex(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
@@ -143,12 +151,13 @@ abstract class BlueprintTest extends BaseTest
             ->addForeignKey(['sample_id'], 'sample1', ['id'])
             ->create();
 
-        $this->assertTrue($blueprint->getSchema()->hasIndex(['sample_id']));
+        \Testo\Assert::true($blueprint->getSchema()->hasIndex(['sample_id']));
     }
 
+    #[\Testo\Test]
     public function testUpdateTableError(): void
     {
-        $this->expectException(\Cycle\Migrations\Exception\Operation\TableException::class);
+        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\TableException::class);
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -157,7 +166,7 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
@@ -165,9 +174,10 @@ abstract class BlueprintTest extends BaseTest
             ->create(); //wrong
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
     }
 
+    #[\Testo\Test]
     public function testUpdateTable(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -178,7 +188,7 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
@@ -186,9 +196,10 @@ abstract class BlueprintTest extends BaseTest
             ->update();
     }
 
+    #[\Testo\Test]
     public function testUpdateTableError2(): void
     {
-        $this->expectException(\Cycle\Migrations\Exception\Operation\ColumnException::class);
+        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -197,16 +208,17 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('value', 'int')->update();
     }
 
+    #[\Testo\Test]
     public function testUpdateTableError5(): void
     {
-        $this->expectException(\Cycle\Migrations\Exception\Operation\ColumnException::class);
+        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\ColumnException::class);
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -215,16 +227,17 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('value', 'int')->update();
     }
 
+    #[\Testo\Test]
     public function testUpdateTableError3(): void
     {
-        $this->expectException(\Cycle\Migrations\Exception\Operation\IndexException::class);
+        \Testo\Expect::exception(\Cycle\Migrations\Exception\Operation\IndexException::class);
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->addColumn('id', 'primary')
@@ -233,13 +246,14 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->addIndex(['value'])->update();
     }
 
+    #[\Testo\Test]
     public function testDropTable(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -250,13 +264,14 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint($capsule = new Capsule($this->db), 'sample');
 
         $blueprint->drop();
     }
 
+    #[\Testo\Test]
     public function testRenameTable(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
@@ -267,7 +282,7 @@ abstract class BlueprintTest extends BaseTest
             ->create();
 
         //Not created
-        $this->assertTrue($blueprint->getSchema()->exists());
+        \Testo\Assert::true($blueprint->getSchema()->exists());
 
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 

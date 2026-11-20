@@ -8,6 +8,7 @@ use Cycle\Migrations\Atomizer\TableSorter;
 
 abstract class TableSorterTest extends BaseTest
 {
+    #[\Testo\Test]
     public function testSortWithoutDeps(): void
     {
         $sorter = new TableSorter();
@@ -19,9 +20,10 @@ abstract class TableSorterTest extends BaseTest
         $table2->primary('id');
         $table1->integer('value');
 
-        $this->assertSame([$table1, $table2], $sorter->sort([$table1, $table2]));
+        \Testo\Assert::same($sorter->sort([$table1, $table2]), [$table1, $table2]);
     }
 
+    #[\Testo\Test]
     public function testSortWithCorrectOrder(): void
     {
         $sorter = new TableSorter();
@@ -34,9 +36,10 @@ abstract class TableSorterTest extends BaseTest
         $table2->integer('sample_id');
         $table2->foreignKey(['sample_id'])->references('table1', ['id']);
 
-        $this->assertSame([$table1, $table2], $sorter->sort([$table1, $table2]));
+        \Testo\Assert::same($sorter->sort([$table1, $table2]), [$table1, $table2]);
     }
 
+    #[\Testo\Test]
     public function testSortWithIncorrectOrder(): void
     {
         $sorter = new TableSorter();
@@ -49,6 +52,6 @@ abstract class TableSorterTest extends BaseTest
         $table2->primary('id');
         $table2->integer('value');
 
-        $this->assertSame([$table2, $table1], $sorter->sort([$table1, $table2]));
+        \Testo\Assert::same($sorter->sort([$table1, $table2]), [$table2, $table1]);
     }
 }

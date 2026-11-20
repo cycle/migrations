@@ -13,8 +13,9 @@ use Cycle\Migrations\Migrator;
 use Cycle\Migrations\RepositoryInterface;
 use PHPUnit\Framework\TestCase;
 
-final class IsolatedMigratorTest extends TestCase
+final class IsolatedMigratorTest
 {
+    #[\Testo\Test]
     public function testReadonlyDriversMustNotBeUsed()
     {
         $dbal = new DatabaseManager(new DatabaseConfig());
@@ -22,16 +23,13 @@ final class IsolatedMigratorTest extends TestCase
             new Database(
                 'foo',
                 '',
-                $driver = $this->createMock(DriverInterface::class),
+                $driver = \Mockery::mock(DriverInterface::class)->shouldIgnoreMissing(),
             ),
         );
-        $driver->expects($this->atLeastOnce())->method('isReadonly')->willReturn(true);
-        $driver
-            ->expects($this->any())
-            ->method($this->callback(fn($name) => $name !== 'isReadonly'))
-            ->willThrowException(new \RuntimeException('Unexpected method call'));
+        $driver->shouldReceive('isReadonly')->atLeast()->once()->andReturn(true);
+        $driver->shouldReceive($this->callback(fn($name) => $name !== 'isReadonly'))->andThrow(new \RuntimeException('Unexpected method call'));
 
-        $repository = $this->createMock(RepositoryInterface::class);
+        $repository = \Mockery::mock(RepositoryInterface::class)->shouldIgnoreMissing();
 
         $migrator = new Migrator(
             new MigrationConfig([]),

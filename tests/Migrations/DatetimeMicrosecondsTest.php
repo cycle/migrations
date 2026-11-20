@@ -33,6 +33,7 @@ abstract class DatetimeMicrosecondsTest extends BaseTest
         return $this->driver;
     }
 
+    #[\Testo\Test]
     public function testMigrationResolvedAsExecutedAfterRun(): void
     {
         $this->migrator->configure();
@@ -44,10 +45,11 @@ abstract class DatetimeMicrosecondsTest extends BaseTest
 
         $migration = $this->migrator->run();
 
-        $this->assertInstanceOf(Migration::class, $migration);
-        $this->assertSame(State::STATUS_EXECUTED, $migration->getState()->getStatus());
+        \Testo\Assert::instanceOf($migration, Migration::class);
+        \Testo\Assert::same($migration->getState()->getStatus(), State::STATUS_EXECUTED);
     }
 
+    #[\Testo\Test]
     public function testSecondRunHasNothingToExecute(): void
     {
         $this->migrator->configure();
@@ -60,9 +62,10 @@ abstract class DatetimeMicrosecondsTest extends BaseTest
         $this->migrator->run();
 
         // The only migration has been executed, nothing is pending
-        $this->assertNull($this->migrator->run());
+        \Testo\Assert::null($this->migrator->run());
     }
 
+    #[\Testo\Test]
     public function testUpgradeFromLegacyTableStructure(): void
     {
         // The migration table as it was created by previous versions of the package:
@@ -76,7 +79,7 @@ abstract class DatetimeMicrosecondsTest extends BaseTest
         $schema->save();
 
         $this->migrator->configure();
-        $this->assertTrue($this->migrator->isConfigured());
+        \Testo\Assert::true($this->migrator->isConfigured());
 
         $schema = $this->schema('sample');
         $schema->primary('id');
@@ -85,11 +88,12 @@ abstract class DatetimeMicrosecondsTest extends BaseTest
 
         $migration = $this->migrator->run();
 
-        $this->assertInstanceOf(Migration::class, $migration);
-        $this->assertSame(State::STATUS_EXECUTED, $migration->getState()->getStatus());
-        $this->assertNull($this->migrator->run());
+        \Testo\Assert::instanceOf($migration, Migration::class);
+        \Testo\Assert::same($migration->getState()->getStatus(), State::STATUS_EXECUTED);
+        \Testo\Assert::null($this->migrator->run());
     }
 
+    #[\Testo\Test]
     public function testRollbackAfterRun(): void
     {
         $this->migrator->configure();
@@ -100,11 +104,11 @@ abstract class DatetimeMicrosecondsTest extends BaseTest
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
-        $this->assertTrue($this->db->hasTable('sample'));
+        \Testo\Assert::true($this->db->hasTable('sample'));
 
         $migration = $this->migrator->rollback();
 
-        $this->assertInstanceOf(Migration::class, $migration);
-        $this->assertFalse($this->db->hasTable('sample'));
+        \Testo\Assert::instanceOf($migration, Migration::class);
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 }

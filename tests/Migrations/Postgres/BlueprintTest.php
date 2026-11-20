@@ -15,12 +15,11 @@ use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
 use PHPUnit\Framework\Attributes\Group;
 
-#[Group('driver')]
-#[Group('driver-postgres')]
+#[\Testo\Filter\Group('driver', 'driver-postgres')]
 class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'postgres';
-
+    #[\Testo\Test]
     public function testCreateForeignWithoutIndex(): void
     {
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
@@ -33,6 +32,6 @@ class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
             ->addForeignKey(['sample_id'], 'sample1', ['id'], ['indexCreate' => false])
             ->create();
 
-        $this->assertFalse($blueprint->getSchema()->hasIndex(['sample_id']));
+        \Testo\Assert::false($blueprint->getSchema()->hasIndex(['sample_id']));
     }
 }
