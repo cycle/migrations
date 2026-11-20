@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   sqlite:
-    name: SQLite · PHP ${{ matrix.php-version }} · ${{ matrix.dependencies }}
+    name: Unit and SQLite · PHP ${{ matrix.php-version }} · ${{ matrix.dependencies }}
     timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
@@ -49,14 +49,18 @@ jobs:
         run: composer validate --ansi --strict
 
       - name: Install dependencies with composer
+        # TODO(cycle/testing): switch to the released package
         uses: ramsey/composer-install@v4
         with:
           dependency-versions: ${{ matrix.dependencies }}
 
-      - name: Execute tests
+      - name: Unit tests
+        run: composer test:unit
+
+      - name: SQLite tests
         env:
-          DB: sqlite
-        run: vendor/bin/phpunit --colors=always --exclude-group driver-mysql --exclude-group driver-postgres --exclude-group driver-sqlserver
+          DB_REQUIRED: 1
+        run: composer test:sqlite
 
   coverage:
     name: Code coverage
@@ -77,14 +81,16 @@ jobs:
           coverage: pcov
 
       - name: Install dependencies with composer
+        # TODO(cycle/testing): switch to the released package
         uses: ramsey/composer-install@v4
         with:
           dependency-versions: highest
 
       - name: Collect code coverage
         env:
-          DB: sqlite
-        run: vendor/bin/phpunit --colors=always --exclude-group driver-mysql --exclude-group driver-postgres --exclude-group driver-sqlserver --coverage-clover=runtime/clover.xml
+          DB_DRIVERS: sqlite
+          DB_REQUIRED: 1
+        run: composer test -- --coverage-clover=runtime/clover.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7

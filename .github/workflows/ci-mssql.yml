@@ -16,10 +16,54 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  phpunit:
-    uses: cycle/gh-actions/.github/workflows/db-mssql.yml@master
-    with:
-      php: '["8.2","8.3","8.4","8.5"]'
-      stability: '["prefer-lowest","prefer-stable"]'
+  testo:
+    name: MSSQL · PHP ${{ matrix.php-version }} · ${{ matrix.dependencies }}
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - '8.2'
+          - '8.3'
+          - '8.4'
+          - '8.5'
+        dependencies:
+          - lowest
+          - highest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install ODBC driver
+        run: |
+          curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list \
+            | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, pdo, sqlsrv, pdo_sqlsrv
+          ini-values: error_reporting=E_ALL
+          coverage: none
+
+      - name: Install dependencies with composer
+        # TODO(cycle/testing): switch to the released package
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+
+      - name: Start MSSQL
+        run: composer db:up -- sqlserver
+
+      - name: MSSQL tests
+        env:
+          DB_REQUIRED: 1
+        run: composer test:sqlserver
 
 ...
