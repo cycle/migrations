@@ -27,6 +27,13 @@ final class ConfigTest
         Assert::false($c->isSafe());
     }
 
+    public function testNotSafeByDefault(): void
+    {
+        $c = new MigrationConfig([]);
+
+        Assert::false($c->isSafe());
+    }
+
     public function testSafe(): void
     {
         $c = new MigrationConfig([
