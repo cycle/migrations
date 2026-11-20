@@ -21,12 +21,6 @@
         "testo/bridge-mockery": "^0.1.2",
         "testo/testo": "^0.10.60"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/cycle/testing"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Cycle\\Migrations\\": "src/"
