@@ -6,13 +6,21 @@
         ]
     },
     "timeout": 10,
-    "minMsi": 95,
-    "minCoveredMsi": 95,
+    "minMsi": 97,
+    "minCoveredMsi": 97,
     "testFramework": "testo",
     "tmpDir": "runtime",
     "logs": {
         "stryker": {
             "report": "4.x"
+        }
+    },
+    "mutators": {
+        "@default": true,
+        "ReturnRemoval": {
+            "ignore": [
+                "Cycle\\Migrations\\Migrator::configure"
+            ]
         }
     }
 }

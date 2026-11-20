@@ -56,6 +56,7 @@ final class BlueprintTest extends MigrationsTestCase
 
         //Not created
         Assert::true($blueprint->getSchema()->exists());
+        Assert::equals($this->schema('sample')->column('value')->getDefaultValue(), 1);
     }
 
     #[Test]
@@ -293,6 +294,9 @@ final class BlueprintTest extends MigrationsTestCase
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->rename('new_name');
+
+        Assert::true($this->db->hasTable('new_name'));
+        Assert::false($this->db->hasTable('sample'));
     }
 
     #[Test]
