@@ -7,11 +7,13 @@ namespace Cycle\Migrations\Tests\Unit;
 use Cycle\Database\Config\DatabaseConfig;
 use Cycle\Database\Database;
 use Cycle\Database\DatabaseManager;
+use Cycle\Database\DatabaseProviderInterface;
 use Cycle\Database\Driver\DriverInterface;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Migrator;
 use Cycle\Migrations\RepositoryInterface;
 use Mockery;
+use Testo\Assert;
 use Testo\Test;
 
 #[Test]
@@ -39,5 +41,17 @@ final class IsolatedMigratorTest
         );
 
         $migrator->isConfigured();
+    }
+
+    public function testProviderWithoutDatabaseListNeedsNoConfiguration(): void
+    {
+        // Without shouldIgnoreMissing(), any call to the provider fails the test.
+        $dbal = Mockery::mock(DatabaseProviderInterface::class);
+        $repository = Mockery::mock(RepositoryInterface::class)->shouldIgnoreMissing();
+        $migrator = new Migrator(new MigrationConfig([]), $dbal, $repository);
+
+        $migrator->configure();
+
+        Assert::true($migrator->isConfigured());
     }
 }

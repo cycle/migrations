@@ -117,6 +117,70 @@ final class MigratorTest extends MigrationsTestCase
     }
 
     #[Test]
+    public function aTableWithoutAllColumnsIsNotConfigured(): void
+    {
+        $this->migrator->configure();
+        $s = $this->schema('migrations');
+        $s->dropIndex(['migration', 'created_at']);
+        $s->dropColumn('created_at');
+        $s->save();
+
+        Assert::false($this->migrator->isConfigured());
+
+        $this->migrator->configure();
+        Assert::true($this->migrator->isConfigured());
+        Assert::true($this->db->table('migrations')->hasColumn('created_at'));
+    }
+
+    #[Test]
+    public function aTableWithoutTheUniqueIndexIsNotConfigured(): void
+    {
+        $this->migrator->configure();
+        $s = $this->schema('migrations');
+        $s->dropIndex(['migration', 'created_at']);
+        $s->save();
+
+        Assert::false($this->migrator->isConfigured());
+
+        $this->migrator->configure();
+        Assert::true($this->migrator->isConfigured());
+        Assert::true($this->db->table('migrations')->hasIndex(['migration', 'created_at']));
+    }
+
+    #[Test]
+    public function upgradesAMigrationTableOfAnOlderVersion(): void
+    {
+        $this->repository->registerMigration('legacy', TestMigration::class);
+        $migration = $this->repository->getMigrations()[0];
+        $this->migrator->configure();
+        $s = $this->schema('migrations');
+        $s->index(['migration']);
+        $s->save();
+        $this->db->table('migrations')->insertOne([
+            'migration' => $migration->getState()->getName(),
+            'time_executed' => new \DateTimeImmutable('2020-01-01 10:00:00'),
+            'created_at' => null,
+        ]);
+
+        Assert::false($this->migrator->isConfigured());
+
+        $this->migrator->configure();
+
+        Assert::true($this->migrator->isConfigured());
+        Assert::false($this->db->table('migrations')->hasIndex(['migration']));
+        Assert::same($this->migrator->getMigrations()[0]->getState()->getStatus(), State::STATUS_EXECUTED);
+    }
+
+    #[Test]
+    public function rollsBackNothingWhenNoMigrationWasExecuted(): void
+    {
+        $this->migrator->configure();
+        $this->repository->registerMigration('pending', TestMigration::class);
+
+        Assert::null($this->migrator->rollback());
+    }
+
+    #[Test]
     public function testGetEmptyMigrations(): void
     {
         $this->migrator->configure();
