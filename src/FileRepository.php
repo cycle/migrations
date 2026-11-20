@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations;
 
+use Cycle\Migrations\Config\MigrationConfig;
+use Cycle\Migrations\Exception\RepositoryException;
 use DateTimeInterface;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
@@ -11,8 +13,6 @@ use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
-use Cycle\Migrations\Config\MigrationConfig;
-use Cycle\Migrations\Exception\RepositoryException;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
 
 /**

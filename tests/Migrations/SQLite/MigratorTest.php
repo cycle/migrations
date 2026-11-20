@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Cycle\Migrations\Tests\SQLite;
 
-/**
- * @group driver
- * @group driver-sqlite
- */
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('driver')]
+#[Group('driver-sqlite')]
 class MigratorTest extends \Cycle\Migrations\Tests\MigratorTest
 {
     public const DRIVER = 'sqlite';

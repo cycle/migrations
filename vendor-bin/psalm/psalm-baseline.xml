@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.12.1@e71404b0465be25cf7f8a631b298c01c5ddd864f">
+<files psalm-version="7.11.0@9e0d0f88bc0a4233357a9aeb4b32da060644e196">
   <file src="src/Atomizer/Renderer.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$comparator]]></code>
@@ -63,20 +63,23 @@
       <code><![CDATA[AbstractTable[]]]></code>
       <code><![CDATA[\array_reverse($sorted)]]></code>
     </MixedReturnTypeCoercion>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$reverse]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/Capsule.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$table]]></code>
     </ArgumentTypeCoercion>
+    <DocblockTypeContradiction>
+      <code><![CDATA[$operation instanceof OperationInterface]]></code>
+    </DocblockTypeContradiction>
     <MissingOverrideAttribute>
       <code><![CDATA[public function execute(array $operations): void]]></code>
       <code><![CDATA[public function getDatabase(): DatabaseInterface]]></code>
       <code><![CDATA[public function getSchema(string $table): AbstractTable]]></code>
       <code><![CDATA[public function getTable(string $table): TableInterface]]></code>
     </MissingOverrideAttribute>
+    <MixedArgument>
+      <code><![CDATA[$operation::class]]></code>
+    </MixedArgument>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$this->schemas]]></code>
     </MixedPropertyTypeCoercion>
@@ -99,46 +102,6 @@
       <code><![CDATA[$this->config['table'] ?? 'migrations']]></code>
       <code><![CDATA[$this->config['table'] ?? 'migrations']]></code>
     </MixedReturnStatement>
-  </file>
-  <file src="src/Exception/BlueprintException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[BlueprintException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/CapsuleException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CapsuleException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/ContextException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ContextException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/Operation/ColumnException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ColumnException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/Operation/ForeignKeyException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ForeignKeyException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/Operation/IndexException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[IndexException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/Operation/TableException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[TableException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/RepositoryException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[RepositoryException]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/FileRepository.php">
     <ArgumentTypeCoercion>
@@ -234,7 +197,6 @@
       <code><![CDATA[$migrationData['id']]]></code>
     </PossiblyUndefinedStringArrayOffset>
     <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($data['time_executed'])]]></code>
       <code><![CDATA[empty($migrationData)]]></code>
     </RiskyTruthyFalsyComparison>
     <TooManyArguments>
@@ -333,18 +295,6 @@
     <MixedAssignment>
       <code><![CDATA[$fk]]></code>
     </MixedAssignment>
-    <PossiblyInvalidCast>
-      <code><![CDATA[\str_replace(
-                '_',
-                ' ',
-                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
-            )]]></code>
-      <code><![CDATA[\str_replace(
-                '_',
-                ' ',
-                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
-            )]]></code>
-    </PossiblyInvalidCast>
   </file>
   <file src="src/Operation/ForeignKey/Alter.php">
     <ArgumentTypeCoercion>
@@ -374,18 +324,6 @@
     <MixedAssignment>
       <code><![CDATA[$fk]]></code>
     </MixedAssignment>
-    <PossiblyInvalidCast>
-      <code><![CDATA[\str_replace(
-                '_',
-                ' ',
-                $this->getOption('delete', ForeignKeyInterface::NO_ACTION),
-            )]]></code>
-      <code><![CDATA[\str_replace(
-                '_',
-                ' ',
-                $this->getOption('update', ForeignKeyInterface::NO_ACTION),
-            )]]></code>
-    </PossiblyInvalidCast>
   </file>
   <file src="src/Operation/ForeignKey/Drop.php">
     <ArgumentTypeCoercion>

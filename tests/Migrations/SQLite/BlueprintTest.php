@@ -13,11 +13,10 @@ namespace Cycle\Migrations\Tests\SQLite;
 
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-sqlite
- */
+#[Group('driver')]
+#[Group('driver-sqlite')]
 class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'sqlite';

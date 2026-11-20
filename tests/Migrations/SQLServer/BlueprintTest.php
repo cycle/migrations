@@ -13,11 +13,10 @@ namespace Cycle\Migrations\Tests\SQLServer;
 
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group driver
- * @group driver-sqlserver
- */
+#[Group('driver')]
+#[Group('driver-sqlserver')]
 class BlueprintTest extends \Cycle\Migrations\Tests\BlueprintTest
 {
     public const DRIVER = 'sqlserver';
