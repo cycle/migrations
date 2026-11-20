@@ -119,10 +119,10 @@ final class MigratorTest extends MigrationsTestCase
     #[Test]
     public function aTableWithoutAllColumnsIsNotConfigured(): void
     {
+        $this->migrator->configure();
         $s = $this->schema('migrations');
-        $s->primary('id');
-        $s->string('migration', 191);
-        $s->datetime('time_executed');
+        $s->dropIndex(['migration', 'created_at']);
+        $s->dropColumn('created_at');
         $s->save();
 
         Assert::false($this->migrator->isConfigured());
@@ -135,11 +135,9 @@ final class MigratorTest extends MigrationsTestCase
     #[Test]
     public function aTableWithoutTheUniqueIndexIsNotConfigured(): void
     {
+        $this->migrator->configure();
         $s = $this->schema('migrations');
-        $s->primary('id');
-        $s->string('migration', 191);
-        $s->datetime('time_executed', 6);
-        $s->datetime('created_at', 6);
+        $s->dropIndex(['migration', 'created_at']);
         $s->save();
 
         Assert::false($this->migrator->isConfigured());
@@ -154,11 +152,8 @@ final class MigratorTest extends MigrationsTestCase
     {
         $this->repository->registerMigration('legacy', TestMigration::class);
         $migration = $this->repository->getMigrations()[0];
+        $this->migrator->configure();
         $s = $this->schema('migrations');
-        $s->primary('id');
-        $s->string('migration', 191);
-        $s->datetime('time_executed');
-        $s->datetime('created_at')->nullable(true);
         $s->index(['migration']);
         $s->save();
         $this->db->table('migrations')->insertOne([
