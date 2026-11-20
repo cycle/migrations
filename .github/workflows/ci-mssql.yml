@@ -53,7 +53,6 @@ jobs:
           coverage: none
 
       - name: Install dependencies with composer
-        # TODO(cycle/testing): switch to the released package
         uses: ramsey/composer-install@v4
         with:
           dependency-versions: ${{ matrix.dependencies }}
