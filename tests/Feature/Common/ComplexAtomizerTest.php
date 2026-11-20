@@ -9,11 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Feature\Common;
 
+use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Database\ForeignKeyInterface;
 
-abstract class ComplexAtomizerTest extends BaseTest
+final class ComplexAtomizerTest extends MigrationsTestCase
 {
     #[\Testo\Test]
     public function testCreateMultiple(): void

@@ -9,13 +9,16 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Feature\Common;
 
+use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Database\ForeignKeyInterface;
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\TableBlueprint;
+use Cycle\Testing\Database\Attribute\ExceptDriver;
+use Cycle\Testing\Database\Driver;
 
-abstract class BlueprintTest extends BaseTest
+final class BlueprintTest extends MigrationsTestCase
 {
     #[\Testo\Test]
     public function testCreateButNot(): void
@@ -287,5 +290,22 @@ abstract class BlueprintTest extends BaseTest
         $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
 
         $blueprint->rename('new_name');
+    }
+
+    #[\Testo\Test]
+    #[ExceptDriver(Driver::MySQL)]
+    public function testCreateForeignWithoutIndex(): void
+    {
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample1');
+
+        $blueprint->addColumn('id', 'primary')->create();
+        $blueprint = new TableBlueprint(new Capsule($this->db), 'sample');
+
+        $blueprint->addColumn('id', 'primary')
+            ->addColumn('sample_id', 'int')
+            ->addForeignKey(['sample_id'], 'sample1', ['id'], ['indexCreate' => false])
+            ->create();
+
+        \Testo\Assert::false($blueprint->getSchema()->hasIndex(['sample_id']));
     }
 }

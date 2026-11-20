@@ -11,7 +11,6 @@ use Cycle\Database\Driver\DriverInterface;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Migrator;
 use Cycle\Migrations\RepositoryInterface;
-use PHPUnit\Framework\TestCase;
 
 final class IsolatedMigratorTest
 {
@@ -23,11 +22,11 @@ final class IsolatedMigratorTest
             new Database(
                 'foo',
                 '',
-                $driver = \Mockery::mock(DriverInterface::class)->shouldIgnoreMissing(),
+                $driver = \Mockery::mock(DriverInterface::class),
             ),
         );
+        // Without shouldIgnoreMissing(), any other driver call fails the test.
         $driver->shouldReceive('isReadonly')->atLeast()->once()->andReturn(true);
-        $driver->shouldReceive($this->callback(fn($name) => $name !== 'isReadonly'))->andThrow(new \RuntimeException('Unexpected method call'));
 
         $repository = \Mockery::mock(RepositoryInterface::class)->shouldIgnoreMissing();
 

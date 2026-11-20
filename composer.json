@@ -39,7 +39,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Cycle\\Migrations\\Tests\\": "tests/Migrations/",
+            "Cycle\\Migrations\\Tests\\": "tests/",
             "Cycle\\Migrations\\Fixtures\\": "tests/Fixtures/"
         }
     },

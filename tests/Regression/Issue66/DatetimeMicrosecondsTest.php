@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Regression\Issue66;
 
-use Cycle\Database\Driver\DriverInterface;
+use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Migrations\Migration;
 use Cycle\Migrations\State;
-use Psr\Log\LoggerAwareInterface;
 
 /**
  * The Migrator must correctly resolve the state of executed migrations
@@ -15,22 +14,11 @@ use Psr\Log\LoggerAwareInterface;
  *
  * @see https://github.com/cycle/migrations/issues/66
  */
-abstract class DatetimeMicrosecondsTest extends BaseTest
+final class DatetimeMicrosecondsTest extends MigrationsTestCase
 {
-    public function getDriver(): DriverInterface
+    protected function driverConfig(): array
     {
-        if (!isset($this->driver)) {
-            $config = clone self::$config[static::DRIVER];
-            $config->options['withDatetimeMicroseconds'] = true;
-
-            $this->driver = $config->driver::create($config);
-        }
-
-        if (self::$config['debug'] && $this->driver instanceof LoggerAwareInterface) {
-            $this->driver->setLogger(new TestLogger());
-        }
-
-        return $this->driver;
+        return ['options' => ['withDatetimeMicroseconds' => true]];
     }
 
     #[\Testo\Test]

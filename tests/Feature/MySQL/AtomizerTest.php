@@ -9,45 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests\MySQL;
+namespace Cycle\Migrations\Tests\Feature\MySQL;
 
-use PHPUnit\Framework\Attributes\Group;
+use Cycle\Migrations\Tests\MigrationsTestCase;
 
-#[\Testo\Filter\Group('driver', 'driver-mysql')]
-class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
+final class AtomizerTest extends MigrationsTestCase
 {
-    public const DRIVER = 'mysql';
-    #[\Testo\Test]
-    public function testChangeBinaryColumnSize(): void
-    {
-        $this->migrator->configure();
-
-        $schema = $this->schema('sample');
-        $schema->primary('id');
-        $schema->binary('value', size: 16);
-        $this->atomize('migration1', [$schema]);
-
-        $this->migrator->run();
-        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
-
-        $schema = $this->schema('sample');
-        $schema->binary('value', size: 255);
-        $this->atomize('migration2', [$schema]);
-
-        $this->migrator->run();
-
-        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 255);
-
-        \Testo\Assert::true($this->db->hasTable('sample'));
-
-        $this->migrator->rollback();
-        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
-
-        \Testo\Assert::true($this->db->hasTable('sample'));
-
-        $this->migrator->rollback();
-        \Testo\Assert::false($this->db->hasTable('sample'));
-    }
     #[\Testo\Test]
     public function testUnsigned(): void
     {

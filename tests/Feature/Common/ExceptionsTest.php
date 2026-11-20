@@ -9,8 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Feature\Common;
 
+use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Migrations\Fixtures\AddForeignKeyMigration;
 use Cycle\Migrations\Fixtures\AlterForeignKeyMigration;
 use Cycle\Migrations\Fixtures\AlterNonExistedColumnMigration;
@@ -25,7 +26,7 @@ use Cycle\Migrations\Fixtures\RenameColumnMigration;
 use Cycle\Migrations\Fixtures\RenameTableMigration;
 use Cycle\Migrations\Exception\MigrationException;
 
-abstract class ExceptionsTest extends BaseTest
+final class ExceptionsTest extends MigrationsTestCase
 {
     private const MIGRATION_EXCEPTION_PREFIX_REGEX = "/Error in the migration \([0-9a-z_\-]+ \(\d{4}-\d{2}-\d{2} "
     . "\d{2}:\d{2}:\d{2}\)\) occurred: ";
@@ -382,7 +383,7 @@ abstract class ExceptionsTest extends BaseTest
     #[\Testo\Test]
     public function testBadMigrationFile(): void
     {
-        file_put_contents(__DIR__ . '/../files/mmm.php', 'test');
+        file_put_contents(self::FILES . 'mmm.php', 'test');
 
         \Testo\Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class)->withMessageMatchingRegex("/Invalid migration filename '.+'/");
         $this->repository->getMigrations();
@@ -392,7 +393,7 @@ abstract class ExceptionsTest extends BaseTest
     public function testBadDateFormatMigrationFile(): void
     {
         $fileName = (new \DateTime())->format('dmY-his') . '_0_test.php';
-        file_put_contents(__DIR__ . "/../files/{$fileName}", 'test');
+        file_put_contents(self::FILES . "{$fileName}", 'test');
 
         \Testo\Expect::exception(\Cycle\Migrations\Exception\RepositoryException::class)->withMessageMatchingRegex("/Invalid migration filename '.+' - corrupted date format/");
         $this->repository->getMigrations();

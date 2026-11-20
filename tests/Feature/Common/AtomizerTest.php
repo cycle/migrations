@@ -9,16 +9,19 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Feature\Common;
 
+use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Database\Injection\Fragment;
 use Cycle\Database\Schema\AbstractTable;
 use Cycle\Migrations\Atomizer\Atomizer;
 use Cycle\Migrations\Atomizer\Renderer;
 use Cycle\Migrations\Migration;
 use Cycle\Migrations\State;
+use Cycle\Testing\Database\Attribute\OnlyDriver;
+use Cycle\Testing\Database\Driver;
 
-abstract class AtomizerTest extends BaseTest
+final class AtomizerTest extends MigrationsTestCase
 {
     #[\Testo\Test]
     public function testCreateAndDiff(): void
@@ -450,5 +453,38 @@ abstract class AtomizerTest extends BaseTest
 
         $atomizer->setTables([$table2, $table3]);
         \Testo\Assert::same($atomizer->getTables(), [$table2, $table3]);
+    }
+
+    #[\Testo\Test]
+    #[OnlyDriver(Driver::MySQL, Driver::SQLServer)]
+    public function testChangeBinaryColumnSize(): void
+    {
+        $this->migrator->configure();
+
+        $schema = $this->schema('sample');
+        $schema->primary('id');
+        $schema->binary('value', size: 16);
+        $this->atomize('migration1', [$schema]);
+
+        $this->migrator->run();
+        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
+
+        $schema = $this->schema('sample');
+        $schema->binary('value', size: 255);
+        $this->atomize('migration2', [$schema]);
+
+        $this->migrator->run();
+
+        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 255);
+
+        \Testo\Assert::true($this->db->hasTable('sample'));
+
+        $this->migrator->rollback();
+        \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
+
+        \Testo\Assert::true($this->db->hasTable('sample'));
+
+        $this->migrator->rollback();
+        \Testo\Assert::false($this->db->hasTable('sample'));
     }
 }

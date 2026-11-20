@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Fixtures;
 
 use Cycle\Database\DatabaseInterface;
 use Cycle\Migrations\Migration;

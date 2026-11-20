@@ -9,29 +9,27 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests\SQLServer;
+namespace Cycle\Migrations\Tests\Feature\Postgres;
 
-use PHPUnit\Framework\Attributes\Group;
+use Cycle\Migrations\Tests\MigrationsTestCase;
 
-#[\Testo\Filter\Group('driver', 'driver-sqlserver')]
-class AtomizerTest extends \Cycle\Migrations\Tests\AtomizerTest
+final class AtomizerTest extends MigrationsTestCase
 {
-    public const DRIVER = 'sqlserver';
     #[\Testo\Test]
-    public function testChangeBinaryColumnSize(): void
+    public function testChangeBitColumnSize(): void
     {
         $this->migrator->configure();
 
         $schema = $this->schema('sample');
         $schema->primary('id');
-        $schema->binary('value', size: 16);
+        $schema->bit('value', size: 16);
         $this->atomize('migration1', [$schema]);
 
         $this->migrator->run();
         \Testo\Assert::same($this->schema('sample')->column('value')->getSize(), 16);
 
         $schema = $this->schema('sample');
-        $schema->binary('value', size: 255);
+        $schema->bit('value', size: 255);
         $this->atomize('migration2', [$schema]);
 
         $this->migrator->run();

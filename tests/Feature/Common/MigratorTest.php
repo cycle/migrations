@@ -9,13 +9,16 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Feature\Common;
 
+use Cycle\Migrations\Tests\MigrationsTestCase;
+use Cycle\Migrations\Fixtures\TestMigration;
+use CycleMigrationsTestsixturestestmigration;
 use Cycle\Migrations\Capsule;
 use Cycle\Migrations\Exception\MigrationException;
 use Cycle\Migrations\State;
 
-abstract class MigratorTest extends BaseTest
+final class MigratorTest extends MigrationsTestCase
 {
     #[\Testo\Test]
     public function testSortingOrder(): void
@@ -42,13 +45,13 @@ abstract class MigratorTest extends BaseTest
             '20200909.030203_1_1_migration_1.php' => 'B1',
         ];
 
-        $stub = file_get_contents(__DIR__ . '/../files/migration.stub');
+        $stub = file_get_contents(self::FILES . 'migration.stub');
         foreach ($files as $name => $class) {
-            file_put_contents(__DIR__ . "/../files/$name", sprintf($stub, $class));
+            file_put_contents(self::FILES . "$name", sprintf($stub, $class));
         }
 
         foreach ($vendorFiles as $name => $class) {
-            file_put_contents(__DIR__ . "/../files/vendor/$name", \sprintf($stub, $class . 'Vendor'));
+            file_put_contents(self::FILES . "vendor/$name", \sprintf($stub, $class . 'Vendor'));
         }
 
         $migrations = $this->repository->getMigrations();

@@ -9,22 +9,17 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Unit;
 
 use Cycle\Database\Schema\AbstractColumn;
 use Cycle\Migrations\Atomizer\Renderer;
 
-abstract class RendererTest extends BaseTest
+final class RendererTest
 {
     #[\Testo\Test]
     public function testColumnOptionsForEnumColumn(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(true);
-        $column->shouldReceive('getDefaultValue')->andReturn('one');
-        $column->shouldReceive('getAttributes')->andReturn([]);
-        $column->shouldReceive('getAbstractType')->andReturn('enum');
-        $column->shouldReceive('getEnumValues')->andReturn(['one', 'two', 'three']);
+        $column = self::column(nullable: true, default: 'one', attributes: [], type: 'enum', enum: ['one', 'two', 'three']);
 
         $renderer = new Renderer();
 
@@ -42,11 +37,7 @@ abstract class RendererTest extends BaseTest
     #[\Testo\Test]
     public function testColumnOptionsWithDateTimeNow(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(false);
-        $column->shouldReceive('getDefaultValue')->andReturn(AbstractColumn::DATETIME_NOW);
-        $column->shouldReceive('getAttributes')->andReturn([]);
-        $column->shouldReceive('getAbstractType')->andReturn('datetime');
+        $column = self::column(nullable: false, default: AbstractColumn::DATETIME_NOW, attributes: [], type: 'datetime');
 
         $renderer = new Renderer();
 
@@ -63,11 +54,7 @@ abstract class RendererTest extends BaseTest
     #[\Testo\Test]
     public function testColumnOptionsSizeNotZeroIsAccepted(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(true);
-        $column->shouldReceive('getDefaultValue')->andReturn(null);
-        $column->shouldReceive('getAttributes')->andReturn(['size' => 11]);
-        $column->shouldReceive('getAbstractType')->andReturn('integer');
+        $column = self::column(nullable: true, default: null, attributes: ['size' => 11], type: 'integer');
 
         $renderer = new Renderer();
 
@@ -85,11 +72,7 @@ abstract class RendererTest extends BaseTest
     #[\Testo\Test]
     public function testColumnOptionsSizeZeroIsIgnored(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(true);
-        $column->shouldReceive('getDefaultValue')->andReturn(null);
-        $column->shouldReceive('getAttributes')->andReturn(['size' => 0]);
-        $column->shouldReceive('getAbstractType')->andReturn('integer');
+        $column = self::column(nullable: true, default: null, attributes: ['size' => 0], type: 'integer');
 
         $renderer = new Renderer();
 
@@ -106,11 +89,7 @@ abstract class RendererTest extends BaseTest
     #[\Testo\Test]
     public function testColumnOptionsAfterNotEmptyStringIsAccepted(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(true);
-        $column->shouldReceive('getDefaultValue')->andReturn(null);
-        $column->shouldReceive('getAttributes')->andReturn(['after' => 'email']);
-        $column->shouldReceive('getAbstractType')->andReturn('integer');
+        $column = self::column(nullable: true, default: null, attributes: ['after' => 'email'], type: 'integer');
 
         $renderer = new Renderer();
 
@@ -128,11 +107,7 @@ abstract class RendererTest extends BaseTest
     #[\Testo\Test]
     public function testColumnOptionsAfterEmptyStringIsIgnored(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(true);
-        $column->shouldReceive('getDefaultValue')->andReturn(null);
-        $column->shouldReceive('getAttributes')->andReturn(['after' => '']);
-        $column->shouldReceive('getAbstractType')->andReturn('integer');
+        $column = self::column(nullable: true, default: null, attributes: ['after' => ''], type: 'integer');
 
         $renderer = new Renderer();
 
@@ -149,11 +124,7 @@ abstract class RendererTest extends BaseTest
     #[\Testo\Test]
     public function testColumnOptionsFirstNotFalseIsAccepted(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(true);
-        $column->shouldReceive('getDefaultValue')->andReturn(null);
-        $column->shouldReceive('getAttributes')->andReturn(['first' => true]);
-        $column->shouldReceive('getAbstractType')->andReturn('integer');
+        $column = self::column(nullable: true, default: null, attributes: ['first' => true], type: 'integer');
 
         $renderer = new Renderer();
 
@@ -171,11 +142,7 @@ abstract class RendererTest extends BaseTest
     #[\Testo\Test]
     public function testColumnOptionsFirstFalseIsIgnored(): void
     {
-        $column = \Mockery::mock(AbstractColumn::class)->shouldIgnoreMissing();
-        $column->shouldReceive('isNullable')->andReturn(true);
-        $column->shouldReceive('getDefaultValue')->andReturn(null);
-        $column->shouldReceive('getAttributes')->andReturn(['first' => false]);
-        $column->shouldReceive('getAbstractType')->andReturn('integer');
+        $column = self::column(nullable: true, default: null, attributes: ['first' => false], type: 'integer');
 
         $renderer = new Renderer();
 
@@ -187,5 +154,42 @@ abstract class RendererTest extends BaseTest
         \Testo\Assert::array($options)->hasKeys('nullable')->hasKeys('defaultValue')->doesNotHaveKeys('first');
         \Testo\Assert::true($options['nullable']);
         \Testo\Assert::null($options['defaultValue']);
+    }
+    private static function column(bool $nullable, mixed $default, array $attributes, string $type, array $enum = []): AbstractColumn
+    {
+        return new class ($nullable, $default, $attributes, $type, $enum) extends AbstractColumn {
+            public function __construct(
+                private readonly bool $fakeNullable,
+                private readonly mixed $fakeDefault,
+                private readonly array $fakeAttributes,
+                private readonly string $fakeType,
+                private readonly array $fakeEnum,
+            ) {}
+
+            public function isNullable(): bool
+            {
+                return $this->fakeNullable;
+            }
+
+            public function getDefaultValue(): mixed
+            {
+                return $this->fakeDefault;
+            }
+
+            public function getAttributes(): array
+            {
+                return $this->fakeAttributes;
+            }
+
+            public function getAbstractType(): string
+            {
+                return $this->fakeType;
+            }
+
+            public function getEnumValues(): array
+            {
+                return $this->fakeEnum;
+            }
+        };
     }
 }

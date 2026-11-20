@@ -9,12 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use Cycle\Migrations\Config\MigrationConfig;
 
-class ConfigTest
+final class ConfigTest
 {
     #[\Testo\Test]
     public function testNotSafe(): void

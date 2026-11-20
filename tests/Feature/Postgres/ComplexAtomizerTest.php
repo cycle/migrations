@@ -9,14 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests\Postgres;
+namespace Cycle\Migrations\Tests\Feature\Postgres;
 
-use PHPUnit\Framework\Attributes\Group;
+use Cycle\Migrations\Tests\MigrationsTestCase;
 
-#[\Testo\Filter\Group('driver', 'driver-postgres')]
-class ComplexAtomizerTest extends \Cycle\Migrations\Tests\ComplexAtomizerTest
+final class ComplexAtomizerTest extends MigrationsTestCase
 {
-    public const DRIVER = 'postgres';
     #[\Testo\Test]
     public function testTableSorting(): void
     {

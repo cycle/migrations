@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Cycle\Migrations\Tests;
+namespace Cycle\Migrations\Tests\Feature\Common;
 
+use Cycle\Migrations\Tests\MigrationsTestCase;
 use Cycle\Migrations\Atomizer\TableSorter;
 
-abstract class TableSorterTest extends BaseTest
+final class TableSorterTest extends MigrationsTestCase
 {
     #[\Testo\Test]
     public function testSortWithoutDeps(): void
