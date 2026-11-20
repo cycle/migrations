@@ -42,4 +42,10 @@ final class ConfigTest
 
         Assert::true($c->isSafe());
     }
+
+    public function testNamespace(): void
+    {
+        Assert::same((new MigrationConfig([]))->getNamespace(), 'Migration');
+        Assert::same((new MigrationConfig(['namespace' => 'App\Migration']))->getNamespace(), 'App\Migration');
+    }
 }
